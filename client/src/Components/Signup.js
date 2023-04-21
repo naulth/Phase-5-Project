@@ -6,10 +6,27 @@ function Signup(){
     const [password, setPassword] = useState('')
     const [confirm, setConfirm] = useState('')
 
+    const createNewUser = (e) => {
+        e.preventDefault()
+
+        const newUser = {
+            username: username, 
+            password: password, 
+            confirm_password: confirm
+        }
+        console.log(newUser)
+
+        fetch('http://localhost:5555/signup', {
+            method: "POST",
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(newUser)
+        })
+    }
+
     return(
         <div>
             <h2>Sign Up</h2>
-            <form>
+            <form onSubmit={createNewUser}>
                 <label>Username</label>
                 <input
                     type="text"
