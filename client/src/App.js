@@ -1,12 +1,15 @@
+import React from "react"
+import {Routes, Route} from "react-router-dom"
 
+import Home from "./Components/Home"
+import Signup from "./Components/Signup"
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <h1>Boulder</h1>
-      </header>
-    </div>
+    <Routes>
+        <Route path="/" element={<Home />} />
+        <Route path="/signup" element={<Signup />} />
+    </Routes>
   );
 }
 
