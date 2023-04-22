@@ -4,6 +4,11 @@ import {Routes, Route} from "react-router-dom"
 import Home from "./Components/Home"
 import Signup from "./Components/Signup"
 import Login from "./Components/Login"
+import Nav from "./Components/Nav"
+
+import { library } from '@fortawesome/fontawesome-svg-core'
+import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
+library.add(faEye,faEyeSlash)
 
 function App() {
 
@@ -33,11 +38,14 @@ function App() {
     }
 
     return (
-        <Routes>
-            <Route path="/" element={<Home />} />
-            <Route path="/signup" element={<Signup />} />
-            <Route path="/login" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
-        </Routes>
+        <div>
+            <Nav />
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/signup" element={<Signup />} />
+                <Route path="/login" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
+            </Routes>
+        </div>
     );
 }
 

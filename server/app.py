@@ -45,7 +45,10 @@ class Login(Resource):
         password = request.get_json().get('password')
         user = User.query.filter(User.username == username).first()
         
-        if user.authenticate(password) == True:
+        if user is None:
+            return {'error': 'Invalid username or password'}, 401
+        
+        elif user.authenticate(password) == True:
             flash("Login Successful")
             session.permanent = True
             session['user_id'] = user.id
@@ -53,8 +56,7 @@ class Login(Resource):
                 "id": user.id,
                 "username": user.username
             })
-        elif user is None:
-            return {'error': 'Invalid username or password'}, 401
+
         else:
             return {'error', 'Invalid username or password'}, 401
 
