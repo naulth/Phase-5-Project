@@ -2,7 +2,7 @@ import React from 'react'
 import {Link, NavLink} from 'react-router-dom'
 import '../index.css';
 
-function Nav(){
+function Nav({user, handleLogout}){
     return(
         <header className="bg-sky-950">
             <nav className="mx-auto flex mx-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8" aria-label="Global">
@@ -11,6 +11,9 @@ function Nav(){
 						<span className="sr-only">Project Name</span>
 						<img src=logo />
 					</Link> */}
+					{user ? <p className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white">Welcome, {user && user.username}</p> : null}
+					
+					
 				</div>
 				<div className="hidden lg:flex lg:gap-x-12">
 					<NavLink className="text-lg font-semibold leading-6 text-white" to="/" end>Home</NavLink>
@@ -19,10 +22,23 @@ function Nav(){
 					<NavLink></NavLink> */}
 				</div>
 				<div className="flex flex-1 items-center justify-end gap-x-6">
-					<Link to="/login"className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white">Log in</Link>
-					<Link to="/signup" className="rounded-md bg-emerald-200 px-3 py-2 text-sm font-semibold text-sky-950 shadow-sm hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200">Sign up</Link>
+				{user ? (
+                    <div class="flex justify-between gap-x-6">
+                        <Link className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white" to="/login" onClick={handleLogout}>Logout</Link>
+                    </div>
+                ) : (
+                    <Link className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white" to="/login">Login</Link>
+                )}
+					<Link to="/signup" className="rounded-md bg-emerald-200 px-3 py-2 text-md font-semibold text-sky-950 shadow-sm hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200">Sign up</Link>
 
 				</div>
+
+
+				
+
+
+
+
 
 				{/* <div className="flex lg:hidden">
       <button type="button" className="-m-2.5 inline-flex items-center justify-center rounded-md p-2.5 text-gray-700">
