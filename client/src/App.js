@@ -5,6 +5,9 @@ import Home from "./Components/Home"
 import Signup from "./Components/Signup"
 import Login from "./Components/Login"
 import Nav from "./Components/Nav"
+import Games from "./Components/Games"
+import Profile from "./Components/Profile"
+
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
@@ -22,6 +25,8 @@ function App() {
         });
     }, []);
 
+    
+
     function handleLogin(user) {
         setUser(user);
     }
@@ -37,11 +42,21 @@ function App() {
         console.log('logged out')
     }
 
+    const [gamesArray, setGamesArray] = useState([])
+
+    useEffect(() => {
+        fetch('http://localhost:5555/games')
+            .then(r => r.json())
+            .then(setGamesArray)
+    },[])
+
     return (
         <div>
             <Nav user={user} handleLogout={handleLogout}/>
             <Routes>
                 <Route path="/" element={<Home user={user}/>} />
+                <Route path='/games' element={<Games gamesArray={gamesArray} user={user}/>} />
+                <Route path='/profile' element={<Profile user={user} /> } />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/login" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
             </Routes>

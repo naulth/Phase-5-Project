@@ -16,9 +16,10 @@ function Nav({user, handleLogout}){
 					
 				</div>
 				<div className="hidden lg:flex lg:gap-x-12">
-					<NavLink className="text-lg font-semibold leading-6 text-white" to="/" end>Home</NavLink>
+                    <NavLink className="text-lg font-semibold leading-6 text-white" to="/" end>Home</NavLink>
+                    {user ? <NavLink className="text-lg font-semibold leading-6 text-white" to="/profile">Profile</NavLink> : null}
+					<NavLink className="text-lg font-semibold leading-6 text-white" to="/games" >Games</NavLink>
 					{/*<NavLink></NavLink>
-					<NavLink></NavLink>
 					<NavLink></NavLink> */}
 				</div>
 				<div className="flex flex-1 items-center justify-end gap-x-6">

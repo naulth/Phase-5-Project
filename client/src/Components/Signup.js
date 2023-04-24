@@ -4,6 +4,10 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 function Signup(){
 
     const [username, setUsername] = useState('')
+    const [firstName, setFirstName] = useState('')
+    const [lastName, setLastName] = useState('')
+    const [birthDate, setBirthDate] = useState('')
+    const [profileImage, setProfileImage] = useState('')
     const [password, setPassword] = useState('')
     const [confirm, setConfirm] = useState('')
     const [showPassword, setShowPassword] = useState(false)
@@ -18,7 +22,11 @@ function Signup(){
         const newUser = {
             username: username, 
             password: password, 
-            confirm_password: confirm
+            confirm_password: confirm,
+            first_name: firstName,
+            last_name: lastName,
+            birth_date: birthDate,
+            image: profileImage
         }
         console.log(newUser)
 
@@ -27,6 +35,14 @@ function Signup(){
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify(newUser)
         })
+
+        setUsername('')
+        setFirstName('')
+        setLastName('')
+        setPassword('')
+        setConfirm('')
+        setBirthDate('')
+        setProfileImage('')
     }
 
     return(
@@ -37,7 +53,7 @@ function Signup(){
             </div>
             <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                 <form className="space-y-6" onSubmit={createNewUser}>
-                    <div>
+                    <div className="">
                         <label className="block text-sm font-medium leading-6 text-gray-900">Username</label>
                         <div className="mt-2">
                             <input
@@ -45,6 +61,54 @@ function Signup(){
                                 name="username"
                                 value={username}
                                 onChange={(e) => setUsername(e.target.value)}
+                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium leading-6 text-gray-900">First Name</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="firstName"
+                                value={firstName}
+                                onChange={(e) => setFirstName(e.target.value)}
+                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Last Name</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="lastName"
+                                value={lastName}
+                                onChange={(e) => setLastName(e.target.value)}
+                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Date of Birth</label>
+                        <div className="mt-2">
+                            <input
+                                type="date"
+                                name="birthDate"
+                                value={birthDate}
+                                onChange={(e) => setBirthDate(e.target.value)}
+                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                        </div>
+                    </div>
+                    <div>
+                        <label className="block text-sm font-medium leading-6 text-gray-900">Profile Image URL</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="profileImage"
+                                value={profileImage}
+                                onChange={(e) => setProfileImage(e.target.value)}
                                 className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
                         </div>
