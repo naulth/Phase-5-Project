@@ -49,12 +49,12 @@ class Login(Resource):
 
     def post(self):
 
-        username = request.get_json().get('username')
-        password = request.get_json().get('password')
+        username = request.get_json()['username']
+        password = request.get_json()['password']
         user = User.query.filter(User.username == username).first()
         
         if user.authenticate(password) == True:
-            flash("Login Successful")
+            # flash("Login Successful")
             session.permanent = True
             session['user_id'] = user.id
             return jsonify({
