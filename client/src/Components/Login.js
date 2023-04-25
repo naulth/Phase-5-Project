@@ -8,7 +8,7 @@ function Login({user, handleLogout, handleLogin}){
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [isOpen, setIsOpen] = useState(false);
-    const [log, setLog] = useState(false)
+    
 
     const [showPassword, setShowPassword] = useState(false)
 
@@ -20,14 +20,10 @@ function Login({user, handleLogout, handleLogin}){
         setIsOpen(!isOpen);
       };
 
-    const toggleLogButton = () => {
-        setLog(!log)
-    }
-
     function handleLoginSubmit(e) {
         e.preventDefault()
 
-        fetch("http://localhost:5555/login", {
+        fetch("/login", {
             method: "POST",
             headers: {"Content-Type": "application/json",},
             body: JSON.stringify({username, password})
@@ -101,9 +97,6 @@ function Login({user, handleLogout, handleLogin}){
                     <button onClick={toggleModal}>Try Again</button>
                 </div>
             </div>
-        )}
-        {log && (
-            <button onClick={handleLogout}>Log Out</button>
         )}
         
         </div>

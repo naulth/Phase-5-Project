@@ -7,13 +7,11 @@ function Nav({user, handleLogout}){
         <header className="bg-sky-950">
             <nav className="mx-auto flex mx-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8" aria-label="Global">
 				<div className="flex lg:flex-1">
+                    <Link className="text-lg font-semibold leading-6 text-white" to="/">LoggedOn</Link>
 					{/* <Link>
 						<span className="sr-only">Project Name</span>
 						<img src=logo />
 					</Link> */}
-					{user ? <p className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white">Welcome, {user && user.username}</p> : null}
-					
-					
 				</div>
 				<div className="hidden lg:flex lg:gap-x-12">
                     <NavLink className="text-lg font-semibold leading-6 text-white" to="/" end>Home</NavLink>
@@ -23,14 +21,16 @@ function Nav({user, handleLogout}){
 					<NavLink></NavLink> */}
 				</div>
 				<div className="flex flex-1 items-center justify-end gap-x-6">
+                {user ? <p className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white">Welcome, {user && user.username}</p> : null}
 				{user ? (
-                    <div class="flex justify-between gap-x-6">
+                    <div className="flex justify-between gap-x-6">
                         <Link className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white" to="/login" onClick={handleLogout}>Logout</Link>
                     </div>
                 ) : (
                     <Link className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white" to="/login">Login</Link>
                 )}
-					<Link to="/signup" className="rounded-md bg-emerald-200 px-3 py-2 text-md font-semibold text-sky-950 shadow-sm hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200">Sign up</Link>
+                {user ? null : <Link to="/signup" className="rounded-md bg-emerald-200 px-3 py-2 text-md font-semibold text-sky-950 shadow-sm hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200">Sign up</Link> }
+					
 
 				</div>
 

@@ -51,22 +51,39 @@ class Login(Resource):
 
         username = request.get_json()['username']
         password = request.get_json()['password']
-        user = User.query.filter(User.username == username).first()
         
+
+        user = User.query.filter(User.username == username).first()
+
         if user.authenticate(password) == True:
-            # flash("Login Successful")
-            session.permanent = True
+            # session.permanent = True
             session['user_id'] = user.id
-            return jsonify({
-                "id": user.id,
-                "username": user.username
-            })
+            return user.to_dict()
 
-        elif user is None:
-            return {'error': 'Invalid username or password'}, 401
+    ################################
 
-        else:
-            return {'error', 'Invalid username or password'}, 401
+    # def post(self):
+
+    #     username = request.get_json()['username']
+    #     password = request.get_json()['password']
+    #     user = User.query.filter(User.username == username).first()
+        
+    #     if user.authenticate(password) == True:
+    #         # flash("Login Successful")
+    #         session.permanent = True
+    #         session['user_id'] = user.id
+    #         return jsonify({
+    #             "id": user.id,
+    #             "username": user.username
+    #         })
+
+    #     elif user is None:
+    #         return {'error': 'Invalid username or password'}, 401
+
+    #     else:
+    #         return {'error', 'Invalid username or password'}, 401
+        
+        ##############################
         
     # def post(self):
 
@@ -97,7 +114,7 @@ class Login(Resource):
 class Logout(Resource):
 
     def delete(self):
-        session.pop("user_id", None)
+        session['user_id'] = None
         return {}, 204
     
 class CheckSession(Resource):
@@ -147,6 +164,30 @@ class GameByID(Resource):
 
         return make_response({'message': 'The game has been deleted'}, 200)
     
+class Comments(Resource):
+    def get(self):
+        return make_response([c.to_dict() for c in Comment.query.all()], 200)
+    
+    def post(self):
+        data = request.get_json()
+        new_comment = Comment(
+            score=data['score'],
+            content=data['content'],
+            game_id=data['game_id'],
+            user_id=data['user_id'],
+            user_username=data['user_username']
+        )
+        db.session.add(new_comment)
+        db.session.commit()
+        return {'message': '201, a new comment has been added.'}, 201
+    
+class CommentsByGameId(Resource):
+    def get(self, id):
+        if id not in [g.id for g in Game.query.all()]:
+            return {'error': '404, Game not Found!'}, 404
+
+        return make_response((Game.query.filter(Game.id==id).first().comments).to_dict(), 200)
+
 
 
 api.add_resource(HomePage, '/')
@@ -156,7 +197,8 @@ api.add_resource(Logout, '/logout', endpoint='logout')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Games, '/games')
 api.add_resource(GameByID, '/games/<int:id>')
-
+api.add_resource(Comments, '/comments')
+api.add_resource(CommentsByGameId, '/commets/<int:id>')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)

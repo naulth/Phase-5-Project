@@ -30,7 +30,7 @@ function Signup(){
         }
         console.log(newUser)
 
-        fetch('http://localhost:5555/signup', {
+        fetch('/signup', {
             method: "POST",
             headers: {'Content-Type' : 'application/json'},
             body: JSON.stringify(newUser)

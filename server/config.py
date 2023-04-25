@@ -8,10 +8,10 @@ from flask_bcrypt import Bcrypt
 from datetime import timedelta
 
 app = Flask(__name__)
-app.secret_key = b'boulder'
+app.secret_key = b'boulderjoystorm'
 app.config['SQLALCHEMY_DATABASE_URI']='sqlite:///app.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=15)
+# app.config['PERMANENT_SESSION_LIFETIME'] = timedelta(days=15)
 app.json.compact = False
 # app.permanent_session_lifetime = timedelta(days=30)
 

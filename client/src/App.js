@@ -7,6 +7,7 @@ import Login from "./Components/Login"
 import Nav from "./Components/Nav"
 import Games from "./Components/Games"
 import Profile from "./Components/Profile"
+import GamePage from "./Components/GamePage"
 
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -33,7 +34,7 @@ function App() {
 
     function handleLogout() {
         
-        fetch("http://localhost:5555/logout", {
+        fetch("/logout", {
             method: "DELETE",
         }).then(
             // () => onLogout()
@@ -45,7 +46,7 @@ function App() {
     const [gamesArray, setGamesArray] = useState([])
 
     useEffect(() => {
-        fetch('http://localhost:5555/games')
+        fetch('/games')
             .then(r => r.json())
             .then(setGamesArray)
     },[])
@@ -55,10 +56,11 @@ function App() {
             <Nav user={user} handleLogout={handleLogout}/>
             <Routes>
                 <Route path="/" element={<Home user={user}/>} />
-                <Route path='/games' element={<Games gamesArray={gamesArray} user={user}/>} />
-                <Route path='/profile' element={<Profile user={user} /> } />
-                <Route path="/signup" element={<Signup />} />
-                <Route path="/login" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
+                <Route path='games' element={<Games gamesArray={gamesArray} user={user}/>}/>
+                <Route path='games/:gameId' element={<GamePage user={user}/>} />
+                <Route path='profile' element={<Profile user={user} /> } />
+                <Route path="signup" element={<Signup />} />
+                <Route path="login" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
             </Routes>
         </div>
     );
