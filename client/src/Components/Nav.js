@@ -21,7 +21,7 @@ function Nav({user, handleLogout}){
 					<NavLink></NavLink> */}
 				</div>
 				<div className="flex flex-1 items-center justify-end gap-x-6">
-                {user ? <p className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white">Welcome, {user && user.username}</p> : null}
+                {user ? <p className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white">Welcome, {user && user.username}</p> : null}
 				{user ? (
                     <div className="flex justify-between gap-x-6">
                         <Link className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white" to="/login" onClick={handleLogout}>Logout</Link>

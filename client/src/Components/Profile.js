@@ -1,6 +1,10 @@
 import React from 'react'
+import UserCommentCard from './UserCommentCard'
 
 function Profile({user}){
+
+    const userComments = user?.comments?.map(comment => <UserCommentCard key={user.id} gamename={comment.game_name} score={comment.score} content={comment.content}/>)
+
     return(
 		<div className="py-24 sm:py-32 justify-items-center grid max-w-8xl grid-cols-4 gap-x-2 gap-y-4 ">
             <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 border rounded shadow-md">
@@ -18,7 +22,12 @@ function Profile({user}){
             </div>
             <div className="col-span-2">
                 <h1> Comments </h1>
+                <div>
+                    {userComments}
+                </div>
             </div>
+            
+
             <div className="">
                 <h1> Favorite Games </h1>
             </div>

@@ -5,7 +5,7 @@ from config import db, bcrypt
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-comments.user')
+    serialize_rules = ('-comments.user',)
 
     id = db.Column( db.Integer, primary_key = True )
 
@@ -17,7 +17,7 @@ class User (db.Model, SerializerMixin):
     _password_hash = db.Column( db.String, nullable = False )
     confirm_password = db.Column(db.String, nullable = False)
 
-    comments = db.relationship('Comment', backref='user')
+    comments = db.relationship('Comment', backref='user', cascade='all, delete')
 
 
     @hybrid_property
@@ -65,6 +65,7 @@ class Comment(db.Model, SerializerMixin):
 
     score = db.Column(db.Integer)
     content = db.Column(db.String)
+    game_name = db.Column(db.String)
     user_username = db.Column(db.String)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())

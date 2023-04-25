@@ -40,48 +40,40 @@ class SignUp(Resource):
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify({
-            "id": new_user.id,
-            "username": new_user.username
-        })
-
-class Login(Resource):
-
-    def post(self):
-
-        username = request.get_json()['username']
-        password = request.get_json()['password']
+        return new_user.to_dict()
         
 
-        user = User.query.filter(User.username == username).first()
-
-        if user.authenticate(password) == True:
-            # session.permanent = True
-            session['user_id'] = user.id
-            return user.to_dict()
-
-    ################################
+class Login(Resource):
 
     # def post(self):
 
     #     username = request.get_json()['username']
     #     password = request.get_json()['password']
-    #     user = User.query.filter(User.username == username).first()
         
+
+    #     user = User.query.filter(User.username == username).first()
+
     #     if user.authenticate(password) == True:
-    #         # flash("Login Successful")
-    #         session.permanent = True
     #         session['user_id'] = user.id
-    #         return jsonify({
-    #             "id": user.id,
-    #             "username": user.username
-    #         })
+    #         return user.to_dict()
 
-    #     elif user is None:
-    #         return {'error': 'Invalid username or password'}, 401
+    ################################
 
-    #     else:
-    #         return {'error', 'Invalid username or password'}, 401
+    def post(self):
+
+        username = request.get_json()['username']
+        password = request.get_json()['password']
+        user = User.query.filter(User.username == username).first()
+        
+        if user.authenticate(password) == True:
+            session['user_id'] = user.id
+            return user.to_dict()
+
+        elif user is None:
+            return {'error': 'Invalid username or password'}, 401
+
+        else:
+            return {'error', 'Invalid username or password'}, 401
         
         ##############################
         
@@ -175,7 +167,8 @@ class Comments(Resource):
             content=data['content'],
             game_id=data['game_id'],
             user_id=data['user_id'],
-            user_username=data['user_username']
+            user_username=data['user_username'],
+            game_name=data['game_name']
         )
         db.session.add(new_comment)
         db.session.commit()

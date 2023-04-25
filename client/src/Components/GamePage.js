@@ -1,7 +1,7 @@
 import {Link, useParams} from 'react-router-dom'
 import {useState, useEffect} from "react"
 
-import CommentCard from './CommentCard'
+import GameCommentCard from './GameCommentCard'
 
 function GamePage({user}){
 
@@ -17,20 +17,22 @@ function GamePage({user}){
             .then(setGame)
     },[])
 
-    const commentComponents = game?.comments?.map(comment => <CommentCard key={game.id} username={comment.user_username} score={comment.score} content={comment.content}/>)
+    const commentComponents = game?.comments?.map(comment => <GameCommentCard key={game.id} username={comment.user_username} score={comment.score} content={comment.content}/>)
 
 
     const [comment, setComment] = useState('')
     const [score, setScore] = useState('')
 
     const createComment = (e) => {
+        e.preventDefault()
 
         const newComment = {
             score: score,
             content: comment,
             game_id: id,
             user_id: user.id,
-            user_username: user.username
+            user_username: user.username,
+            game_name: game.title
         }
 
         fetch('/comments', {
