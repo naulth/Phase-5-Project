@@ -182,6 +182,32 @@ class CommentsByGameId(Resource):
         return make_response((Game.query.filter(Game.id==id).first().comments).to_dict(), 200)
 
 
+class UserByID(Resource):
+    def patch(self, id):
+        if id not in [u.id for u in User.query.all()]:
+            return {'error': '404, User not Found!'}, 404
+
+        data = request.get_json()
+        user = User.query.filter(User.id==id).first()
+        for key in data.keys():
+            setattr(user, key , data[key])
+        db.session.add(user)
+        db.session.commit()
+        return make_response(user.to_dict(), 200)
+    
+    def delete(self, id):
+        if id not in [u.id for u in User.query.all()]:
+            return {'error': '404, User not Found!'}, 404
+        try:
+            db.session.query(Comment).filter(Comment.user_id == id).delete()
+            user = User.query.filter(User.id==id).first()
+            db.session.delete(user)
+            db.session.commit()
+        except:
+            db.session.rollback()
+
+        return make_response({'message': 'The user and their comments have been deleted'}, 200)
+
 
 api.add_resource(HomePage, '/')
 api.add_resource(SignUp, '/signup', endpoint='signup')
@@ -192,6 +218,7 @@ api.add_resource(Games, '/games')
 api.add_resource(GameByID, '/games/<int:id>')
 api.add_resource(Comments, '/comments')
 api.add_resource(CommentsByGameId, '/commets/<int:id>')
+api.add_resource(UserByID, '/users/<int:id>')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)

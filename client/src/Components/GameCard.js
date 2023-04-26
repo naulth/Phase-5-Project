@@ -1,18 +1,22 @@
 import React from 'react'
 import {Outlet, Link} from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 
 function GameCard({title, image, id, genre, platform, price, reviews}){
 
     const linkURL = `/games/${id}`
 
     return(
-        <div className='mx-5 mb-8 w-84 border rounded shadow-md text-center'>
-            <h1 className='p-4 text-xl font-medium'>{title}</h1>
-            <img src={image} alt={title} className='flex h-2/3 mb-1'/>
-            <button className="mx-2 my-4 hover:bg-slate-900 hover:text-white border shadow font-bold px-4 rounded">
-                <Link to={linkURL}>View Game</Link>
-            </button>
-            
+        <div className='text-center rounded-2xl shadow-lg w-72 h-full bg-sky-950'>
+            <img src={image} alt={title} className='p-4 rounded-2xl mx-auto h-3/4'/>
+            <div className="px-6 py-4">
+                <h1 className='text-xl text-white font-medium'>{title}</h1>
+            </div>
+            <div className="mx-auto justify-center items-center ">
+                <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-100 border border-lime-100 shadow font-bold px-4 rounded mx-2">
+                    <Link to={linkURL}>View Game</Link> 
+                </button> 
+            </div>
            <Outlet />
         </div>
         

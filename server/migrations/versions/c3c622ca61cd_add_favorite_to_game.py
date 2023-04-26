@@ -1,8 +1,8 @@
-"""rebuilding models
+"""add favorite to Game
 
-Revision ID: 95aca6d3c1a7
+Revision ID: c3c622ca61cd
 Revises: 
-Create Date: 2023-04-25 16:57:48.882491
+Create Date: 2023-04-26 11:51:16.025852
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '95aca6d3c1a7'
+revision = 'c3c622ca61cd'
 down_revision = None
 branch_labels = None
 depends_on = None
@@ -25,6 +25,7 @@ def upgrade():
     sa.Column('genre', sa.String(), nullable=False),
     sa.Column('platform', sa.String(), nullable=False),
     sa.Column('price', sa.Float(), nullable=False),
+    sa.Column('favorite', sa.Boolean(), nullable=False),
     sa.PrimaryKeyConstraint('id')
     )
     op.create_table('users',

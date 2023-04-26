@@ -3,7 +3,7 @@ import {useState, useEffect} from "react"
 
 import GameCommentCard from './GameCommentCard'
 
-function GamePage({user}){
+function GamePage({user, handleUpdate}){
 
     const params = useParams()
 
@@ -17,7 +17,19 @@ function GamePage({user}){
             .then(setGame)
     },[])
 
-    const commentComponents = game?.comments?.map(comment => <GameCommentCard key={game.id} username={comment.user_username} score={comment.score} content={comment.content}/>)
+    const [commentsArray, setCommentsArray] = useState([])
+
+
+    useEffect(()=>{
+        fetch('/games/' + `${id}`)
+            .then(r => r.json())
+            .then(r => setCommentsArray(r.comments))
+    },[])
+
+    
+
+    const commentComponents = commentsArray.map(comment => <GameCommentCard key={game.id} username={comment.user_username} score={comment.score} content={comment.content}/>)
+
 
 
     const [comment, setComment] = useState('')
@@ -41,43 +53,72 @@ function GamePage({user}){
             body: JSON.stringify(newComment)
         })
 
+        addComment(newComment)
+
         setScore('')
         setComment('')
+        handleUpdate(user)
     }
 
+    const addComment = (newCommentObj) => {
+        setCommentsArray([...commentsArray, newCommentObj])
+    }
+
+    // const favorite = game.favorite
+
+    // const favoriteGame = (game) => {
+            
+    //     const newGame = {...game} 
+
+    //     newGame.favorite = !favorite
+
+    //     setGame(newGame)
+    // }
+
+    // const handleFavorite = () => {
+
+    //     favoriteGame(game)
+
+    //     fetch('/games/' + `${id}` , {
+	// 		method: "PATCH",
+	// 		headers: {
+	// 			"Content-Type": "application/json",
+	// 		},
+	// 		body: JSON.stringify({
+	// 			favorite: !favorite
+	// 		})
+	// 	})
+    // }
 
     return(
-        <div>
+        <div className = "">
             <div className="text-center my-6">
-                <button className="mx-2 my-4 hover:bg-slate-900 hover:text-white border shadow font-bold px-4 rounded"><Link to="/games">Back to Games</Link></button> 
+                <button className="mx-2 my-4 hover:bg-slate-900 hover:text-white bg-white border shadow font-bold px-4 py-2 rounded"><Link to="/games">Back to Games</Link></button> 
             </div>
-            <div className="py-24 sm:py-32 justify-items-center grid max-w-8xl grid-cols-6 gap-x-2 gap-y-4 ">
-                <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 col-span-2">
+            <div className=" sm:py-32 justify-items-center grid max-w-8xl grid-cols-6 gap-x-2 gap-y-4 ">
+                <div></div>
+                <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 col-span-2 bg-gray-800 rounded-2xl border shadow p-4 my-4 w-80">
                     <div className="text-center">
-                        <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-gray-900">{game && game.title}</h1>
+                        <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-white">{game && game.title}</h1>
                     </div>
                     <div className="">
-                        <img className="w-2/3 rounded-2xl mx-auto border shadow" src={game && game.image}/>
+                        <img className="w-full rounded-2xl mx-auto border shadow" src={game && game.image}/>
                     </div>
                     <div className="py-4 px-4 text-center">
-                        <p className="text-lg font-bold tracking-tight text-gray-900">Genre: {game && game.genre} </p>
-                        <p className="text-lg font-bold tracking-tight text-gray-900">Platform: {game && game.platform}</p>
-                        <p className="text-lg font-bold tracking-tight text-gray-900">Price: {game && game.price}</p>
+                        <p className="text-lg font-bold tracking-tight text-white">Genre: {game && game.genre} </p>
+                        <p className="text-lg font-bold tracking-tight text-white">Platform: {game && game.platform}</p>
+                        <p className="text-lg font-bold tracking-tight text-white">Price: {game && game.price}</p>
                     </div>
+                    {/* <div className="mx-auto text-center">
+                    {favorite ? <button onClick={handleFavorite} className="hover:bg-sky-950 hover:text-lime-100 text-lime-100 border border-lime-100 shadow font-bold px-4 rounded mx-2">Favorited</button> : <button onClick={handleFavorite}className="hover:bg-sky-950 hover:text-lime-100 text-lime-100 border border-lime-100 shadow font-bold px-4 rounded mx-2">Favorite This Game</button> }
+                    </div> */}
+                    
                 </div>
                 <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 col-span-2">
-                    <div className="text-center">
-                        <h2 className="text-3xl py-4 px-4 font-bold tracking-tight text-gray-900">Comments</h2>
-                    </div>
-                    <div className="max-w-md">
-                    {commentComponents}
-                    </div>
-                </div>
-                <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 col-span-2">
-                    <div>
+                <div>
                         <h2 className="text-3xl py-4 px-4 font-bold tracking-tight text-gray-900">Add a Comment</h2>
                     </div>
-                    <div>
+                 <div>
                     <form className="space-y-6" onSubmit={createComment}>
                         <div className="">
                         <label className="block text-sm font-medium leading-6 text-gray-900">Score: </label>
@@ -104,6 +145,16 @@ function GamePage({user}){
                         </div>
                     </form>
                     </div>
+                    <div className="text-center">
+                        <h2 className="text-3xl py-4 px-4 font-bold tracking-tight text-gray-900">Recent Comments</h2>
+                    </div>
+                    <div className="max-w-md">
+                    {commentComponents}
+                    </div>
+                </div>
+                <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 col-span-2">
+                    
+                    
                 </div>
             </div>
         </div>

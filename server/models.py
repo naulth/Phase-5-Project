@@ -53,6 +53,7 @@ class Game(db.Model, SerializerMixin):
     genre = db.Column(db.String, nullable = False)
     platform = db.Column(db.String, nullable = False)
     price = db.Column(db.Float, nullable = False)
+    favorite = db.Column(db.Boolean, nullable = False, default = False)
 
     comments = db.relationship('Comment', backref = 'game')
 

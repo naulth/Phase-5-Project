@@ -12,6 +12,7 @@ import GamePage from "./Components/GamePage"
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
+import EditUserForm from "./Components/EditUserForm"
 library.add(faEye,faEyeSlash)
 
 function App() {
@@ -26,7 +27,9 @@ function App() {
         });
     }, []);
 
-    
+    function handleUpdate(user) {
+        setUser(user)
+    }
 
     function handleLogin(user) {
         setUser(user);
@@ -52,13 +55,14 @@ function App() {
     },[])
 
     return (
-        <div>
+        <div className="h-max bg-slate-500">
             <Nav user={user} handleLogout={handleLogout}/>
             <Routes>
                 <Route path="/" element={<Home user={user}/>} />
                 <Route path='games' element={<Games gamesArray={gamesArray} user={user}/>}/>
-                <Route path='games/:gameId' element={<GamePage user={user}/>} />
-                <Route path='profile' element={<Profile user={user} /> } />
+                <Route path='games/:gameId' element={<GamePage handleUpdate={handleUpdate} user={user}/>} />
+                <Route path='profile' element={<Profile user={user} setUser={setUser} handleLogout={handleLogout} handleUpdate={handleUpdate}/> } />
+                <Route path='edit' element={<EditUserForm user={user} setUser={setUser} handleUpdate={handleUpdate}/>} />
                 <Route path="signup" element={<Signup />} />
                 <Route path="login" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
             </Routes>

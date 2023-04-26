@@ -11,7 +11,7 @@ function Games({gamesArray}){
 
     return(
         <div className = "py-24 max-w-8xl mx-auto ">
-            <div className = " justify-items-center grid max-w-8xl grid-cols-4 gap-x-2 gap-y-4 " >
+            <div className = " justify-items-center grid max-w-8xl grid-cols-5 gap-x-1 gap-y-6 " >
             {gameComponents}
 
             </div>

@@ -5,9 +5,9 @@ import '../index.css';
 function Nav({user, handleLogout}){
     return(
         <header className="bg-sky-950">
-            <nav className="mx-auto flex mx-w-7xl items-center justify-between gap-x-6 p-6 lg:px-8" aria-label="Global">
+            <nav className="mx-auto flex mx-w-7xl items-center justify-between h-24 gap-x-6 p-6 lg:px-8" aria-label="Global">
 				<div className="flex lg:flex-1">
-                    <Link className="text-lg font-semibold leading-6 text-white" to="/">LoggedOn</Link>
+                    <Link className="text-lg font-semibold leading-6 text-lime-200" to="/">LoggedOn</Link>
 					{/* <Link>
 						<span className="sr-only">Project Name</span>
 						<img src=logo />
@@ -21,7 +21,7 @@ function Nav({user, handleLogout}){
 					<NavLink></NavLink> */}
 				</div>
 				<div className="flex flex-1 items-center justify-end gap-x-6">
-                {user ? <p className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white">Welcome, {user && user.username}</p> : null}
+                {user ? <p className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-lime-200">Welcome, {user && user.username}</p> : null}
 				{user ? (
                     <div className="flex justify-between gap-x-6">
                         <Link className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white" to="/login" onClick={handleLogout}>Logout</Link>
