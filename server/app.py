@@ -17,10 +17,10 @@ class SignUp(Resource):
         username = request.json['username']
         first_name = request.json['first_name']
         last_name = request.json['last_name']
-        birth_date = request.json['birth_date']
-        image = request.json['image']
+        birth_date = request.json['birthDate']
+        image = request.json['profileImage']
         password = request.json['password']
-        confirm_password = request.json['confirm_password']
+        confirm_password = request.json['confirm']
 
         user_exists = User.query.filter(User.username == username).first() is not None
 
@@ -174,15 +174,52 @@ class Comments(Resource):
         db.session.commit()
         return {'message': '201, a new comment has been added.'}, 201
     
-class CommentsByGameId(Resource):
-    def get(self, id):
-        if id not in [g.id for g in Game.query.all()]:
-            return {'error': '404, Game not Found!'}, 404
+class CommentsById(Resource):
 
-        return make_response((Game.query.filter(Game.id==id).first().comments).to_dict(), 200)
+    def patch(self, id):
+        if id not in [c.id for c in Comment.query.all()]:
+            return {'error': '404, User not Found!'}, 404
 
+        data = request.get_json()
+        comment = Comment.query.filter(Comment.id==id).first()
+        for key in data.keys():
+            setattr(comment, key , data[key])
+        db.session.add(comment)
+        db.session.commit()
+        return make_response(comment.to_dict(), 200)
+
+    def delete(self, id):
+        if id not in [c.id for c in Comment.query.all()]:
+            return {'error': '404, Comment not Found!'}, 404
+
+        try:
+            comment = Comment.query.filter(Comment.id==id).first()
+            db.session.delete(comment)
+            db.session.commit()
+        except:
+            db.session.rollback()
+
+        return make_response({'message': 'The comment has been deleted'}, 200)
+
+
+# class CommentsByUserId(Resource):
+#     def get(self, id):
+#         if id not in [u.id for u in User.query.all()]:
+#             return {'error': '404, User not Found!'}, 404
+
+#         return make_response((User.query.filter(User.id==id).first()).comments.to_dict(), 200)
+        
+class Users(Resource):
+    def get(self):
+        return make_response([u.to_dict() for u in User.query.all()], 200)
 
 class UserByID(Resource):
+    def get(self, id):
+        if id not in [u.id for u in User.query.all()]:
+            return {'error': '404, User not Found!'}, 404
+
+        return make_response((User.query.filter(User.id==id).first()).to_dict(), 200)
+
     def patch(self, id):
         if id not in [u.id for u in User.query.all()]:
             return {'error': '404, User not Found!'}, 404
@@ -217,8 +254,9 @@ api.add_resource(CheckSession, '/check_session', endpoint='check_session')
 api.add_resource(Games, '/games')
 api.add_resource(GameByID, '/games/<int:id>')
 api.add_resource(Comments, '/comments')
-api.add_resource(CommentsByGameId, '/commets/<int:id>')
+api.add_resource(CommentsById, '/comments/<int:id>')
 api.add_resource(UserByID, '/users/<int:id>')
+api.add_resource(Users, '/users')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)

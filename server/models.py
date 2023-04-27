@@ -5,7 +5,7 @@ from config import db, bcrypt
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-comments.user',)
+    serialize_rules = ('-comments.user', '-following.user',)
 
     id = db.Column( db.Integer, primary_key = True )
 
@@ -41,6 +41,8 @@ class User (db.Model, SerializerMixin):
         return sum(bytearray(input, encoding='utf-8'))
     
 
+    # following = db.relationship('Following', backref='user')
+
 class Game(db.Model, SerializerMixin):
     __tablename__ = 'games'
 
@@ -73,3 +75,14 @@ class Comment(db.Model, SerializerMixin):
 
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+# class Following(db.Model, SerializerMixin):
+#     __tablename__ = "followers"
+
+#     serialize_rules = ('-user.followers',)
+
+#     id = db.Column(db.Integer, primary_key = True)
+
+#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+#     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'))

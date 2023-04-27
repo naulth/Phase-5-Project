@@ -1,120 +1,184 @@
 import React, {useState} from "react"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {useFormik} from "formik"
+import * as yup from "yup"
+import {useNavigate} from 'react-router-dom'
 
 function Signup(){
 
-    const [username, setUsername] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [birthDate, setBirthDate] = useState('')
-    const [profileImage, setProfileImage] = useState('')
-    const [password, setPassword] = useState('')
-    const [confirm, setConfirm] = useState('')
+    // const [username, setUsername] = useState('')
+    // const [firstName, setFirstName] = useState('')
+    // const [lastName, setLastName] = useState('')
+    // const [birthDate, setBirthDate] = useState('')
+    // const [profileImage, setProfileImage] = useState('')
+    // const [password, setPassword] = useState('')
+    // const [confirm, setConfirm] = useState('')
     const [showPassword, setShowPassword] = useState(false)
 
     const handleShow = () => {
         setShowPassword(!showPassword)
     }
 
-    const createNewUser = (e) => {
-        e.preventDefault()
+    // const createNewUser = (e) => {
+    //     e.preventDefault()
 
-        const newUser = {
-            username: username, 
-            password: password, 
-            confirm_password: confirm,
-            first_name: firstName,
-            last_name: lastName,
-            birth_date: birthDate,
-            image: profileImage
-        }
-        console.log(newUser)
+    const formSchema = yup.object().shape({
+        username: yup
+        .string()
+        .min(5, 'Username must include at least 5 characters.')
+        .required('Required'),
+        password: yup
+        .string()
+        .required('Required')
+        .min(8, 'Password must include at least 8 characters.')
+        .matches(/[0-9]/, 'Password requires a number.')
+        .matches(/[a-z]/, 'Password requires a lowercase letter.')
+        .matches(/[A-Z]/, 'Password requires an uppercase letter.')
+        .matches(/[^\w]/, 'Password requires a symbol.'),
+        confirm: yup
+        .string()
+        .required('Required')
+        .oneOf([yup.ref('password'), null], 'Must match "Password" value'),
+        first_name: yup
+        .string()
+        .required('Required'),
+        last_name: yup
+        .string()
+        .required('Required'),
+        birthDate: yup
+        .date()
+        .max(new Date(Date.now() - 567648000000), "You must be at least 18 years old to sign up.")
+        .required('Required'),
+        profileImage: yup
+        .string()
+        .required('Required'),
+    })
 
-        fetch('/signup', {
-            method: "POST",
-            headers: {'Content-Type' : 'application/json'},
-            body: JSON.stringify(newUser)
-        })
+    const navigate = useNavigate()
 
-        setUsername('')
-        setFirstName('')
-        setLastName('')
-        setPassword('')
-        setConfirm('')
-        setBirthDate('')
-        setProfileImage('')
-    }
+    const formik = useFormik({
+        initialValues: {
+        username: "",
+        password: "",
+        confirm: "",
+        first_name: "",
+        last_name: "",
+        birthDate: "",
+        profileImage: ""
+        },
+        validationSchema: formSchema,
+        onSubmit: (values) => {
+            fetch("/signup", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values, null, 2),
+            })
+            navigate('/')
+        },
+    });
+
+        // .then((r) => {
+        //     if (r.ok) {
+        //         r.json().then((user) => setUser(user));
+        //     }
+        // });
+
+        // const newUser = {
+        //     username: username, 
+        //     password: password, 
+        //     confirm_password: confirm,
+        //     first_name: firstName,
+        //     last_name: lastName,
+        //     birth_date: birthDate,
+        //     image: profileImage
+        // }
+
+        // fetch('/signup', {
+        //     method: "POST",
+        //     headers: {'Content-Type' : 'application/json'},
+        //     body: JSON.stringify(newUser)
+        // })
+
+    //     setUsername('')
+    //     setFirstName('')
+    //     setLastName('')
+    //     setPassword('')
+    //     setConfirm('')
+    //     setBirthDate('')
+    //     setProfileImage('')
+    // }
 
     return(
-        <div className="flex min-h-full flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+        <div className="bg-zinc-800 h-screen">
+        <div >
+        <div className="flex flex-col justify-center px-6 py-12 lg:px-8">
+            <div className="">
                 {/* <img className="mx-auto h-10 w-auto" src="" alt="Logo"/>*/}
-                <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-sky-950">Create a new account</h2>
+                <h2 className="my-10 text-center text-4xl font-bold leading-9 tracking-tight text-lime-200">Create Your New Account</h2>
             </div>
-            <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                <form className="space-y-6" onSubmit={createNewUser}>
-                    <div className="">
-                        <label className="block text-sm font-medium leading-6 text-gray-900">Username</label>
+            <div>
+            <div className="mt-10 max-w-3xl mx-auto">
+                <form className="space-y-6" onSubmit={formik.handleSubmit}>
+                    <div className="grid grid-cols-4 gap-4">
+                    <div className="col-span-2">
+                        <label className="block text-sm font-medium leading-6 text-lime-100">Username</label>
                         <div className="mt-2">
                             <input
                                 type="text"
                                 name="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                value={formik.values.username}
+                                onChange={formik.handleChange}
+                                className="block w-full rounded-md bg-lime-100 border-0 px-4 py-1.5 text-zinc-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.username}</p>
                         </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium leading-6 text-gray-900">First Name</label>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                name="firstName"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium leading-6 text-gray-900">Last Name</label>
-                        <div className="mt-2">
-                            <input
-                                type="text"
-                                name="lastName"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-                            />
-                        </div>
-                    </div>
-                    <div>
-                        <label className="block text-sm font-medium leading-6 text-gray-900">Date of Birth</label>
+                    <div className="col-span-2">
+                        <label className="block text-sm font-medium leading-6 text-lime-100">Date of Birth</label>
                         <div className="mt-2">
                             <input
                                 type="date"
                                 name="birthDate"
-                                value={birthDate}
-                                onChange={(e) => setBirthDate(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                value={formik.values.birthDate}
+                                onChange={formik.handleChange}
+                                className="block w-full rounded-md border-0 bg-lime-100 px-4 py-1.5 text-zinc-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.birthDate}</p>
                         </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium leading-6 text-gray-900">Profile Image URL</label>
+                    <div className="col-span-2">
+                        <label className="block text-sm font-medium leading-6 text-lime-100">First Name</label>
                         <div className="mt-2">
                             <input
                                 type="text"
-                                name="profileImage"
-                                value={profileImage}
-                                onChange={(e) => setProfileImage(e.target.value)}
-                                className="block w-full rounded-md border-0 px-4 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                name="first_name"
+                                value={formik.values.first_name}
+                                onChange={formik.handleChange}
+                                className="block w-full rounded-md border-0 bg-lime-100 px-4 py-1.5 text-zinc-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.first_name}</p>
                         </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium leading-6 text-gray-900">Password</label>
+                    <div className="col-span-2">
+                        <label className="block text-sm font-medium leading-6 text-lime-100">Last Name</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="last_name"
+                                value={formik.values.last_name}
+                                onChange={formik.handleChange}
+                                className="block w-full rounded-md border-0 bg-lime-100 px-4 py-1.5 text-zinc-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                            <p className="formikReqs"> {formik.errors.last_name}</p>
+                        </div>
+                    </div>
+                    
+                    
+                    
+                    <div className="col-span-2">
+                        <label className="block text-sm font-medium leading-6 text-lime-100">Password</label>
                         <div className="z-0 relative w-full">
                             <div className="absolute inset-y-4 right-0 flex items-center px-2">
                                 <input className="hidden js-password-toggle" id="toggle" type="checkbox" />
@@ -123,34 +187,55 @@ function Signup(){
                                     }
                                 </span>
                             </div>
+                            <div className="mt-2">
                             <input
                                 type={showPassword ? "text" : "password"}
                                 name="password"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                                className="block w-full rounded-md border-0 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                value={formik.values.password}
+                                onChange={formik.handleChange}
+                                className="block w-full rounded-md bg-lime-100 border-0 py-1.5 px-4 text-zinc-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.password}</p>
+                            </div>
                         </div>
                     </div>
-                    <div>
-                        <label className="block text-sm font-medium leading-6 text-gray-900">Confirm Password</label>
+                    <div className="col-span-2">
+                        <label className="block text-sm font-medium leading-6 text-lime-100">Confirm Password</label>
                         <div className="mt-2">
                             <input
                                 type="password"
                                 name="confirm"
-                                value={confirm}
-                                onChange={(e) => setConfirm(e.target.value)}
-                                className="block w-full rounded-md border-0 py-1.5 px-4 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                                value={formik.values.confirm}
+                                onChange={formik.handleChange}
+                                className="block w-full rounded-md border-0 bg-lime-100 py-1.5 px-4 text-zinc-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.confirm}</p>
+                        </div>
+                    </div>
+                    <div className="col-span-2">
+                        <label className="block text-sm font-medium leading-6 text-lime-100">Profile Image URL</label>
+                        <div className="mt-2">
+                            <input
+                                type="text"
+                                name="profileImage"
+                                value={formik.values.profileImage}
+                                onChange={formik.handleChange}
+                                className="block w-full rounded-md border-0 bg-lime-100 px-4 py-1.5 text-zinc-950 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+                            />
+                            <p className="formikReqs"> {formik.errors.profileImage}</p>
                         </div>
                     </div>
                     <input
                         type="submit"
                         name="submit"
-                        className="flex w-full justify-center rounded-md bg-sky-950 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-emerald-200 hover:text-sky-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200"
+                        className="w-full col-span-2 h-9 justify-center rounded-md bg-lime-300 mt-8 px-3 py-1.5 text-lg font-semibold leading-6 text-zinc-950 shadow-sm hover:bg-lime-100 hover:text-zinc-950"
                     />
+                    </div>
                 </form>
             </div>
+            </div>
+        </div>
+        </div>
         </div>
     )
 }

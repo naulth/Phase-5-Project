@@ -4,17 +4,17 @@ import '../index.css';
 
 function Nav({user, handleLogout}){
     return(
-        <header className="bg-sky-950">
+        <header className="bg-zinc-900 border border-lime-200 sticky top-0">
             <nav className="mx-auto flex mx-w-7xl items-center justify-between h-24 gap-x-6 p-6 lg:px-8" aria-label="Global">
 				<div className="flex lg:flex-1">
-                    <Link className="text-lg font-semibold leading-6 text-lime-200" to="/">LoggedOn</Link>
+                    {user ? <Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/profile">LoggedOn</Link> :<Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/">LoggedOn</Link> }
 					{/* <Link>
 						<span className="sr-only">Project Name</span>
 						<img src=logo />
 					</Link> */}
 				</div>
 				<div className="hidden lg:flex lg:gap-x-12">
-                    <NavLink className="text-lg font-semibold leading-6 text-white" to="/" end>Home</NavLink>
+                    {user ? <NavLink className="text-lg font-semibold leading-6 text-white" to="/users" end>Users</NavLink> : null}
                     {user ? <NavLink className="text-lg font-semibold leading-6 text-white" to="/profile">Profile</NavLink> : null}
 					<NavLink className="text-lg font-semibold leading-6 text-white" to="/games" >Games</NavLink>
 					{/*<NavLink></NavLink>
@@ -24,12 +24,12 @@ function Nav({user, handleLogout}){
                 {user ? <p className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-lime-200">Welcome, {user && user.username}</p> : null}
 				{user ? (
                     <div className="flex justify-between gap-x-6">
-                        <Link className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white" to="/login" onClick={handleLogout}>Logout</Link>
+                        <Link className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-white" to="/" onClick={handleLogout}>Logout</Link>
                     </div>
-                ) : (
-                    <Link className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white" to="/login">Login</Link>
-                )}
-                {user ? null : <Link to="/signup" className="rounded-md bg-emerald-200 px-3 py-2 text-md font-semibold text-sky-950 shadow-sm hover:bg-emerald-300 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200">Sign up</Link> }
+                ) : null }
+                    {/* <Link className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white" to="/login">Login</Link>
+                )} */}
+                {user ? null : <Link to="/signup" className="rounded-md bg-lime-300 px-3 py-2 text-md font-semibold text-zinc-950 shadow-sm hover:bg-lime-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200">Sign up</Link> }
 					
 
 				</div>

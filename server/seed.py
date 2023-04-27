@@ -7,7 +7,7 @@ from datetime import date
 
 # Local imports
 from app import app
-from models import db, Game, Comment
+from models import db, Game, Comment,User
 
 
 if __name__ == '__main__':
@@ -42,7 +42,13 @@ if __name__ == '__main__':
 
         g12 = Game(title = "Sly 2: Band of Thieves", image = "https://m.media-amazon.com/images/I/51EdyufYBzL.jpg", genre = "Platformer", platform ="PS2", price = 15.99, favorite = False)
 
-        games = [g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12]
+        g13 = Game(title = "Ratchet and Clank", image = "https://upload.wikimedia.org/wikipedia/en/b/b6/RaCbox.jpg", genre = "Platformer Shooter", platform ="PS2", price = 14.99, favorite = False)
+
+        g14 = Game(title = "Jak II", image = "https://upload.wikimedia.org/wikipedia/en/b/b3/JakIIbox.jpg", genre = "Platformer Shooter", platform ="PS2", price = 20.99, favorite = False)
+
+        g15 = Game(title = "Sly 3: Honor Among Thieves", image = "https://upload.wikimedia.org/wikipedia/en/c/c4/Sly_3.jpg", genre = "Platformer", platform ="PS2", price = 24.99, favorite = False)
+
+        games = [g1, g2, g3, g4, g5, g6, g7, g8, g9, g10, g11, g12, g13, g14, g15]
 
 
         # c1 = Comment(score = "5", content = "Great game", game_id = "1", user_id = "1")
