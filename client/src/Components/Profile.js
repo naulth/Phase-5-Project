@@ -3,10 +3,37 @@ import UserCommentCard from './UserCommentCard'
 import {useNavigate, Link} from "react-router-dom"
 import EditUserForm from "./EditUserForm"
 import FavoriteCard from './FavoriteCard'
+import EmptyComment from './EmptyComment'
+import EmptyFavorite from './EmptyFavorite'
 
-function Profile({user, setUser, handleUpdate, commentsArray, handleDeleteComment, editComment, handleLogout, favoritesArray}){
+function Profile({user, setUser, handleUpdate, commentsArray, setCommentsArray, handleDeleteComment, editComment, handleLogout, favoritesArray}){
 
     const navigate = useNavigate()
+
+    // useEffect(() => {
+    //     fetch("/check_session").then((response) => {
+    //         if (response.ok) {
+    //             response.json().then((user) => setUser(user));
+    //         } else {
+    //             console.log(response.status)
+    //             response.text().then(console.warn)
+    //         }
+    //     });
+    // }, []);
+
+    useEffect(() => {
+        Promise.all([
+            fetch('/check_session'),
+            fetch('/comments'),
+        ])
+        .then(([resSession, resComments]) =>
+            Promise.all([resSession.json(), resComments.json()])
+        )
+        .then(([dataSession, dataComments]) => {
+            setUser(dataSession)
+            setCommentsArray(dataComments)
+        })
+    }, [])
 
     const handleDelete = (e) => {
         fetch(`/users/${user.id}`,{
@@ -26,20 +53,25 @@ function Profile({user, setUser, handleUpdate, commentsArray, handleDeleteCommen
 
     const formattedDate = formatDate(user?.birth_date)
 
+    let userComments = null
+    if(commentsArray?.length > 0) {
+        const userCommentArray = commentsArray.filter(comment => comment?.user_id == user?.id)
 
-    const userCommentArray = commentsArray?.filter(comment => comment?.user_id == user?.id)
- 
-    const byCreate = (commentA, commentB) => {
-        return commentB.created_at - commentA.created_at
+        const byCreate = (commentA, commentB) => {
+            return commentB.created_at - commentA.created_at
+        }
+
+        const sortedComponents = [...userCommentArray].sort(byCreate).reverse()
+
+        userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
     }
 
-    const sortedComponents = [...userCommentArray].sort(byCreate).reverse()
+    let userFavorites = null
+    if(favoritesArray?.length > 0) {
+        const userFavoriteArray  = favoritesArray?.filter(favorite => favorite?.user_id == user?.id)
 
-    const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
-
-    const userFavoriteArray  = favoritesArray?.filter(favorite => favorite.user_id == user?.id)
-
-    const userFavorites = userFavoriteArray.map(favorite => <FavoriteCard title={favorite?.game_title} image={favorite?.game_image}/>)
+        userFavorites = userFavoriteArray?.map(favorite => <FavoriteCard title={favorite?.game_title} image={favorite?.game_image}/>)
+    }
 
     return(
         <div className="bg-zinc-800 min-h-screen h-full">
@@ -78,11 +110,6 @@ function Profile({user, setUser, handleUpdate, commentsArray, handleDeleteCommen
                     </div>
                 </div>
             </div>
-            
-
-            {/* <div className="">
-                <h1> Favorite Games </h1>
-            </div> */}
 		</div>
         </div>
 	)

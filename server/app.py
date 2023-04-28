@@ -5,10 +5,20 @@ from flask import Flask, make_response, jsonify, request, session, flash
 
 from models import User, Game, Comment, Favorite
 
-
 class HomePage(Resource):
     def get(self):
         return {'message': '200: Welcome to our Home Page'}, 200
+
+
+@app.before_request
+def check_if_logged_in():
+    logged_in = session.get('user_id')
+    signing_up = 'signup' in request.path and 'POST' in request.method
+    logging_in = 'login' in request.path and 'POST' in request.method
+    grabbing_games = 'games' in request.path
+    
+    if not logged_in and not signing_up and not logging_in and not grabbing_games:
+        return make_response ( {'message': 'please log in'}, 401 )
 
 class SignUp(Resource):
 
@@ -46,13 +56,9 @@ class SignUp(Resource):
 class Login(Resource):
 
     # def post(self):
-
     #     username = request.get_json()['username']
     #     password = request.get_json()['password']
-        
-
     #     user = User.query.filter(User.username == username).first()
-
     #     if user.authenticate(password) == True:
     #         session['user_id'] = user.id
     #         return user.to_dict()
@@ -63,7 +69,7 @@ class Login(Resource):
 
         username = request.get_json()['username']
         password = request.get_json()['password']
-        user = User.query.filter(User.username == username).first()
+        user = User.query.filter_by(username = username).first()
         
         if user.authenticate(password) == True:
             session['user_id'] = user.id
@@ -112,13 +118,8 @@ class Logout(Resource):
 class CheckSession(Resource):
 
     def get(self):
-
         user = User.query.filter(User.id == session.get('user_id')).first()
-
-        if user:
-            return user.to_dict(), 200
-        else:
-            return {'message', '401: Not Authorized'}, 401
+        return user.to_dict(), 200
     
 class Games(Resource):
     def get(self):
@@ -161,14 +162,16 @@ class Comments(Resource):
         return make_response([c.to_dict() for c in Comment.query.all()], 200)
     
     def post(self):
+        
         data = request.get_json()
+
         new_comment = Comment(
-            score=data['score'],
-            content=data['content'],
             game_id=data['game_id'],
             user_id=data['user_id'],
-            user_username=data['user_username'],
-            game_name=data['game_name']
+            score=data['score'],
+            content=data['content'],
+            game_name=data['game_name'],
+            user_username=data['user_username']
         )
         db.session.add(new_comment)
         db.session.commit()

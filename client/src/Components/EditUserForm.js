@@ -1,14 +1,15 @@
 import React, {useState} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {Link, useNavigate} from 'react-router-dom'
+import {useFormik} from "formik"
+import * as yup from "yup"
 
 function EditUserForm({handleUpdate, user, setUser}){
 
-    const [username, setUsername] = useState('')
-    const [firstName, setFirstName] = useState('')
-    const [lastName, setLastName] = useState('')
-    const [birthDate, setBirthDate] = useState('')
-    const [profileImage, setProfileImage] = useState('')
+    // const [username, setUsername] = useState('')
+    // const [firstName, setFirstName] = useState('')
+    // const [lastName, setLastName] = useState('')
+    // const [profileImage, setProfileImage] = useState('')
     // const [password, setPassword] = useState('')
     // const [confirm, setConfirm] = useState('')
     // const [showPassword, setShowPassword] = useState(false)
@@ -20,41 +21,84 @@ function EditUserForm({handleUpdate, user, setUser}){
 
     const id = user?.id
 
+    const formSchema = yup.object().shape({
+        username: yup
+        .string()
+        .min(5, 'Must include 5 characters.')
+        .required('Required'),
+        first_name: yup
+        .string()
+        .required('Required'),
+        last_name: yup
+        .string()
+        .required('Required'),
+        profileImage: yup
+        .string()
+        .required('Required'),
+    })
 
-    const handleEdit = (e) => {
-        e.preventDefault()
-        fetch(`/users/${id}` , {
-            headers: {
-                Accept: "application/json",
-                "Content-Type": "application/json",
-            },
-            method: "PATCH",
-            body: JSON.stringify({
-                first_name: firstName,
-                last_name: lastName,
-                username: username,
-                image: profileImage,
-                // _password_hash: password,
-                // confirm_password: confirm
-            }),
-        }).then((r) => {
-            if (r.ok) {
-              r.json().then((user) => {
-                setUser(user)
-            });
-            }
-        })
-        setUsername('')
-        setFirstName('')
-        setLastName('')
-        // setPassword('')
-        // setConfirm('')
-        setProfileImage('')
+    const formik = useFormik({
+        initialValues: {
+        username: "",
+        first_name: "",
+        last_name: "",
+        profileImage: ""
+        },
+        validationSchema: formSchema,
+        onSubmit: (values) => {
+            fetch(`/users/${id}`, {
+                method: "PATCH",
+                headers: {
+                    Accept: "application/json",
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(values, null, 2),
+            }).then((r) => {
+                if (r.ok) {
+                  r.json().then((user) => {
+                    setUser(user)
+                });
+                }
+            })
+            toggleEdit()
+        },
+        
+    });
 
-        handleUpdate();
-        toggleEdit()
+    // const handleEdit = (e) => {
+    //     e.preventDefault()
+    //     fetch(`/users/${id}` , {
+    //         headers: {
+    //             Accept: "application/json",
+    //             "Content-Type": "application/json",
+    //         },
+    //         method: "PATCH",
+    //         body: JSON.stringify({
+    //             first_name: firstName,
+    //             last_name: lastName,
+    //             username: username,
+    //             image: profileImage,
+    //             // _password_hash: password,
+    //             // confirm_password: confirm
+    //         }),
+    //     }).then((r) => {
+    //         if (r.ok) {
+    //           r.json().then((user) => {
+    //             setUser(user)
+    //         });
+    //         }
+    //     })
+    //     setUsername('')
+    //     setFirstName('')
+    //     setLastName('')
+    //     // setPassword('')
+    //     // setConfirm('')
+    //     setProfileImage('')
 
-    }
+    //     handleUpdate();
+        
+
+    // }
 
     const [showEdit, setShowEdit] = useState(false)
 
@@ -70,7 +114,7 @@ function EditUserForm({handleUpdate, user, setUser}){
         <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
         <div className="max-w-2xl py-20 mx-auto rounded-2xl shadow-lg p-8 my-16 bg-zinc-900 border border-lime-100">
                 <h2 className="text-3xl pt-4 font-bold tracking-tight text-lime-200">Edit Your Information</h2>
-                <form className="space-y-6" onSubmit={handleEdit}>
+                <form className="space-y-6" onSubmit={formik.handleSubmit}>
                 <div className="mt-10 grid grid-cols-4 gap-x-6 gap-y-10">
                     <div className="col-span-2">
                         <label className="block text-sm font-medium leading-6 text-lime-100">Username</label>
@@ -78,10 +122,11 @@ function EditUserForm({handleUpdate, user, setUser}){
                             <input
                                 type="text"
                                 name="username"
-                                value={username}
-                                onChange={(e) => setUsername(e.target.value)}
+                                value={formik.values.username}
+                                onChange={formik.handleChange}
                                 className="block w-full rounded-md bg-lime-100 border-0 px-4 py-1.5 text-zinc-950 shadow-sm ring-1 ring-inset ring-lime-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-300 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.username}</p>
                         </div>
                     </div>
                     <div className="col-span-2">
@@ -89,11 +134,12 @@ function EditUserForm({handleUpdate, user, setUser}){
                         <div className="mt-2">
                             <input
                                 type="text"
-                                name="firstName"
-                                value={firstName}
-                                onChange={(e) => setFirstName(e.target.value)}
+                                name="first_name"
+                                value={formik.values.first_name}
+                                onChange={formik.handleChange}
                                 className="block w-full rounded-md border-0 bg-lime-100 px-4 py-1.5 text-zinc-950 shadow-sm ring-1 ring-inset ring-lime-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-300 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.first_name}</p>
                         </div>
                     </div>
                     
@@ -102,11 +148,12 @@ function EditUserForm({handleUpdate, user, setUser}){
                         <div className="mt-2">
                             <input
                                 type="text"
-                                name="lastName"
-                                value={lastName}
-                                onChange={(e) => setLastName(e.target.value)}
+                                name="last_name"
+                                value={formik.values.last_name}
+                                onChange={formik.handleChange}
                                 className="block w-full rounded-md border-0 px-4 py-1.5 text-zinc-950 bg-lime-100 shadow-sm ring-1 ring-inset ring-lime-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-300 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.last_name}</p>
                         </div>
                     </div>
                     <div className="col-span-2">
@@ -115,10 +162,11 @@ function EditUserForm({handleUpdate, user, setUser}){
                             <input
                                 type="text"
                                 name="profileImage"
-                                value={profileImage}
-                                onChange={(e) => setProfileImage(e.target.value)}
+                                value={formik.values.profileImage}
+                                onChange={formik.handleChange}
                                 className="block w-full rounded-md border-0 px-4 py-1.5 text-zinc-950 bg-lime-100 shadow-sm ring-1 ring-inset ring-lime-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-lime-300 sm:text-sm sm:leading-6"
                             />
+                            <p className="formikReqs"> {formik.errors.profileImage}</p>
                         </div>
                     </div>
                     <button className=" border border-zinc-950 flex w-full justify-center rounded-md bg-lime-300 px-3 py-1.5 text-sm  leading-6 text-zinc-950  font-bold shadow-sm hover:bg-lime-200 hover:text-zinc-950 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-200" type="submit">Submit</button><button className=" border border-lime-300 flex w-full justify-center rounded-md bg-zinc-800 px-3 py-1.5 text-sm leading-6 text-lime-100  font-bold shadow-sm hover:bg-zinc-800 hover:text-lime-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-lime-200" onClick={toggleEdit}>Close Form</button>
