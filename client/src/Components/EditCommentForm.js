@@ -1,9 +1,12 @@
 import React, {useState} from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
+import {useNavigate} from 'react-router-dom'
 
 
 function EditCommentForm({theId, editComment, user}){
+
+    const navigate = useNavigate()
 
     const [showEditComment, setShowEditComment] = useState(false)
 

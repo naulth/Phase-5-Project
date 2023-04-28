@@ -97,11 +97,21 @@ function App() {
         const changedComment = {
             id: values.id,
             score: values.score,
-            content: values.content,
+            content: values.content
         }
 
-        const updatedComments = [...commentsArray].map(comment => comment.id === changedComment.id ? changedComment : comment)
+        const updatedComments = [...commentsArray].map(comment => {
+            if(comment.id === changedComment.id) {
+                return changedComment
+            } else {
+                return comment
+            }
+        })
+        console.log(updatedComments)
         setCommentsArray(updatedComments)
+
+        // const updatedComments = [...commentsArray].map(comment => comment.id === changedComment.id ? changedComment : comment)
+        // setCommentsArray(updatedComments)
     }
 
     const [favoritesArray, setFavoritesArray] = useState([])

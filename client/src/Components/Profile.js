@@ -53,7 +53,7 @@ function Profile({user, setUser, handleUpdate, commentsArray, setCommentsArray, 
 
     const formattedDate = formatDate(user?.birth_date)
 
-    let userComments = null
+    let userComments = []
     if(commentsArray?.length > 0) {
         const userCommentArray = commentsArray.filter(comment => comment?.user_id == user?.id)
 
