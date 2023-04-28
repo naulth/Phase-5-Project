@@ -2,8 +2,9 @@ import React, {useState, useEffect} from 'react'
 import UserCommentCard from './UserCommentCard'
 import {useNavigate, Link} from "react-router-dom"
 import EditUserForm from "./EditUserForm"
+import FavoriteCard from './FavoriteCard'
 
-function Profile({user, setUser, handleUpdate, commentsArray, handleDeleteComment, editComment, handleLogout}){
+function Profile({user, setUser, handleUpdate, commentsArray, handleDeleteComment, editComment, handleLogout, favoritesArray}){
 
     const navigate = useNavigate()
 
@@ -36,16 +37,14 @@ function Profile({user, setUser, handleUpdate, commentsArray, handleDeleteCommen
 
     const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
 
-   // const editCommentToUser = (changedComment) => {
-    //     const changedUserComments = [...userCommentsArray]
-    //     changedUserComments.map(comment => comment.id === changedComment.id ? changedComment : comment)
-    //     setUserCommentsArray(changedUserComments)
-    // }
+    const userFavoriteArray  = favoritesArray?.filter(favorite => favorite.user_id == user?.id)
+
+    const userFavorites = userFavoriteArray.map(favorite => <FavoriteCard title={favorite?.game_title} image={favorite?.game_image}/>)
 
     return(
-        <div className="bg-zinc-800 h-screen">
-		<div className="justify-items-center grid w-full grid-cols-6 gap-x-2 gap-y-4 ">
-            <div className="fixed left-0 w-72 px-8 h-full lg:px-8 border border-lime-200 bg-zinc-900">
+        <div className="bg-zinc-800 min-h-screen h-full">
+		<div className="grid w-full grid-cols-6 gap-x-2 gap-y-4 ">
+            <div className="float-left w-72 px-8 min-h-screen col-span-1  border border-lime-200 bg-zinc-900">
                 <div className="text-center py-10 ">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">{user && user.username}</h1>
                 </div>
@@ -61,16 +60,24 @@ function Profile({user, setUser, handleUpdate, commentsArray, handleDeleteCommen
                     </div>
                 </div>
             </div>
-            <div className="col-span-2"></div>
-            <div className="col-span-2 ml-30 content-center">
-            <div className=" bg-sky-950 rounded-2xl border shadow px-8 w-108 h-fit">
-                <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
-                <div className="">
-                    {userComments}
+            <div className="col-span-5 min-w-screen ml-1">
+                <div className="grid grid-cols-4">
+                    <div className="col-span-1">
+                    <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
+                        <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
+                        <div className="w-full ">
+                            {userComments}
+                        </div>
+                    </div>
+                    </div>
+                    <div className=" bg-zinc-900 col-span-2 text-center border border-lime-100 shadow px-8 h-fit">
+                        <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
+                        <div className="">
+                            {userFavorites}
+                        </div>
+                    </div>
                 </div>
             </div>
-            </div>
-            <div className="col-span-1"></div>
             
 
             {/* <div className="">

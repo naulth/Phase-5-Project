@@ -32,16 +32,17 @@ function Games({gamesArray, commentsArray}){
 
 
     return(
-        <div className="bg-zinc-800 h-full">
-        <div className = "h-full py-24 max-w-8xl mx-auto ">
-            <div>
-                <h1 className=" mb-12 text-center text-6xl font-bold leading-9 tracking-tight text-lime-200">Welcome To The Library</h1>
-            </div>
-            <div className="flex justify-center">
-                <SearchGames changeSearch={changeSearch}/>
+        <div className="bg-zinc-800 h-full min-h-screen">
+        <div className = "h-full max-w-8xl mx-auto">
+            <div className="mx-auto border border-lime-100 bg-zinc-900 w-full p-8">
+                <h1 className="text-center text-6xl font-bold leading-9 tracking-tight text-lime-200">The Library</h1>
+                <div className="flex mt-10 justify-center">
+                    <SearchGames changeSearch={changeSearch}/>
+                </div>
             </div>
             
-            <div className = " justify-items-center grid max-w-8xl grid-cols-5 gap-y-6 " >
+            
+            <div className = " justify-items-center mt-10 grid max-w-8xl grid-cols-5 pb-10 gap-y-6 " >
                 
             {gameComponents}
 

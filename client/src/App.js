@@ -84,14 +84,26 @@ function App() {
         setCommentsArray(updatedComments)
     }
 
+    const [favoritesArray, setFavoritesArray] = useState([])
+
+    useEffect(() => {
+        fetch('/favorites')
+            .then(r => r.json())
+            .then(setFavoritesArray)
+    },[])
+
+    const addFavorite = (newFavorite) => {
+        setFavoritesArray([...favoritesArray, newFavorite])
+    }
+
     return (
         <div className="">
             <Nav user={user} handleLogout={handleLogout}/>
             <Routes>
                 <Route path="/users" element={<Users usersArray={usersArray} user={user}/>} />
                 <Route path='games' element={<Games gamesArray={gamesArray} user={user} commentsArray={commentsArray}/>}/>
-                <Route path='games/:gameId' element={<GamePage addComment={addComment} handleUpdate={handleUpdate} user={user} commentsArray={commentsArray}/>} />
-                <Route path='profile' element={<Profile user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment} commentsArray={commentsArray} handleLogout={handleLogout} handleUpdate={handleUpdate}/> } />
+                <Route path='games/:gameId' element={<GamePage addComment={addComment} addFavorite={addFavorite} handleUpdate={handleUpdate} user={user} commentsArray={commentsArray}/>} />
+                <Route path='profile' element={<Profile user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment} commentsArray={commentsArray} handleLogout={handleLogout} handleUpdate={handleUpdate} favoritesArray={favoritesArray}/> } />
                 {/* <Route path='edit' element={<EditUserForm user={user} setUser={setUser} handleUpdate={handleUpdate}/>} /> */}
                 <Route path="signup" element={<Signup />} />
                 <Route path="/" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />

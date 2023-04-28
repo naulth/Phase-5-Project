@@ -5,7 +5,7 @@ from config import db, bcrypt
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-comments.user', '-following.user',)
+    serialize_rules = ('-comments.user', '-favorites.user',)
 
     id = db.Column( db.Integer, primary_key = True )
 
@@ -18,6 +18,7 @@ class User (db.Model, SerializerMixin):
     confirm_password = db.Column(db.String, nullable = False)
 
     comments = db.relationship('Comment', backref='user', cascade='all, delete')
+    favorites = db.relationship('Favorite', backref='user', cascade='all, delete')
 
 
     @hybrid_property
@@ -46,7 +47,7 @@ class User (db.Model, SerializerMixin):
 class Game(db.Model, SerializerMixin):
     __tablename__ = 'games'
 
-    serialize_rules = ('-comments.game',)
+    serialize_rules = ('-comments.game', '-favorites.game',)
 
     id = db.Column(db.Integer, primary_key = True)
 
@@ -75,6 +76,21 @@ class Comment(db.Model, SerializerMixin):
 
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+
+
+class Favorite(db.Model, SerializerMixin):
+    __tablename__ = 'favorites'
+
+    serialize_rules = ('-game.favorites', '-user.favorites',)
+
+    id = db.Column(db.Integer, primary_key = True)
+
+    game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
+    game_image = db.Column(db.String, nullable = False)
+    game_title = db.Column(db.String, nullable = False)
+
+
 
 
 # class Following(db.Model, SerializerMixin):

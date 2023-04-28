@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask import Flask, make_response, jsonify, request, session, flash
 
-from models import User, Game, Comment
+from models import User, Game, Comment, Favorite
 
 
 class HomePage(Resource):
@@ -244,6 +244,23 @@ class UserByID(Resource):
             db.session.rollback()
 
         return make_response({'message': 'The user and their comments have been deleted'}, 200)
+    
+
+class Favorites(Resource):
+    def get(self):
+        return make_response([f.to_dict() for f in Favorite.query.all()], 200)
+    
+    def post(self):
+        data = request.get_json()
+        new_favorite = Favorite(
+            game_id=data['game_id'],
+            user_id=data['user_id'],
+            game_image=data['game_image'],
+            game_title=data['game_title']
+        )
+        db.session.add(new_favorite)
+        db.session.commit()
+        return {'message': '201, a new favorite has been added.'}, 201
 
 
 api.add_resource(HomePage, '/')
@@ -257,6 +274,7 @@ api.add_resource(Comments, '/comments')
 api.add_resource(CommentsById, '/comments/<int:id>')
 api.add_resource(UserByID, '/users/<int:id>')
 api.add_resource(Users, '/users')
+api.add_resource(Favorites, '/favorites')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)
