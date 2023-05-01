@@ -3,9 +3,11 @@ import {Link, NavLink} from 'react-router-dom'
 import '../index.css';
 import {UserContext} from "../Context/user"
 
+
 function Nav({handleLogout}){
 
     const {user} = useContext(UserContext)
+
 
     return(
         <header className="bg-zinc-900 border border-lime-200 sticky top-0">

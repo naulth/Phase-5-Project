@@ -6,37 +6,16 @@ import FavoriteCard from './FavoriteCard'
 import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
 import {UserContext} from "../Context/user"
+import { FavoritesContext } from '../Context/favorites'
+import { CommentsContext } from '../Context/comments'
 
-function Profile({handleUpdate, commentsArray, setCommentsArray, handleDeleteComment, editComment, handleLogout, favoritesArray, deleteFavorite}){
+function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, handleLogout, deleteFavorite}){
 
     const navigate = useNavigate()
 
     const {user, setUser} = useContext(UserContext)
-
-    // useEffect(() => {
-    //     fetch("/check_session").then((response) => {
-    //         if (response.ok) {
-    //             response.json().then((user) => setUser(user));
-    //         } else {
-    //             console.log(response.status)
-    //             response.text().then(console.warn)
-    //         }
-    //     });
-    // }, []);
-
-    useEffect(() => {
-        Promise.all([
-            fetch('/check_session'),
-            fetch('/comments'),
-        ])
-        .then(([resSession, resComments]) =>
-            Promise.all([resSession.json(), resComments.json()])
-        )
-        .then(([dataSession, dataComments]) => {
-            setUser(dataSession)
-            setCommentsArray(dataComments)
-        })
-    }, [])
+    const {favoritesArray} = useContext(FavoritesContext)
+    const {commentsArray} = useContext(CommentsContext)
 
 
     const handleDelete = (e) => {
@@ -44,7 +23,8 @@ function Profile({handleUpdate, commentsArray, setCommentsArray, handleDeleteCom
         method: 'DELETE'
         })
         handleLogout()
-        navigate('/login')
+        deleteUser(user.id)
+        navigate('/')
     }
 
     const formatDate = (dateString) => {
@@ -57,37 +37,26 @@ function Profile({handleUpdate, commentsArray, setCommentsArray, handleDeleteCom
 
     const formattedDate = formatDate(user?.birth_date)
 
-    // console.log(commentsArray)
-/////////////////////////////////////////////////////////////
 
-    let userComments = []
-    if(commentsArray?.length > 0) {
-        const userCommentArray = [...commentsArray].filter(comment => comment?.user_id == user?.id)
 
-        const byCreate = (commentA, commentB) => {
-            return commentB?.created_at - commentA?.created_at
-    
-        }
-    // console.log(userCommentArray)
+
+
+    const userCommentArray = [...commentsArray].filter(comment => comment?.user_id == user?.id)
+
+    const byCreate = (commentA, commentB) => {
+        return commentB?.created_at - commentA?.created_at
+
+    }
 
     const sortedComponents = [...userCommentArray].sort(byCreate).reverse()
 
-    // console.log(sortedComponents)
-
     const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
-    }
+   
+    const userFavoriteArray = [...favoritesArray].filter(favorite => favorite?.user_id == user?.id)
 
-    ////////////////////////////////////////////////////
+    const userFavorites = userFavoriteArray?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
-    // console.log(userComments)
-
-
-    let userFavorites = null
-    if(favoritesArray?.length > 0) {
-        const userFavoriteArray  = favoritesArray?.filter(favorite => favorite?.user_id == user?.id)
-
-        userFavorites = userFavoriteArray?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
-    }
+    
 
     return(
         <div className="bg-zinc-800 min-h-screen h-full">
@@ -114,14 +83,14 @@ function Profile({handleUpdate, commentsArray, setCommentsArray, handleDeleteCom
                     <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
                         <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
                         <div className="w-full ">
-                            {userComments.length ? userComments : <EmptyComment />}
+                            {userComments?.length ? userComments : <EmptyComment />}
                         </div>
                     </div>
                     </div>
                     <div className=" bg-zinc-900 col-span-2 text-center border border-lime-100 shadow px-8 h-fit">
                         <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
                         <div className="">
-                            {userFavorites}
+                            {userFavorites.length ? userFavorites : <EmptyFavorite />}
                         </div>
                     </div>
                 </div>

@@ -9,8 +9,10 @@ import Profile from "./Components/Profile"
 import GamePage from "./Components/GamePage"
 import Users from "./Components/Users"
 
-import {UserProvider} from "./Context/user"
 import {UserContext} from "./Context/user"
+import {FavoritesContext} from "./Context/favorites"
+import {CommentsContext} from "./Context/comments"
+import { UsersArrayContext } from "./Context/usersArray"
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
@@ -21,20 +23,11 @@ library.add(faEye,faEyeSlash)
 
 function App() {
 
-    // const [user, setUser] = useState(null)
-
-    // useEffect(() => {
-    //     fetch("/check_session").then((response) => {
-    //         if (response.ok) {
-    //             response.json().then((user) => setUser(user));
-    //         } else {
-    //             console.log(response.status)
-    //             response.text().then(console.warn)
-    //         }
-    //     });
-    // }, []);
-
+    const {favoritesArray, setFavoritesArray} = useContext(FavoritesContext)
     const {user, setUser} = useContext(UserContext)
+    const {commentsArray, setCommentsArray} = useContext(CommentsContext)
+    const {usersArray, setUsersArray} = useContext(UsersArrayContext)
+
 
     function handleUpdate(user) {
         setUser(user)
@@ -64,15 +57,6 @@ function App() {
             .then(setGamesArray)
     },[])
 
-    const [commentsArray, setCommentsArray] = useState([])
-
-    useEffect(() => {
-        fetch('/comments')
-            .then(r => r.json())
-            .then(setCommentsArray)
-    },[])
-
-    const [usersArray, setUsersArray] = useState([])
 
     useEffect(() => {
         fetch('/users')
@@ -84,19 +68,8 @@ function App() {
         setCommentsArray(commentsArray.filter(comment => comment.id !== deadCommentId))
     }
 
-    const addComment = (values) => {
 
-        const newCommentObj = {
-        score: values.score,
-        content: values.content,
-        game_name: values.game_name,
-        user_username: values.user_username,
-        user_id: values.user_id,
-        game_id: values.game_id
-        }
-
-        setCommentsArray([...commentsArray, newCommentObj])
-    }
+    const deleteUser = (userId) => setUsersArray(usersArray.filter(user => user.id !== userId))
 
     const editComment = (values) => {
 
@@ -118,42 +91,71 @@ function App() {
             }
         })
         setCommentsArray(updatedComments)
-
-        // const updatedComments = [...commentsArray].map(comment => comment.id === changedComment.id ? changedComment : comment)
-        // setCommentsArray(updatedComments)
     }
 
-    const [favoritesArray, setFavoritesArray] = useState([])
+    useEffect(() => {
+        fetch("/check_session").then((response) => {
+            if (response.ok) {
+                response.json().then((user) => setUser(user));
+            } else {
+                console.log(response.status)
+                response.text().then(console.warn)
+            }
+        });
+    }, []);
+
+    useEffect(() => {
+        fetch('/comments')
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setCommentsArray(r)
+                })
+            } else {
+                console.log('comments fetched not ok')
+            }
+        })
+            
+    },[])
 
     useEffect(() => {
         fetch('/favorites')
-            .then(r => r.json())
-            .then(setFavoritesArray)
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setFavoritesArray(r)
+                })
+            } else {
+                console.log('favorites fetched not ok')
+            }
+        })
     },[])
 
-    const addFavorite = (newFavorite) => {
-        setFavoritesArray([...favoritesArray, newFavorite])
-    }
+    // const addFavorite = (newFavorite) => {
+    //     const favCopy = [...favoritesArray, newFavorite]
+    //     setFavoritesArray(favCopy)
+    //     console.log(favoritesArray)
+    // }
 
     const deleteFavorite = (favoriteId) => {
         setFavoritesArray(favoritesArray.filter(favorite => favorite.id !== favoriteId))
     }
 
     return (
-        <UserProvider>
         <div className="">
             <Nav user={user} handleLogout={handleLogout}/>
             <Routes>
-                <Route path="/users" element={<Users usersArray={usersArray} user={user}/>} />
-                <Route path='games' element={<Games gamesArray={gamesArray} user={user} commentsArray={commentsArray}/>}/>
-                <Route path='games/:gameId' element={<GamePage setUser={setUser} gamesArray={gamesArray} addComment={addComment} addFavorite={addFavorite} handleUpdate={handleUpdate} user={user} commentsArray={commentsArray} setCommentsArray={setCommentsArray}/>} />
-                <Route path='profile' element={<Profile user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment} commentsArray={commentsArray} setCommentsArray={setCommentsArray} handleLogout={handleLogout} handleUpdate={handleUpdate} favoritesArray={favoritesArray} deleteFavorite={deleteFavorite} /> } />
-                {/* <Route path='edit' element={<EditUserForm user={user} setUser={setUser} handleUpdate={handleUpdate}/>} /> */}
+                <Route path="/users" element={<Users />} />
+                <Route path='games' element={<Games gamesArray={gamesArray} user={user} />}/>
+                
+                    <Route path='games/:gameId' element={<GamePage setUser={setUser} gamesArray={gamesArray} handleUpdate={handleUpdate} user={user} />} />
+                    <Route path='profile' element={<Profile deleteUser={deleteUser} user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment}  handleLogout={handleLogout} handleUpdate={handleUpdate} deleteFavorite={deleteFavorite} /> } />
+                
                 <Route path="signup" element={<Signup />} />
                 <Route path="/" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
             </Routes>
         </div>
-        </UserProvider>
+       
     );
 }
 

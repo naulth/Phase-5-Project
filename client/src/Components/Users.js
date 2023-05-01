@@ -1,10 +1,12 @@
 import { useEffect, useContext} from "react"
 import UserCard from "./UserCard"
 import {UserContext} from "../Context/user"
+import { UsersArrayContext } from "../Context/usersArray"
 
-function Users({usersArray}){
+function Users(){
 
     const {user} = useContext(UserContext)
+    const{usersArray} = useContext(UsersArrayContext)
 
     const theUsersId = user?.id
 

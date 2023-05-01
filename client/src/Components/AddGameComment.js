@@ -2,10 +2,13 @@ import React, {useState, useContext} from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
 import {UserContext} from "../Context/user"
+import { CommentsContext } from '../Context/comments'
 
-function AddGameComment({addComment, game}){
+function AddGameComment({game}){
 
     const {user} = useContext(UserContext)
+
+    const {setCommentsArray, commentsArray} = useContext(CommentsContext)
 
 	const formSchema = yup.object().shape({
         score: yup
@@ -35,10 +38,13 @@ function AddGameComment({addComment, game}){
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(values),
+            }).then((response) => {
+                if (response.ok) {
+                    response.json().then((response) => setCommentsArray([...commentsArray, (response)]))
+                }
             })
-			
-			addComment(values)
 			toggleAddComment()
+            console.log(commentsArray)
 
         },
     });

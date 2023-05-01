@@ -16,8 +16,10 @@ def check_if_logged_in():
     signing_up = 'signup' in request.path and 'POST' in request.method
     logging_in = 'login' in request.path and 'POST' in request.method
     grabbing_games = 'games' in request.path
+    grabbing_comments = 'comments' in request.path
+    grabbing_favorites = 'favorites' in request.path
     
-    if not logged_in and not signing_up and not logging_in and not grabbing_games:
+    if not logged_in and not signing_up and not logging_in and not grabbing_games and not grabbing_comments and not grabbing_favorites:
         return make_response ( {'message': 'please log in'}, 401 )
 
 class SignUp(Resource):
@@ -175,7 +177,8 @@ class Comments(Resource):
         )
         db.session.add(new_comment)
         db.session.commit()
-        return {'message': '201, a new comment has been added.'}, 201
+        # return {'message': '201, a new comment has been added.'}, 201
+        return make_response(new_comment.to_dict(), 201)
     
 class CommentsById(Resource):
 
@@ -263,7 +266,7 @@ class Favorites(Resource):
         )
         db.session.add(new_favorite)
         db.session.commit()
-        return {'message': '201, a new favorite has been added.'}, 201
+        return make_response(new_favorite.to_dict())
     
 class FavoritesById(Resource):
     def delete(self, id):

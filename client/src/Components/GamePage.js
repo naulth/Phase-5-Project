@@ -5,28 +5,30 @@ import GameCommentCard from './GameCommentCard'
 import AddGameComment from './AddGameComment'
 import FavoriteGame from './FavoriteGame'
 import {UserContext} from "../Context/user"
+import { CommentsContext } from '../Context/comments'
 
-function GamePage({setCommentsArray, gamesArray, handleUpdate,  commentsArray, addComment, addFavorite}){
+function GamePage({gamesArray, handleUpdate,  addFavorite}){
 
     const {user, setUser} = useContext(UserContext)
+    const {commentsArray, setCommentsArray} = useContext(CommentsContext)
 
     const params = useParams()
 
     const id = params.gameId
     
-    useEffect(() => {
-        Promise.all([
-            fetch('/check_session'),
-            fetch('/comments'),
-        ])
-        .then(([resSession, resComments]) =>
-            Promise.all([resSession.json(), resComments.json()])
-        )
-        .then(([dataSession, dataComments]) => {
-            setUser(dataSession)
-            setCommentsArray(dataComments)
-        })
-    }, [])
+    // useEffect(() => {
+    //     Promise.all([
+    //         fetch('/check_session'),
+    //         fetch('/comments'),
+    //     ])
+    //     .then(([resSession, resComments]) =>
+    //         Promise.all([resSession.json(), resComments.json()])
+    //     )
+    //     .then(([dataSession, dataComments]) => {
+    //         setUser(dataSession)
+    //         setCommentsArray(dataComments)
+    //     })
+    // }, [])
 
     const theGame = gamesArray.find(game => game.id == id)
 
@@ -37,21 +39,18 @@ function GamePage({setCommentsArray, gamesArray, handleUpdate,  commentsArray, a
     // console.log(game_title)
     // console.log(game_id)
 
-
-    let gameComments = null
-    if(commentsArray?.length > 0) {
-        const gameCommentArray = commentsArray?.filter(comment => comment?.game_id == game_id)
+    const gameCommentArray = [...commentsArray]?.filter(comment => comment?.game_id == game_id)
 
 
-        const byCreate = (commentA, commentB) => {
-            return commentB.created_at - commentA.created_at
-        }
-
-        const sortedComponents = [...gameCommentArray]?.sort(byCreate).reverse()
-
-        gameComments = sortedComponents?.map(comment => <GameCommentCard key={theGame.id} username={comment?.user_username} score={comment?.score} content={comment?.content} create={comment?.created_at}/>)
-
+    const byCreate = (commentA, commentB) => {
+        return commentB.created_at - commentA.created_at
     }
+
+    const sortedComponents = [...gameCommentArray]?.sort(byCreate).reverse()
+
+    const gameComments = sortedComponents?.map(comment => <GameCommentCard key={theGame.id} username={comment?.user_username} score={comment?.score} content={comment?.content} create={comment?.created_at}/>)
+
+    
     return(
         <div className = "">
             {/* <div className="text-center my-6">
@@ -72,8 +71,8 @@ function GamePage({setCommentsArray, gamesArray, handleUpdate,  commentsArray, a
                         <p className="text-lg font-bold tracking-tight text-white">Price: {theGame?.price}</p>
                     </div>
                     <div className="text-center">
-                    <AddGameComment commentsArray={commentsArray} addComment={addComment} user={user} game={theGame} handleUpdate={handleUpdate}/>
-                    <FavoriteGame user={user} gameId={game_id} addFavorite={addFavorite} gameTitle={theGame?.title} gameImage={theGame?.image}/>
+                    <AddGameComment game={theGame} handleUpdate={handleUpdate}/>
+                    <FavoriteGame gameId={game_id} theGame={theGame} addFavorite={addFavorite} gameTitle={theGame?.title} gameImage={theGame?.image}/>
                     </div>
                     {/* <div className="mx-auto text-center">
                     {favorite ? <button onClick={handleFavorite} className="hover:bg-sky-950 hover:text-lime-100 text-lime-100 border border-lime-100 shadow font-bold px-4 rounded mx-2">Favorited</button> : <button onClick={handleFavorite}className="hover:bg-sky-950 hover:text-lime-100 text-lime-100 border border-lime-100 shadow font-bold px-4 rounded mx-2">Favorite This Game</button> }
