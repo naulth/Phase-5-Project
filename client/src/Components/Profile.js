@@ -37,7 +37,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     const formattedDate = formatDate(user?.birth_date)
 
-
+    
 
 
 
@@ -87,7 +87,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                     </div>
                 </div>
             </div>
-            
+
             <div></div>
 
             

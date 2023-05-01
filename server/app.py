@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask import Flask, make_response, jsonify, request, session, flash
 
-from models import User, Game, Comment, Favorite
+from models import User, Game, Comment, Favorite, Follow
 
 class HomePage(Resource):
     def get(self):
@@ -283,6 +283,24 @@ class FavoritesById(Resource):
 
         return make_response({'message': 'The favorite has been deleted'}, 200)
 
+# class FollowersById(Resource):
+#     def get(self, id):
+#         if id not in [u.id for u in User.query.all()]:
+#             return {'error', '404 User not found'}
+#         else:
+#             user = User.query.filter(User.id==id).first()
+#             return make_response(user.is_followed_by().to_dict())
+        
+class Followers(Resource):
+    def post(self):
+        data = request.get_json()
+        new_follow = Follow(
+            follower_id = data['follower_id'],
+            followed_id = data['followed_id']
+        )
+        db.session.add(new_follow)
+        db.session.commit()
+        return make_response(new_follow.to_dict())
 
 
 api.add_resource(HomePage, '/')
@@ -298,6 +316,7 @@ api.add_resource(UserByID, '/users/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(Favorites, '/favorites')
 api.add_resource(FavoritesById, '/favorites/<int:id>')
+api.add_resource(Followers, '/followers')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)
