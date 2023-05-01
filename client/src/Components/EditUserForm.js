@@ -1,11 +1,14 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {Link, useNavigate} from 'react-router-dom'
 import {useFormik} from "formik"
 import * as yup from "yup"
+import {UserContext} from "../Context/user"
 
-function EditUserForm({handleUpdate, user, setUser}){
+function EditUserForm({handleUpdate}){
 
+
+    const {user, setUser} = useContext(UserContext)
     // const [username, setUsername] = useState('')
     // const [firstName, setFirstName] = useState('')
     // const [lastName, setLastName] = useState('')

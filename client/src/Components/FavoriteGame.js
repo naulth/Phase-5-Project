@@ -1,7 +1,9 @@
+import {UserContext} from "../Context/user"
+import React, {useContext} from 'react'
 
+function FavoriteGame({gameId, gameImage, gameTitle, addFavorite}){
 
-function FavoriteGame({gameId, user, gameImage, gameTitle, addFavorite}){
-
+    const {user} = useContext(UserContext)
 
 	const createFavorite = (e) => {
         e.preventDefault()

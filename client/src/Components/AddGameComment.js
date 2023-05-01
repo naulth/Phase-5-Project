@@ -1,8 +1,11 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
+import {UserContext} from "../Context/user"
 
-function AddGameComment({addComment, game, user}){
+function AddGameComment({addComment, game}){
+
+    const {user} = useContext(UserContext)
 
 	const formSchema = yup.object().shape({
         score: yup

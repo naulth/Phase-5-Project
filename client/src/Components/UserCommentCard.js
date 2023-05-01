@@ -1,6 +1,6 @@
 import EditCommentForm from "./EditCommentForm"
 
-function UserCommentCard({content, score, handleDeleteComment, editComment, commentId, gamename, user}){
+function UserCommentCard({content, score, handleDeleteComment, editComment, commentId, game_id, gamename, user}){
 
     const handleDelete = (e) => {
         fetch(`/comments/${commentId}`,{
@@ -33,7 +33,7 @@ function UserCommentCard({content, score, handleDeleteComment, editComment, comm
             
                 <div className="pt-8">
                 <div className="text-right ">
-                    <EditCommentForm id={commentId} theId={theId} editComment={editComment} user={user}/>
+                    <EditCommentForm theId={theId} gamename={gamename} game_id={game_id} editComment={editComment} user={user}/>
                 </div>
                 <div className="text-right">
                     <button onClick={handleDelete} className="text-center hover:bg-sky-950 hover:text-lime-200 text-sm w-20 text-lime-200 border border-lime-200 shadow font-bold py-1 px-1 rounded my-1">Delete</button>

@@ -1,8 +1,12 @@
-import React from 'react'
+import React, {useContext} from 'react'
 import {Link, NavLink} from 'react-router-dom'
 import '../index.css';
+import {UserContext} from "../Context/user"
 
-function Nav({user, handleLogout}){
+function Nav({handleLogout}){
+
+    const {user} = useContext(UserContext)
+
     return(
         <header className="bg-zinc-900 border border-lime-200 sticky top-0">
             <nav className="mx-auto flex mx-w-7xl items-center justify-between h-24 gap-x-6 p-6 lg:px-8" aria-label="Global">

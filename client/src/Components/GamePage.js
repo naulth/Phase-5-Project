@@ -1,11 +1,14 @@
 import {Link, useParams} from 'react-router-dom'
-import {useState, useEffect} from "react"
+import {useState, useEffect, useContext} from "react"
 
 import GameCommentCard from './GameCommentCard'
 import AddGameComment from './AddGameComment'
 import FavoriteGame from './FavoriteGame'
+import {UserContext} from "../Context/user"
 
-function GamePage({user, setUser, setCommentsArray, gamesArray, handleUpdate,  commentsArray, addComment, addFavorite}){
+function GamePage({setCommentsArray, gamesArray, handleUpdate,  commentsArray, addComment, addFavorite}){
+
+    const {user, setUser} = useContext(UserContext)
 
     const params = useParams()
 

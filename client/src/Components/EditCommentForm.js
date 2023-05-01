@@ -1,10 +1,13 @@
-import React, {useState} from 'react'
+import React, {useState, useContext} from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
 import {useNavigate} from 'react-router-dom'
+import {UserContext} from "../Context/user"
 
 
-function EditCommentForm({theId, editComment, user}){
+function EditCommentForm({theId, editComment, game_id, gamename}){
+
+    const {user} = useContext(UserContext)
 
     const navigate = useNavigate()
 
@@ -29,7 +32,11 @@ function EditCommentForm({theId, editComment, user}){
         initialValues: {
         score: "",
         content: "",
-        id: theId
+        id: theId,
+        game_name: gamename,
+        user_username: user?.username,
+        game_id: game_id,
+        user_id: user?.id
         },
         validationSchema: formSchema,
         onSubmit: (values) => {

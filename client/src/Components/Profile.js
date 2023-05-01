@@ -1,14 +1,17 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import UserCommentCard from './UserCommentCard'
 import {useNavigate, Link} from "react-router-dom"
 import EditUserForm from "./EditUserForm"
 import FavoriteCard from './FavoriteCard'
 import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
+import {UserContext} from "../Context/user"
 
-function Profile({user, setUser, handleUpdate, commentsArray, setCommentsArray, handleDeleteComment, editComment, handleLogout, favoritesArray}){
+function Profile({handleUpdate, commentsArray, setCommentsArray, handleDeleteComment, editComment, handleLogout, favoritesArray, deleteFavorite}){
 
     const navigate = useNavigate()
+
+    const {user, setUser} = useContext(UserContext)
 
     // useEffect(() => {
     //     fetch("/check_session").then((response) => {
@@ -35,6 +38,7 @@ function Profile({user, setUser, handleUpdate, commentsArray, setCommentsArray, 
         })
     }, [])
 
+
     const handleDelete = (e) => {
         fetch(`/users/${user.id}`,{
         method: 'DELETE'
@@ -53,24 +57,36 @@ function Profile({user, setUser, handleUpdate, commentsArray, setCommentsArray, 
 
     const formattedDate = formatDate(user?.birth_date)
 
+    // console.log(commentsArray)
+/////////////////////////////////////////////////////////////
+
     let userComments = []
     if(commentsArray?.length > 0) {
-        const userCommentArray = commentsArray.filter(comment => comment?.user_id == user?.id)
+        const userCommentArray = [...commentsArray].filter(comment => comment?.user_id == user?.id)
 
         const byCreate = (commentA, commentB) => {
-            return commentB.created_at - commentA.created_at
+            return commentB?.created_at - commentA?.created_at
+    
         }
+    // console.log(userCommentArray)
 
-        const sortedComponents = [...userCommentArray].sort(byCreate).reverse()
+    const sortedComponents = [...userCommentArray].sort(byCreate).reverse()
 
-        userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
+    // console.log(sortedComponents)
+
+    const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
     }
+
+    ////////////////////////////////////////////////////
+
+    // console.log(userComments)
+
 
     let userFavorites = null
     if(favoritesArray?.length > 0) {
         const userFavoriteArray  = favoritesArray?.filter(favorite => favorite?.user_id == user?.id)
 
-        userFavorites = userFavoriteArray?.map(favorite => <FavoriteCard title={favorite?.game_title} image={favorite?.game_image}/>)
+        userFavorites = userFavoriteArray?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
     }
 
     return(
@@ -98,7 +114,7 @@ function Profile({user, setUser, handleUpdate, commentsArray, setCommentsArray, 
                     <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
                         <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
                         <div className="w-full ">
-                            {userComments}
+                            {userComments.length ? userComments : <EmptyComment />}
                         </div>
                     </div>
                     </div>

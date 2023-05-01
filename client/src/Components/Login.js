@@ -1,13 +1,18 @@
-import React, {useState} from "react"
+import React, {useState, useContext} from "react"
 import {Link, useNavigate} from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import {UserContext} from "../Context/user"
 
-function Login({user, handleLogout, handleLogin}){
+function Login({handleLogout, handleLogin}){
+
+    const {user} = useContext(UserContext)
 
     const navigate = useNavigate()
     const [username, setUsername] = useState('')
     const [password, setPassword] = useState('')
     const [isIncorrect, setIsIncorrect] = useState(false);
+
+    
     
 
     const [showPassword, setShowPassword] = useState(false)

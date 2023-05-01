@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from "react"
+import React, {useState, useEffect, useContext} from "react"
 import {Routes, Route, useNavigate} from "react-router-dom"
 
 import Signup from "./Components/Signup"
@@ -9,26 +9,32 @@ import Profile from "./Components/Profile"
 import GamePage from "./Components/GamePage"
 import Users from "./Components/Users"
 
+import {UserProvider} from "./Context/user"
+import {UserContext} from "./Context/user"
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
 import EditUserForm from "./Components/EditUserForm"
 library.add(faEye,faEyeSlash)
 
+
+
 function App() {
 
-    const [user, setUser] = useState(null)
+    // const [user, setUser] = useState(null)
 
-    useEffect(() => {
-        fetch("/check_session").then((response) => {
-            if (response.ok) {
-                response.json().then((user) => setUser(user));
-            } else {
-                console.log(response.status)
-                response.text().then(console.warn)
-            }
-        });
-    }, []);
+    // useEffect(() => {
+    //     fetch("/check_session").then((response) => {
+    //         if (response.ok) {
+    //             response.json().then((user) => setUser(user));
+    //         } else {
+    //             console.log(response.status)
+    //             response.text().then(console.warn)
+    //         }
+    //     });
+    // }, []);
+
+    const {user, setUser} = useContext(UserContext)
 
     function handleUpdate(user) {
         setUser(user)
@@ -97,7 +103,11 @@ function App() {
         const changedComment = {
             id: values.id,
             score: values.score,
-            content: values.content
+            content: values.content,
+            game_name: values.game_name,
+            user_username: values.user_username,
+            user_id: values.user_id,
+            game_id: values.game_id
         }
 
         const updatedComments = [...commentsArray].map(comment => {
@@ -107,7 +117,6 @@ function App() {
                 return comment
             }
         })
-        console.log(updatedComments)
         setCommentsArray(updatedComments)
 
         // const updatedComments = [...commentsArray].map(comment => comment.id === changedComment.id ? changedComment : comment)
@@ -126,19 +135,25 @@ function App() {
         setFavoritesArray([...favoritesArray, newFavorite])
     }
 
+    const deleteFavorite = (favoriteId) => {
+        setFavoritesArray(favoritesArray.filter(favorite => favorite.id !== favoriteId))
+    }
+
     return (
+        <UserProvider>
         <div className="">
             <Nav user={user} handleLogout={handleLogout}/>
             <Routes>
                 <Route path="/users" element={<Users usersArray={usersArray} user={user}/>} />
                 <Route path='games' element={<Games gamesArray={gamesArray} user={user} commentsArray={commentsArray}/>}/>
                 <Route path='games/:gameId' element={<GamePage setUser={setUser} gamesArray={gamesArray} addComment={addComment} addFavorite={addFavorite} handleUpdate={handleUpdate} user={user} commentsArray={commentsArray} setCommentsArray={setCommentsArray}/>} />
-                <Route path='profile' element={<Profile user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment} commentsArray={commentsArray} setCommentsArray={setCommentsArray} handleLogout={handleLogout} handleUpdate={handleUpdate} favoritesArray={favoritesArray}/> } />
+                <Route path='profile' element={<Profile user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment} commentsArray={commentsArray} setCommentsArray={setCommentsArray} handleLogout={handleLogout} handleUpdate={handleUpdate} favoritesArray={favoritesArray} deleteFavorite={deleteFavorite} /> } />
                 {/* <Route path='edit' element={<EditUserForm user={user} setUser={setUser} handleUpdate={handleUpdate}/>} /> */}
                 <Route path="signup" element={<Signup />} />
                 <Route path="/" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
             </Routes>
         </div>
+        </UserProvider>
     );
 }
 

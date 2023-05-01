@@ -1,18 +1,10 @@
-import { useEffect} from "react"
+import { useEffect, useContext} from "react"
 import UserCard from "./UserCard"
+import {UserContext} from "../Context/user"
 
-function Users({user, setUser, usersArray}){
+function Users({usersArray}){
 
-    useEffect(() => {
-        fetch("/check_session").then((response) => {
-            if (response.ok) {
-                response.json().then((user) => setUser(user));
-            } else {
-                console.log(response.status)
-                response.text().then(console.warn)
-            }
-        });
-    }, []);
+    const {user} = useContext(UserContext)
 
     const theUsersId = user?.id
 

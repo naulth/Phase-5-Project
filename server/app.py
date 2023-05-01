@@ -264,6 +264,21 @@ class Favorites(Resource):
         db.session.add(new_favorite)
         db.session.commit()
         return {'message': '201, a new favorite has been added.'}, 201
+    
+class FavoritesById(Resource):
+    def delete(self, id):
+        if id not in [f.id for f in Favorite.query.all()]:
+            return {'error': '404, Favorite not Found!'}, 404
+
+        try:
+            favorite = Favorite.query.filter(Favorite.id==id).first()
+            db.session.delete(favorite)
+            db.session.commit()
+        except:
+            db.session.rollback()
+
+        return make_response({'message': 'The favorite has been deleted'}, 200)
+
 
 
 api.add_resource(HomePage, '/')
@@ -278,6 +293,7 @@ api.add_resource(CommentsById, '/comments/<int:id>')
 api.add_resource(UserByID, '/users/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(Favorites, '/favorites')
+api.add_resource(FavoritesById, '/favorites/<int:id>')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)
