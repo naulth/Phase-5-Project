@@ -10,9 +10,9 @@ function Users(){
 
     const theUsersId = user?.id
 
-    const filteredUserArray = usersArray?.filter(userObj => userObj?.id !== theUsersId)
+    const filteredUserArray = [...usersArray]?.filter(userObj => userObj?.id !== theUsersId)
 
-    const userComponents = filteredUserArray?.map(userObj => <UserCard key={userObj.id} username={userObj.username} image={userObj.image} />)
+    const userComponents = filteredUserArray?.map(userObj => <UserCard key={userObj.id} id={userObj.id} username={userObj.username} image={userObj.image} />)
 
     
 

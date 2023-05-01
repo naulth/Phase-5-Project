@@ -11,10 +11,13 @@ function GamePage({gamesArray, handleUpdate,  addFavorite}){
 
     const {user, setUser} = useContext(UserContext)
     const {commentsArray, setCommentsArray} = useContext(CommentsContext)
+    
 
     const params = useParams()
 
     const id = params.gameId
+
+    console.log(id)
     
     // useEffect(() => {
     //     Promise.all([

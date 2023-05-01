@@ -16,22 +16,21 @@ function UserCommentCard({content, score, handleDeleteComment, editComment, comm
     const theId = commentId
 
     return(
-        <div className="bg-zinc-800 border border-lime-200 shadow p-4 my-4">
-            <div className="">
-            <div className="py-1">
-                <h2 className=" float-left text-lg font-bold tracking-tight text-lime-100">{gamename}</h2>
-            </div>
-            
-            <div className="float-left">
-                <h2 className="text-left text-lime-100">{content} </h2>
-            </div>
-            
-            <div className="float-left">
-            <h2 className="text-lg font-semibold tracking-tight text-lime-200">{score} / 10</h2>
-            </div>
-            </div>
-            
+        <div className="bg-zinc-800 border border-lime-200 shadow w-54 p-4 my-4 ">
+                <div className="grid grid-rows-1 ">
+                    <div className="text-left">
+                        <h2 className=" float-left text-lg font-bold tracking-tight text-lime-100">{gamename}</h2>
+                    </div>
+                    <div className="text-left my-4">
+                        <h2 className="text-lime-100">{content} </h2>
+                    </div>
+                    <div className="text-left">
+                        <h2 className="text-lg font-semibold tracking-tight text-lime-200">{score} / 10</h2>
+                    </div>
+                </div>
+
                 <div className="pt-8">
+                
                 <div className="text-right ">
                     <EditCommentForm theId={theId} gamename={gamename} game_id={game_id} editComment={editComment} user={user}/>
                 </div>

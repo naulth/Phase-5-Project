@@ -8,6 +8,7 @@ import Games from "./Components/Games"
 import Profile from "./Components/Profile"
 import GamePage from "./Components/GamePage"
 import Users from "./Components/Users"
+import OtherUserProfile from "./Components/OtherUserProfile"
 
 import {UserContext} from "./Context/user"
 import {FavoritesContext} from "./Context/favorites"
@@ -146,11 +147,10 @@ function App() {
             <Nav user={user} handleLogout={handleLogout}/>
             <Routes>
                 <Route path="/users" element={<Users />} />
+                <Route path='users/:userId' element={<OtherUserProfile/>} />
                 <Route path='games' element={<Games gamesArray={gamesArray} user={user} />}/>
-                
-                    <Route path='games/:gameId' element={<GamePage setUser={setUser} gamesArray={gamesArray} handleUpdate={handleUpdate} user={user} />} />
-                    <Route path='profile' element={<Profile deleteUser={deleteUser} user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment}  handleLogout={handleLogout} handleUpdate={handleUpdate} deleteFavorite={deleteFavorite} /> } />
-                
+                <Route path='games/:gameId' element={<GamePage setUser={setUser} gamesArray={gamesArray} handleUpdate={handleUpdate} user={user} />} />
+                <Route path='profile' element={<Profile deleteUser={deleteUser} user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment}  handleLogout={handleLogout} handleUpdate={handleUpdate} deleteFavorite={deleteFavorite} /> } />
                 <Route path="signup" element={<Signup />} />
                 <Route path="/" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
             </Routes>

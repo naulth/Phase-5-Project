@@ -18,8 +18,9 @@ def check_if_logged_in():
     grabbing_games = 'games' in request.path
     grabbing_comments = 'comments' in request.path
     grabbing_favorites = 'favorites' in request.path
+    grabbing_users = 'users' in request.path
     
-    if not logged_in and not signing_up and not logging_in and not grabbing_games and not grabbing_comments and not grabbing_favorites:
+    if not logged_in and not signing_up and not logging_in and not grabbing_games and not grabbing_comments and not grabbing_favorites and not grabbing_users:
         return make_response ( {'message': 'please log in'}, 401 )
 
 class SignUp(Resource):

@@ -60,8 +60,9 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     return(
         <div className="bg-zinc-800 min-h-screen h-full">
-		<div className="grid w-full grid-cols-6 gap-x-2 gap-y-4 ">
-            <div className="float-left w-72 px-8 min-h-screen col-span-1  border border-lime-200 bg-zinc-900">
+		<div className="grid w-full grid-cols-6 gap-6 h-full">
+
+            <div className="float-left w-72 px-8 h-screen col-span-1  border border-lime-200 bg-zinc-900">
                 <div className="text-center py-10 ">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">{user && user.username}</h1>
                 </div>
@@ -77,21 +78,27 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                     </div>
                 </div>
             </div>
-            <div className="col-span-5 min-w-screen ml-1">
-                <div className="grid grid-cols-4">
-                    <div className="col-span-1">
-                    <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
-                        <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
-                        <div className="w-full ">
-                            {userComments?.length ? userComments : <EmptyComment />}
-                        </div>
+
+            <div className="col-span-1 ">
+                <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
+                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
+                    <div className="w-full ">
+                        {userComments?.length ? userComments : <EmptyComment />}
                     </div>
-                    </div>
-                    <div className=" bg-zinc-900 col-span-2 text-center border border-lime-100 shadow px-8 h-fit">
-                        <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
-                        <div className="">
-                            {userFavorites.length ? userFavorites : <EmptyFavorite />}
-                        </div>
+                </div>
+            </div>
+            
+            <div></div>
+
+            
+
+            <div></div>
+
+            <div className="col-span-2 float-left h-fit">
+                <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8">
+                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
+                    <div className="grid grid-cols-2 gap-x-8 pb-6">
+                        {userFavorites.length ? userFavorites : <EmptyFavorite />}
                     </div>
                 </div>
             </div>
