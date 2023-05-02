@@ -1,6 +1,19 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
+from datetime import datetime
+
+
+
+class Follow(db.Model, SerializerMixin):
+    __tablename__ = "follows"
+
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
+    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
+
+    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
+
+
 
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
@@ -42,7 +55,18 @@ class User (db.Model, SerializerMixin):
         return sum(bytearray(input, encoding='utf-8'))
     
 
-    # following = db.relationship('Following', backref='user')
+    followed = db.relationship('Follow',
+                               foreign_keys=[Follow.follower_id],
+                               backref=db.backref('follower', lazy='joined'),
+                               lazy='dynamic',
+                               cascade='all, delete-orphan')
+    followers = db.relationship('Follow',
+                                foreign_keys=[Follow.followed_id],
+                                backref=db.backref('followed', lazy='joined'),
+                                lazy='dynamic',
+                                cascade='all, delete-orphan')
+
+
 
 class Game(db.Model, SerializerMixin):
     __tablename__ = 'games'
@@ -93,12 +117,3 @@ class Favorite(db.Model, SerializerMixin):
 
 
 
-# class Following(db.Model, SerializerMixin):
-#     __tablename__ = "followers"
-
-#     serialize_rules = ('-user.followers',)
-
-#     id = db.Column(db.Integer, primary_key = True)
-
-#     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-#     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'))
