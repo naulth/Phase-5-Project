@@ -39,11 +39,11 @@ function OtherUserProfile() {
 
 
     const byCreate = (commentA, commentB) => {
-        return commentA?.created_at - commentB?.created_at
+        return commentB?.created_at - commentA?.created_at
 
     }
 
-    const sortedComponents = targetUser?.comments?.sort(byCreate).reverse()
+    const sortedComponents = targetUser?.comments?.slice().sort(byCreate).reverse()
 
     const targetComments = sortedComponents?.map(comment => <TargetCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id}/>)
 

@@ -83,11 +83,11 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
 
     const byCreate = (commentA, commentB) => {
-        return commentA?.created_at - commentB?.created_at
+        return commentB?.created_at - commentA?.created_at
 
     }
 
-    const sortedComponents = user?.comments?.sort(byCreate).reverse()
+    const sortedComponents = user?.comments?.slice().sort(byCreate).reverse()
 
 
     const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} gameImage ={comment?.game_image} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)

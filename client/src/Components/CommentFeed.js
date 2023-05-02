@@ -10,11 +10,11 @@ function CommentFeed(){
 
 
     const byCreate = (commentA, commentB) => {
-        return commentA?.created_at - commentB?.created_at
+        return commentB?.created_at - commentA?.created_at
 
     }
 
-    const sortedComponents = commentsArray?.sort(byCreate).reverse()
+    const sortedComponents = commentsArray?.slice().sort(byCreate).reverse()
 
 
     
