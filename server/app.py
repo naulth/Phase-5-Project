@@ -86,30 +86,6 @@ class Login(Resource):
         
         ##############################
         
-    # def post(self):
-
-    #     username = request.get_json().get('username')
-    #     password = request.get_json().get('password')
-    #     user = User.query.filter(User.username == username).first()
-
-    #     # password = request.get_json()['password']
-
-    #     # if user.authenticate(password):
-    #     if user is None:
-    #         return {'error': 'Invalid email or password'}, 401
-    #     if not bcrypt.check_password_hash(user._password_hash, password):
-    #         return {'error': 'Invalid email or password'}, 401
-
-    #     flash("Login Successful!")
-    #     session.permanent = True
-    #     ###SESSION PERMANENT NOT WORKING
-    #     session['user_id'] = user.id
-        
-    #     return jsonify({
-    #         "id": user.id,
-    #         "username": user.username,
-    #         "first_name": user.first_name
-    #     })
 
     
 class Logout(Resource):
@@ -181,11 +157,12 @@ class Comments(Resource):
         # return {'message': '201, a new comment has been added.'}, 201
         return make_response(new_comment.to_dict(), 201)
     
+    
 class CommentsById(Resource):
 
     def patch(self, id):
         if id not in [c.id for c in Comment.query.all()]:
-            return {'error': '404, User not Found!'}, 404
+            return {'error': '404, Comment not Found!'}, 404
 
         data = request.get_json()
         comment = Comment.query.filter(Comment.id==id).first()

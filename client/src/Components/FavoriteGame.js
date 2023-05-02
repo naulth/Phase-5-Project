@@ -1,18 +1,17 @@
 import {UserContext} from "../Context/user"
 import React, {useContext} from 'react'
-import { FavoritesContext } from "../Context/favorites"
 
 
-function FavoriteGame({gameImage, theGame, gameTitle}){
 
-    const {user} = useContext(UserContext)
-    const {setFavoritesArray, favoritesArray} = useContext(FavoritesContext)
+function FavoriteGame({gameImage, game, gameTitle}){
+
+    const {user, setUser} = useContext(UserContext)
 
 	const createFavorite = (e) => {
         e.preventDefault()
 
         const newFavorite = {
-            game_id: theGame?.id,
+            game_id: game?.id,
             user_id: user.id,
             game_image: gameImage,
             game_title: gameTitle
@@ -25,7 +24,15 @@ function FavoriteGame({gameImage, theGame, gameTitle}){
         })
         .then((response) => {
             if (response.ok) {
-                response.json().then((response) => setFavoritesArray([...favoritesArray, (response)]))
+                response.json().then((response) => {
+                    const newUser = {
+                        ...user,
+                        favorites: [
+                            ...user?.favorites, response 
+                        ]
+                    }
+                    setUser(newUser)
+                })
             }
         })
 

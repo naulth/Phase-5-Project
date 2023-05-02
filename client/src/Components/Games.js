@@ -4,7 +4,7 @@ import SearchGames from './SearchGames'
 import {Link, Outlet} from 'react-router-dom'
 
 
-function Games({gamesArray, commentsArray}){
+function Games({gamesArray}){
 
     const [search, setSearch] = useState('')
 

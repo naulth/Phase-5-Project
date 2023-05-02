@@ -2,13 +2,13 @@ import React, {useState, useContext} from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
 import {UserContext} from "../Context/user"
-import { CommentsContext } from '../Context/comments'
+import { GameContext } from '../Context/game'
 
-function AddGameComment({game}){
+function AddGameComment({}){
 
-    const {user} = useContext(UserContext)
-
-    const {setCommentsArray, commentsArray} = useContext(CommentsContext)
+    const {user, setUser} = useContext(UserContext)
+    const {game, setGame} = useContext(GameContext)
+    
 
 	const formSchema = yup.object().shape({
         score: yup
@@ -30,6 +30,7 @@ function AddGameComment({game}){
         user_id: user?.id,
         game_id: game?.id
         },
+        enableReinitialize: true,
         validationSchema: formSchema,
         onSubmit: (values) => {
             fetch("/comments", {
@@ -40,12 +41,27 @@ function AddGameComment({game}){
                 body: JSON.stringify(values),
             }).then((response) => {
                 if (response.ok) {
-                    response.json().then((response) => setCommentsArray([...commentsArray, (response)]))
+                    response.json().then((response) => {
+                    
+                        const newUser = {
+                            ...user,
+                            comments: [
+                                ...user?.comments, response 
+                            ]
+                        }
+                        setUser(newUser)
+
+                        const newGame = {
+                            ...game,
+                            comments: [
+                                ...game?.comments, response
+                            ]
+                        }
+                        setGame(newGame)
+                    })
                 }
             })
 			toggleAddComment()
-            console.log(commentsArray)
-
         },
     });
 

@@ -8,9 +8,7 @@ function Users(){
     const {user} = useContext(UserContext)
     const{usersArray} = useContext(UsersArrayContext)
 
-    const theUsersId = user?.id
-
-    const filteredUserArray = [...usersArray]?.filter(userObj => userObj?.id !== theUsersId)
+    const filteredUserArray = [...usersArray]?.filter(userObj => userObj?.id !== user?.id)
 
     const userComponents = filteredUserArray?.map(userObj => <UserCard key={userObj.id} id={userObj.id} username={userObj.username} image={userObj.image} />)
 

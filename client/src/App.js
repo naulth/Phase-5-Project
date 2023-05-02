@@ -68,7 +68,15 @@ function App() {
     },[])
 
     const handleDeleteComment = (deadCommentId) => {
-        setCommentsArray(commentsArray.filter(comment => comment.id !== deadCommentId))
+
+
+       const newUser = {
+        ...user,
+        comments: [
+            ...user?.comments?.filter(comment => comment.id !== deadCommentId)
+        ]
+        }    
+        setUser(newUser)
     }
 
 
@@ -86,14 +94,19 @@ function App() {
             game_id: values.game_id
         }
 
-        const updatedComments = [...commentsArray].map(comment => {
-            if(comment.id === changedComment.id) {
-                return changedComment
-            } else {
-                return comment
-            }
-        })
-        setCommentsArray(updatedComments)
+        const newUser = {
+            ...user,
+            comments: [
+                ...user?.comments?.map(comment => {
+                    if(comment?.id === changedComment.id) {
+                        return changedComment
+                    } else {
+                        return comment
+                    }
+                })
+            ]
+        }    
+        setUser(newUser)
     }
 
     useEffect(() => {
@@ -151,7 +164,13 @@ function App() {
     // },[])
 
     const deleteFavorite = (favoriteId) => {
-        setFavoritesArray(favoritesArray.filter(favorite => favorite.id !== favoriteId))
+        const newUser = {
+            ...user,
+            favorites: [
+                ...user?.favorites?.filter(favorite => favorite.id !== favoriteId)
+            ]
+            }    
+            setUser(newUser)
     }
 
     return (

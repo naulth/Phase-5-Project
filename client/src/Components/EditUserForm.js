@@ -68,40 +68,6 @@ function EditUserForm({handleUpdate}){
         
     });
 
-    // const handleEdit = (e) => {
-    //     e.preventDefault()
-    //     fetch(`/users/${id}` , {
-    //         headers: {
-    //             Accept: "application/json",
-    //             "Content-Type": "application/json",
-    //         },
-    //         method: "PATCH",
-    //         body: JSON.stringify({
-    //             first_name: firstName,
-    //             last_name: lastName,
-    //             username: username,
-    //             image: profileImage,
-    //             // _password_hash: password,
-    //             // confirm_password: confirm
-    //         }),
-    //     }).then((r) => {
-    //         if (r.ok) {
-    //           r.json().then((user) => {
-    //             setUser(user)
-    //         });
-    //         }
-    //     })
-    //     setUsername('')
-    //     setFirstName('')
-    //     setLastName('')
-    //     // setPassword('')
-    //     // setConfirm('')
-    //     setProfileImage('')
-
-    //     handleUpdate();
-        
-
-    // }
 
     const [showEdit, setShowEdit] = useState(false)
 

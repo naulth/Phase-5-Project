@@ -6,16 +6,12 @@ import FavoriteCard from './FavoriteCard'
 import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
 import {UserContext} from "../Context/user"
-import { FavoritesContext } from '../Context/favorites'
-import { CommentsContext } from '../Context/comments'
 
 function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, handleLogout, deleteFavorite}){
 
     const navigate = useNavigate()
 
     const {user, setUser} = useContext(UserContext)
-    const {favoritesArray} = useContext(FavoritesContext)
-    const {commentsArray} = useContext(CommentsContext)
 
 
     const handleDelete = (e) => {
@@ -37,26 +33,20 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     const formattedDate = formatDate(user?.birth_date)
 
-    
-
-
-
-    const userCommentArray = [...commentsArray].filter(comment => comment?.user_id == user?.id)
 
     const byCreate = (commentA, commentB) => {
         return commentB?.created_at - commentA?.created_at
 
     }
 
-    const sortedComponents = [...userCommentArray].sort(byCreate).reverse()
+    const sortedComponents = user?.comments?.sort(byCreate)
+
 
     const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
    
-    const userFavoriteArray = [...favoritesArray].filter(favorite => favorite?.user_id == user?.id)
 
-    const userFavorites = userFavoriteArray?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
+    const userFavorites = user?.favorites?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
-    
 
     return(
         <div className="bg-zinc-800 min-h-screen h-full">
@@ -98,7 +88,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                 <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
                     <div className="grid grid-cols-2 gap-x-8 pb-6">
-                        {userFavorites.length ? userFavorites : <EmptyFavorite />}
+                        {userFavorites?.length ? userFavorites : <EmptyFavorite />}
                     </div>
                 </div>
             </div>

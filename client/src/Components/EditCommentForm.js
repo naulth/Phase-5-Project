@@ -38,6 +38,7 @@ function EditCommentForm({theId, editComment, game_id, gamename}){
         game_id: game_id,
         user_id: user?.id
         },
+        enableReinitialize: true,
         validationSchema: formSchema,
         onSubmit: (values) => {
             fetch(`/comments/${theId}`, {

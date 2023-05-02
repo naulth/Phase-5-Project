@@ -1,70 +1,74 @@
 
-import {useContext} from 'react'
+import {useContext, useState, useEffect} from 'react'
 import { useParams } from 'react-router-dom'
 import { UsersArrayContext } from "../Context/usersArray"
 import TargetCommentCard from './TargetCommentCard'
 import { FavoritesContext } from '../Context/favorites'
 import { CommentsContext } from '../Context/comments'
+import { UserContext } from '../Context/user'
 import EmptyComment from './EmptyComment'
 import TargetFavoriteCard from './TargetFavoriteCard'
 import EmptyFavorite from './EmptyFavorite'
-import { FollowersContext } from '../Context/followers'
 
 function OtherUserProfile() {
 
-    const{user, usersArray} = useContext(UsersArrayContext)
+    const{usersArray} = useContext(UsersArrayContext)
     const {favoritesArray} = useContext(FavoritesContext)
     const {commentsArray} = useContext(CommentsContext)
-    const {followersArray, setFollowersArray} = useContext(FollowersContext)
+    const {user} = useContext(UserContext)
+
+    const [targetUser, setTargetUser] = useState({})
 
     const params = useParams()
 
     const id = params.userId
 
-    console.log(id)
+    useEffect(() => {
+        fetch(`/users/${id}`)
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setTargetUser(r)
+                })
+            } else {
+                console.log('target not fetched ok')
+            }
+        })
+    },[])
 
-    const targetUser = usersArray.find(user => user.id == id)
 
-
-
-
-    const targetCommentArray = [...commentsArray].filter(comment => comment?.user_id == targetUser?.id)
 
     const byCreate = (commentA, commentB) => {
         return commentB?.created_at - commentA?.created_at
 
     }
 
-    const sortedComponents = [...targetCommentArray].sort(byCreate).reverse()
+    const sortedComponents = targetUser?.comments?.sort(byCreate).reverse()
 
     const targetComments = sortedComponents?.map(comment => <TargetCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id}/>)
 
 
-    const targetFavoriteArray = [...favoritesArray].filter(favorite => favorite?.user_id == targetUser?.id)
+    const targetFavorites = targetUser?.favorites?.map(favorite => <TargetFavoriteCard key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
-    const targetFavorites = targetFavoriteArray?.map(favorite => <TargetFavoriteCard key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
+    // const createFollow = (e) => {
 
-    const createFollow = (e) => {
+    //     const newFollow = {
+    //         followed_id: targetUser?.id,
+    //         follower_id: user?.id,
+    //     }
 
-        const newFollow = {
-            followed_id: targetUser?.id,
-            follower_id: user?.id,
-        }
+    //     fetch('/followers', {
+    //         method: "POST",
+    //         headers: {'Content-Type' : 'application/json'},
+    //         body: JSON.stringify(newFollow)
+    //     })
+    //     .then((response) => {
+    //         if (response.ok) {
+    //             response.json().then((response) => console.log(response))
+    //         }
+    //     })
 
-        fetch('/followers', {
-            method: "POST",
-            headers: {'Content-Type' : 'application/json'},
-            body: JSON.stringify(newFollow)
-        })
-        .then((response) => {
-            if (response.ok) {
-                response.json().then((response) => console.log(response))
-            }
-        })
-
-    }
-
-    // setFollowersArray([...followersArray, (response)])
+    // }
 
 
     return(
@@ -80,7 +84,7 @@ function OtherUserProfile() {
                 </div>
                 <div className="pb-4 px-4 text-center">
                     <p className="text-lg py-4 font-bold tracking-tight text-white">{targetUser?.first_name} {targetUser?.last_name}</p>
-                    <button onClick={createFollow} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
+                    <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
                 </div>
                 
             </div>
@@ -98,7 +102,7 @@ function OtherUserProfile() {
                 <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
                     <div className="grid grid-cols-2 gap-x-8 pb-6">
-                        {targetFavorites.length ? targetFavorites : <EmptyFavorite />}
+                        {targetFavorites?.length ? targetFavorites : <EmptyFavorite />}
                     </div>
                 </div>
             </div>

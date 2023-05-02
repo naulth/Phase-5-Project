@@ -8,10 +8,10 @@ from datetime import datetime
 class Follow(db.Model, SerializerMixin):
     __tablename__ = "follows"
 
+    # serialize_rules = ('-user.follows',)
+
     follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
     followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
-
-    timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
 class User (db.Model, SerializerMixin):
@@ -64,17 +64,17 @@ class User (db.Model, SerializerMixin):
     def simple_hash(input):
         return sum(bytearray(input, encoding='utf-8'))
 
-    def is_following(self, user):
-        if user.id is None:
-            return False
-        return self.followed.filter_by(
-            followed_id=user.id).first() is not None
+    # def is_following(self, user):
+    #     if user.id is None:
+    #         return False
+    #     return self.followed.filter_by(
+    #         followed_id=user.id).first() is not None
 
-    def is_followed_by(self, user):
-        if user.id is None:
-            return False
-        return self.followers.filter_by(
-            follower_id=user.id).first() is not None
+    # def is_followed_by(self, user):
+    #     if user.id is None:
+    #         return False
+    #     return self.followers.filter_by(
+    #         follower_id=user.id).first() is not None
 
 
 class Game(db.Model, SerializerMixin):
