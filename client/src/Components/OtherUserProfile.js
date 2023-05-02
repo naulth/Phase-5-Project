@@ -8,12 +8,14 @@ import { CommentsContext } from '../Context/comments'
 import EmptyComment from './EmptyComment'
 import TargetFavoriteCard from './TargetFavoriteCard'
 import EmptyFavorite from './EmptyFavorite'
+import { FollowersContext } from '../Context/followers'
 
 function OtherUserProfile() {
 
-    const{usersArray} = useContext(UsersArrayContext)
+    const{user, usersArray} = useContext(UsersArrayContext)
     const {favoritesArray} = useContext(FavoritesContext)
     const {commentsArray} = useContext(CommentsContext)
+    const {followersArray, setFollowersArray} = useContext(FollowersContext)
 
     const params = useParams()
 
@@ -42,6 +44,27 @@ function OtherUserProfile() {
 
     const targetFavorites = targetFavoriteArray?.map(favorite => <TargetFavoriteCard key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
+    const createFollow = (e) => {
+
+        const newFollow = {
+            followed_id: targetUser?.id,
+            follower_id: user?.id,
+        }
+
+        fetch('/followers', {
+            method: "POST",
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(newFollow)
+        })
+        .then((response) => {
+            if (response.ok) {
+                response.json().then((response) => console.log(response))
+            }
+        })
+
+    }
+
+    // setFollowersArray([...followersArray, (response)])
 
 
     return(
@@ -57,7 +80,7 @@ function OtherUserProfile() {
                 </div>
                 <div className="pb-4 px-4 text-center">
                     <p className="text-lg py-4 font-bold tracking-tight text-white">{targetUser?.first_name} {targetUser?.last_name}</p>
-                    <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
+                    <button onClick={createFollow} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
                 </div>
                 
             </div>

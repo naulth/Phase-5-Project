@@ -14,7 +14,6 @@ class Follow(db.Model, SerializerMixin):
     timestamp = db.Column(db.DateTime, default=datetime.utcnow)
 
 
-
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
 
@@ -32,6 +31,17 @@ class User (db.Model, SerializerMixin):
 
     comments = db.relationship('Comment', backref='user', cascade='all, delete')
     favorites = db.relationship('Favorite', backref='user', cascade='all, delete')
+
+    followed = db.Relationship('Follow',
+                                foreign_keys=[Follow.follower_id],
+                                backref=db.backref('follower', lazy='joined'),
+                                lazy='dynamic',
+                                cascade='all, delete-orphan')
+    followers = db.relationship('Follow',
+                              foreign_keys=[Follow.followed_id],
+                              backref=db.backref('followed', lazy='joined'),
+                              lazy='dynamic',
+                              cascade='all, delete-orphan')
 
 
     @hybrid_property
@@ -53,19 +63,18 @@ class User (db.Model, SerializerMixin):
     @staticmethod
     def simple_hash(input):
         return sum(bytearray(input, encoding='utf-8'))
-    
 
-    followed = db.relationship('Follow',
-                               foreign_keys=[Follow.follower_id],
-                               backref=db.backref('follower', lazy='joined'),
-                               lazy='dynamic',
-                               cascade='all, delete-orphan')
-    followers = db.relationship('Follow',
-                                foreign_keys=[Follow.followed_id],
-                                backref=db.backref('followed', lazy='joined'),
-                                lazy='dynamic',
-                                cascade='all, delete-orphan')
+    def is_following(self, user):
+        if user.id is None:
+            return False
+        return self.followed.filter_by(
+            followed_id=user.id).first() is not None
 
+    def is_followed_by(self, user):
+        if user.id is None:
+            return False
+        return self.followers.filter_by(
+            follower_id=user.id).first() is not None
 
 
 class Game(db.Model, SerializerMixin):
@@ -113,7 +122,4 @@ class Favorite(db.Model, SerializerMixin):
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
     game_image = db.Column(db.String, nullable = False)
     game_title = db.Column(db.String, nullable = False)
-
-
-
 

@@ -14,6 +14,7 @@ import {UserContext} from "./Context/user"
 import {FavoritesContext} from "./Context/favorites"
 import {CommentsContext} from "./Context/comments"
 import { UsersArrayContext } from "./Context/usersArray"
+import { FollowersContext } from "./Context/followers"
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
@@ -28,6 +29,7 @@ function App() {
     const {user, setUser} = useContext(UserContext)
     const {commentsArray, setCommentsArray} = useContext(CommentsContext)
     const {usersArray, setUsersArray} = useContext(UsersArrayContext)
+    const {followersArray, setFollowersArray} = useContext(FollowersContext)
 
 
     function handleUpdate(user) {
@@ -132,11 +134,21 @@ function App() {
         })
     },[])
 
-    // const addFavorite = (newFavorite) => {
-    //     const favCopy = [...favoritesArray, newFavorite]
-    //     setFavoritesArray(favCopy)
-    //     console.log(favoritesArray)
-    // }
+    // const [ followers, setFollowers] = useState([])
+
+    // useEffect(() => {
+    //     fetch(`/followers/${user.id}`)
+    //     .then((res) => {
+    //         if (res.ok) {
+    //             res.json().then((r) => {
+    //                 setFollowers(r)
+    //             })
+    //         } else {
+    //             console.log('comments fetched not ok')
+    //         }
+    //     })
+            
+    // },[])
 
     const deleteFavorite = (favoriteId) => {
         setFavoritesArray(favoritesArray.filter(favorite => favorite.id !== favoriteId))
