@@ -3,7 +3,7 @@ import {Link, useNavigate} from "react-router-dom"
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import {UserContext} from "../Context/user"
 
-function Login({handleLogout, handleLogin}){
+function Login({handleLogin}){
 
     const {user} = useContext(UserContext)
 
@@ -40,6 +40,7 @@ function Login({handleLogout, handleLogin}){
                 toggleIncorrect()
             }
         })
+            
     }
 
 

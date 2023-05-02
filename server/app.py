@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask import Flask, make_response, jsonify, request, session, flash
 
-from models import User, Game, Comment, Favorite, Follow
+from models import User, Game, Comment, Favorite
 
 class HomePage(Resource):
     def get(self):
@@ -15,12 +15,8 @@ def check_if_logged_in():
     logged_in = session.get('user_id')
     signing_up = 'signup' in request.path and 'POST' in request.method
     logging_in = 'login' in request.path and 'POST' in request.method
-    grabbing_games = 'games' in request.path
-    grabbing_comments = 'comments' in request.path
-    grabbing_favorites = 'favorites' in request.path
-    grabbing_users = 'users' in request.path
     
-    if not logged_in and not signing_up and not logging_in and not grabbing_games and not grabbing_comments and not grabbing_favorites and not grabbing_users:
+    if not logged_in and not signing_up and not logging_in:
         return make_response ( {'message': 'please log in'}, 401 )
 
 class SignUp(Resource):
@@ -74,13 +70,14 @@ class Login(Resource):
         password = request.get_json()['password']
         user = User.query.filter_by(username = username).first()
         
-        if user.authenticate(password) == True:
-            session['user_id'] = user.id
-            return user.to_dict()
 
-        elif user is None:
+        if user is None:
             return {'error': 'Invalid username or password'}, 401
 
+        elif user.authenticate(password) == True:
+            session['user_id'] = user.id
+            return user.to_dict()
+        
         else:
             return {'error', 'Invalid username or password'}, 401
         
@@ -150,7 +147,9 @@ class Comments(Resource):
             score=data['score'],
             content=data['content'],
             game_name=data['game_name'],
-            user_username=data['user_username']
+            game_image=data['game_image'],
+            user_username=data['user_username'],
+            user_image=data['user_image']
         )
         db.session.add(new_comment)
         db.session.commit()
@@ -260,24 +259,19 @@ class FavoritesById(Resource):
 
         return make_response({'message': 'The favorite has been deleted'}, 200)
 
-# class FollowersById(Resource):
-#     def get(self, id):
-#         if id not in [u.id for u in User.query.all()]:
-#             return {'error', '404 User not found'}
-#         else:
-#             user = User.query.filter(User.id==id).first()
-#             return make_response(user.is_followed_by().to_dict())
+
         
-class Followers(Resource):
-    def post(self):
-        data = request.get_json()
-        new_follow = Follow(
-            follower_id = data['follower_id'],
-            followed_id = data['followed_id']
-        )
-        db.session.add(new_follow)
-        db.session.commit()
-        return make_response(new_follow.to_dict())
+# class Friendships(Resource):
+#     def post(self):
+#         data = request.get_json()
+#         friend_id = data['friend_id']
+#         user_id = data['user_id']
+#         user = User.query.filter(User.id == user_id).first()
+        
+#         user.follow(friend_id)
+
+#         db.session.commit()
+#         return make_response({'message': 'Friendship created'}, 201)
 
 
 api.add_resource(HomePage, '/')
@@ -293,7 +287,7 @@ api.add_resource(UserByID, '/users/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(Favorites, '/favorites')
 api.add_resource(FavoritesById, '/favorites/<int:id>')
-api.add_resource(Followers, '/followers')
+# api.add_resource(Friendships, '/friendships')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)

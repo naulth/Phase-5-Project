@@ -12,6 +12,7 @@ import { UsersArrayProvider } from './Context/usersArray';
 import { CommentsProvider } from './Context/comments';
 import { FollowersProvider } from './Context/followers';
 import { GameProvider } from './Context/game';
+import { GamesArrayProvider } from './Context/gamesArray';
 
 const root = createRoot(document.getElementById('root'));
 
@@ -19,6 +20,7 @@ root.render(
 
 	<BrowserRouter>
         <ScrollToTop />
+        <GamesArrayProvider>
         <GameProvider>
         <FollowersProvider>
         <UsersArrayProvider>
@@ -32,5 +34,6 @@ root.render(
         </UsersArrayProvider>
         </FollowersProvider>
         </GameProvider>
+        </GamesArrayProvider>
     </BrowserRouter>
 );

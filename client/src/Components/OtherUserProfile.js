@@ -39,7 +39,7 @@ function OtherUserProfile() {
 
 
     const byCreate = (commentA, commentB) => {
-        return commentB?.created_at - commentA?.created_at
+        return commentA?.created_at - commentB?.created_at
 
     }
 
@@ -50,25 +50,28 @@ function OtherUserProfile() {
 
     const targetFavorites = targetUser?.favorites?.map(favorite => <TargetFavoriteCard key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
-    // const createFollow = (e) => {
+    const createFriend = (e) => {
 
-    //     const newFollow = {
-    //         followed_id: targetUser?.id,
-    //         follower_id: user?.id,
-    //     }
+        console.log('friend_id is', targetUser?.id)
+        console.log('user_id is', user?.id)
 
-    //     fetch('/followers', {
-    //         method: "POST",
-    //         headers: {'Content-Type' : 'application/json'},
-    //         body: JSON.stringify(newFollow)
-    //     })
-    //     .then((response) => {
-    //         if (response.ok) {
-    //             response.json().then((response) => console.log(response))
-    //         }
-    //     })
+        const newFriend = {
+            friend_id: targetUser?.id,
+            user_id: user?.id,
+        }
 
-    // }
+        fetch('/friendships', {
+            method: "POST",
+            headers: {'Content-Type' : 'application/json'},
+            body: JSON.stringify(newFriend)
+        })
+        .then((response) => {
+            if (response.ok) {
+                response.json().then((response) => console.log(response))
+            }
+        })
+
+    }
 
 
     return(
@@ -84,7 +87,7 @@ function OtherUserProfile() {
                 </div>
                 <div className="pb-4 px-4 text-center">
                     <p className="text-lg py-4 font-bold tracking-tight text-white">{targetUser?.first_name} {targetUser?.last_name}</p>
-                    <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
+                    <button onClick={createFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
                 </div>
                 
             </div>

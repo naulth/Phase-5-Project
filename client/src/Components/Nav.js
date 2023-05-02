@@ -13,18 +13,17 @@ function Nav({handleLogout}){
         <header className="bg-zinc-900 border border-lime-200 sticky top-0">
             <nav className="mx-auto flex mx-w-7xl items-center justify-between h-24 gap-x-6 p-6 lg:px-8" aria-label="Global">
 				<div className="flex lg:flex-1">
-                    {user ? <Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/profile">LoggedOn</Link> :<Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/">LoggedOn</Link> }
+                    {user ? <Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/feed">LoggedOn</Link> :<Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/">LoggedOn</Link> }
 					{/* <Link>
 						<span className="sr-only">Project Name</span>
 						<img src=logo />
 					</Link> */}
 				</div>
 				<div className="hidden lg:flex lg:gap-x-12">
+                    {user ? <NavLink className="text-lg font-semibold leading-6 text-lime-100" to="/feed" >Feed</NavLink> : null }
                     {user ? <NavLink className="text-lg font-semibold leading-6 text-lime-100" to="/users" end>Users</NavLink> : null}
                     {user ? <NavLink className="text-lg font-semibold leading-6 text-lime-100" to="/profile">Profile</NavLink> : null}
 					{user ? <NavLink className="text-lg font-semibold leading-6 text-lime-100" to="/games" >Games</NavLink> : null }
-					{/*<NavLink></NavLink>
-					<NavLink></NavLink> */}
 				</div>
 				<div className="flex flex-1 items-center justify-end gap-x-6">
                 {user ? <p className="hidden lg:block lg:text-md lg:font-semibold lg:leading-6 lg:text-lime-200">Welcome, {user && user.username}</p> : null}

@@ -9,12 +9,14 @@ import Profile from "./Components/Profile"
 import GamePage from "./Components/GamePage"
 import Users from "./Components/Users"
 import OtherUserProfile from "./Components/OtherUserProfile"
+import CommentFeed from "./Components/CommentFeed"
 
 import {UserContext} from "./Context/user"
 import {FavoritesContext} from "./Context/favorites"
 import {CommentsContext} from "./Context/comments"
 import { UsersArrayContext } from "./Context/usersArray"
 import { FollowersContext } from "./Context/followers"
+import { GamesArrayContext } from "./Context/gamesArray"
 
 import { library } from '@fortawesome/fontawesome-svg-core'
 import { faEye, faEyeSlash} from '@fortawesome/free-solid-svg-icons'
@@ -30,6 +32,7 @@ function App() {
     const {commentsArray, setCommentsArray} = useContext(CommentsContext)
     const {usersArray, setUsersArray} = useContext(UsersArrayContext)
     const {followersArray, setFollowersArray} = useContext(FollowersContext)
+    const {gamesArray, setGamesArray} = useContext(GamesArrayContext)
 
 
     function handleUpdate(user) {
@@ -52,7 +55,6 @@ function App() {
         console.log('logged out')
     }
 
-    const [gamesArray, setGamesArray] = useState([])
 
     useEffect(() => {
         fetch('/games')
@@ -71,12 +73,15 @@ function App() {
 
 
        const newUser = {
-        ...user,
-        comments: [
-            ...user?.comments?.filter(comment => comment.id !== deadCommentId)
-        ]
+            ...user,
+            comments: [
+                ...user?.comments?.filter(comment => comment.id !== deadCommentId)
+            ]
         }    
         setUser(newUser)
+
+        const newComments = [...commentsArray]?.filter(comment => comment.id !== deadCommentId)
+        setCommentsArray(newComments)
     }
 
 
@@ -127,8 +132,6 @@ function App() {
                 res.json().then((r) => {
                     setCommentsArray(r)
                 })
-            } else {
-                console.log('comments fetched not ok')
             }
         })
             
@@ -141,8 +144,6 @@ function App() {
                 res.json().then((r) => {
                     setFavoritesArray(r)
                 })
-            } else {
-                console.log('favorites fetched not ok')
             }
         })
     },[])
@@ -184,6 +185,7 @@ function App() {
                 <Route path='profile' element={<Profile deleteUser={deleteUser} user={user} setUser={setUser} editComment={editComment} handleDeleteComment={handleDeleteComment}  handleLogout={handleLogout} handleUpdate={handleUpdate} deleteFavorite={deleteFavorite} /> } />
                 <Route path="signup" element={<Signup />} />
                 <Route path="/" element={<Login handleLogout={handleLogout} handleLogin={handleLogin} user={user}/>} />
+                <Route path="feed" element={<CommentFeed/> }/>
             </Routes>
         </div>
        

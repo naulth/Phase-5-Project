@@ -6,21 +6,14 @@ import {useNavigate} from 'react-router-dom'
 
 function Signup(){
 
-    // const [username, setUsername] = useState('')
-    // const [firstName, setFirstName] = useState('')
-    // const [lastName, setLastName] = useState('')
-    // const [birthDate, setBirthDate] = useState('')
-    // const [profileImage, setProfileImage] = useState('')
-    // const [password, setPassword] = useState('')
-    // const [confirm, setConfirm] = useState('')
     const [showPassword, setShowPassword] = useState(false)
+
 
     const handleShow = () => {
         setShowPassword(!showPassword)
     }
 
-    // const createNewUser = (e) => {
-    //     e.preventDefault()
+  
 
     const formSchema = yup.object().shape({
         username: yup
@@ -74,49 +67,37 @@ function Signup(){
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify(values, null, 2),
+            }).then((r) => {
+                if (r.ok) {
+                    navigate('/')
+                }
             })
-            navigate('/')
         },
     });
 
-        // .then((r) => {
-        //     if (r.ok) {
-        //         r.json().then((user) => setUser(user));
-        //     }
-        // });
+    // fetch("/login", {
+    //     method: "POST",
+    //     headers: {"Content-Type": "application/json",},
+    //     body: JSON.stringify({username, password})
+    // }).then((r) => {
+    //     if (r.ok) {
+    //         r.json().then((user) => handleLogin(user))
+    //         navigate("/profile")
+    //     } else {
+    //         toggleIncorrect()
+    //     }
+    // })
 
-        // const newUser = {
-        //     username: username, 
-        //     password: password, 
-        //     confirm_password: confirm,
-        //     first_name: firstName,
-        //     last_name: lastName,
-        //     birth_date: birthDate,
-        //     image: profileImage
-        // }
 
-        // fetch('/signup', {
-        //     method: "POST",
-        //     headers: {'Content-Type' : 'application/json'},
-        //     body: JSON.stringify(newUser)
-        // })
-
-    //     setUsername('')
-    //     setFirstName('')
-    //     setLastName('')
-    //     setPassword('')
-    //     setConfirm('')
-    //     setBirthDate('')
-    //     setProfileImage('')
-    // }
 
     return(
         <div className="bg-zinc-800 h-screen">
         <div >
         <div className="flex flex-col justify-center px-6 py-12 lg:px-8">
-            <div className="">
+            <div className="text-center">
                 {/* <img className="mx-auto h-10 w-auto" src="" alt="Logo"/>*/}
                 <h2 className="my-10 text-center text-4xl font-bold leading-9 tracking-tight text-lime-200">Create Your New Account</h2>
+                <p className="block text-md font-medium leading-6 text-lime-100">Please ensure all fields are complete and valid.</p>
             </div>
             <div>
             <div className="mt-10 max-w-3xl mx-auto">

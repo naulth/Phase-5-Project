@@ -5,7 +5,7 @@ import {useNavigate} from 'react-router-dom'
 import {UserContext} from "../Context/user"
 
 
-function EditCommentForm({theId, editComment, game_id, gamename}){
+function EditCommentForm({theId, editComment, gameImage, game_id, gamename}){
 
     const {user} = useContext(UserContext)
 
@@ -34,7 +34,9 @@ function EditCommentForm({theId, editComment, game_id, gamename}){
         content: "",
         id: theId,
         game_name: gamename,
+        game_image: gameImage,
         user_username: user?.username,
+        user_image: user?.image,
         game_id: game_id,
         user_id: user?.id
         },

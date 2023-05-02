@@ -5,13 +5,12 @@ from datetime import datetime
 
 
 
-class Follow(db.Model, SerializerMixin):
-    __tablename__ = "follows"
-
-    # serialize_rules = ('-user.follows',)
-
-    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
-    followed_id = db.Column(db.Integer, db.ForeignKey('users.id'), primary_key = True)
+# friendship = db.Table(
+#     "friendships",
+#     db.Model.metadata,
+#     db.Column("user_id", db.Integer, db.ForeignKey("users.id"), index=True),
+#     db.Column("friend_id", db.Integer, db.ForeignKey("users.id")),
+# )
 
 
 class User (db.Model, SerializerMixin):
@@ -32,16 +31,20 @@ class User (db.Model, SerializerMixin):
     comments = db.relationship('Comment', backref='user', cascade='all, delete')
     favorites = db.relationship('Favorite', backref='user', cascade='all, delete')
 
-    followed = db.Relationship('Follow',
-                                foreign_keys=[Follow.follower_id],
-                                backref=db.backref('follower', lazy='joined'),
-                                lazy='dynamic',
-                                cascade='all, delete-orphan')
-    followers = db.relationship('Follow',
-                              foreign_keys=[Follow.followed_id],
-                              backref=db.backref('followed', lazy='joined'),
-                              lazy='dynamic',
-                              cascade='all, delete-orphan')
+    # friends = db.relationship(
+    #     "User",
+    #     secondary=friendship,
+    #     primaryjoin=id == friendship.c.user_id,
+    #     secondaryjoin=id == friendship.c.friend_id,
+    # )
+
+    # def follow(self, friend):
+    #     if friend not in self.friends:
+    #         self.friends.append(friend)
+
+    # def unfollow(self, friend):
+    #     if friend in self.friends:
+    #         self.friends.remove(friend)
 
 
     @hybrid_property
@@ -63,18 +66,6 @@ class User (db.Model, SerializerMixin):
     @staticmethod
     def simple_hash(input):
         return sum(bytearray(input, encoding='utf-8'))
-
-    # def is_following(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.followed.filter_by(
-    #         followed_id=user.id).first() is not None
-
-    # def is_followed_by(self, user):
-    #     if user.id is None:
-    #         return False
-    #     return self.followers.filter_by(
-    #         follower_id=user.id).first() is not None
 
 
 class Game(db.Model, SerializerMixin):
@@ -103,7 +94,9 @@ class Comment(db.Model, SerializerMixin):
     score = db.Column(db.Integer)
     content = db.Column(db.String)
     game_name = db.Column(db.String)
+    game_image = db.Column(db.String)
     user_username = db.Column(db.String)
+    user_image = db.Column(db.String)
     created_at = db.Column(db.DateTime, server_default=db.func.now())
     updated_at = db.Column(db.DateTime, onupdate=db.func.now())
 

@@ -3,11 +3,13 @@ import {useFormik} from "formik"
 import * as yup from "yup"
 import {UserContext} from "../Context/user"
 import { GameContext } from '../Context/game'
+import { CommentsContext } from '../Context/comments'
 
 function AddGameComment({}){
 
     const {user, setUser} = useContext(UserContext)
     const {game, setGame} = useContext(GameContext)
+    const {commentsArray, setCommentsArray} = useContext(CommentsContext)
     
 
 	const formSchema = yup.object().shape({
@@ -26,7 +28,9 @@ function AddGameComment({}){
         score: "",
         content: "",
         game_name: game?.title,
+        game_image: game?.image,
         user_username: user?.username,
+        user_image: user?.image,
         user_id: user?.id,
         game_id: game?.id
         },
@@ -58,6 +62,9 @@ function AddGameComment({}){
                             ]
                         }
                         setGame(newGame)
+
+                        const newComments = [...commentsArray, response]
+                        setCommentsArray(newComments)
                     })
                 }
             })

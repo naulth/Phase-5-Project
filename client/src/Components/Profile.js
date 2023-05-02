@@ -6,12 +6,60 @@ import FavoriteCard from './FavoriteCard'
 import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
 import {UserContext} from "../Context/user"
+import {FavoritesContext} from "../Context/favorites"
+import {CommentsContext} from "../Context/comments"
+import { UsersArrayContext } from "../Context/usersArray"
+import { GamesArrayContext } from "../Context/gamesArray"
 
 function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, handleLogout, deleteFavorite}){
 
     const navigate = useNavigate()
 
     const {user, setUser} = useContext(UserContext)
+    const {favoritesArray, setFavoritesArray} = useContext(FavoritesContext)
+    const {commentsArray, setCommentsArray} = useContext(CommentsContext)
+    const {usersArray, setUsersArray} = useContext(UsersArrayContext)
+    const {gamesArray, setGamesArray} = useContext(GamesArrayContext)
+
+    useEffect(() => {
+        fetch('/games')
+            .then(r => r.json())
+            .then(setGamesArray)
+    },[])
+
+
+    useEffect(() => {
+        fetch('/users')
+            .then(r => r.json())
+            .then(setUsersArray)
+    },[])
+
+    useEffect(() => {
+        fetch('/comments')
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setCommentsArray(r)
+                })
+            } else {
+                console.log('comments fetched not ok')
+            }
+        })
+            
+    },[])
+
+    useEffect(() => {
+        fetch('/favorites')
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setFavoritesArray(r)
+                })
+            } else {
+                console.log('favorites fetched not ok')
+            }
+        })
+    },[])
 
 
     const handleDelete = (e) => {
@@ -35,14 +83,14 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
 
     const byCreate = (commentA, commentB) => {
-        return commentB?.created_at - commentA?.created_at
+        return commentA?.created_at - commentB?.created_at
 
     }
 
-    const sortedComponents = user?.comments?.sort(byCreate)
+    const sortedComponents = user?.comments?.sort(byCreate).reverse()
 
 
-    const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
+    const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} gameImage ={comment?.game_image} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
    
 
     const userFavorites = user?.favorites?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
