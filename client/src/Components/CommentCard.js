@@ -11,7 +11,7 @@ function CommentCard({username, content, score, gameImage, userImage, game, user
                 <div className="text-left">
                         <h2 className="text-lg pb-4 font-bold tracking-tight text-lime-100">{username}</h2>
                     </div>
-                    <img src={userImage} className="h-20 mb-4" />
+                    <img src={userImage} alt={game} className="h-20 mb-4" />
                     <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4"><Link to={linkURL}>View Profile</Link></button>
                     <Outlet />
                     
@@ -19,7 +19,7 @@ function CommentCard({username, content, score, gameImage, userImage, game, user
                     
                 </div>
                 <div className="col-span-1">
-                    <img src={gameImage}className="h-60 w-auto border border-lime-100" />
+                    <img src={gameImage} alt={game} className="h-60 w-auto border border-lime-100" />
                 </div>
                 <div className="col-span-1 ml-4 ">
                     <div className="grid grid-rows-1 ">
