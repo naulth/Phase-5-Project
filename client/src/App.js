@@ -56,18 +56,18 @@ function App() {
     }
 
 
-    useEffect(() => {
-        fetch('/games')
-            .then(r => r.json())
-            .then(setGamesArray)
-    },[])
+    // useEffect(() => {
+    //     fetch('/games')
+    //         .then(r => r.json())
+    //         .then(setGamesArray)
+    // },[])
 
 
-    useEffect(() => {
-        fetch('/users')
-            .then(r => r.json())
-            .then(setUsersArray)
-    },[])
+    // useEffect(() => {
+    //     fetch('/users')
+    //         .then(r => r.json())
+    //         .then(setUsersArray)
+    // },[])
 
     const handleDeleteComment = (deadCommentId) => {
 
@@ -125,28 +125,28 @@ function App() {
         });
     }, []);
 
-    useEffect(() => {
-        fetch('/comments')
-        .then((res) => {
-            if (res.ok) {
-                res.json().then((r) => {
-                    setCommentsArray(r)
-                })
-            }
-        })
+    // useEffect(() => {
+    //     fetch('/comments')
+    //     .then((res) => {
+    //         if (res.ok) {
+    //             res.json().then((r) => {
+    //                 setCommentsArray(r)
+    //             })
+    //         }
+    //     })
             
-    },[])
+    // },[])
 
-    useEffect(() => {
-        fetch('/favorites')
-        .then((res) => {
-            if (res.ok) {
-                res.json().then((r) => {
-                    setFavoritesArray(r)
-                })
-            }
-        })
-    },[])
+    // useEffect(() => {
+    //     fetch('/favorites')
+    //     .then((res) => {
+    //         if (res.ok) {
+    //             res.json().then((r) => {
+    //                 setFavoritesArray(r)
+    //             })
+    //         }
+    //     })
+    // },[])
 
     // const [ followers, setFollowers] = useState([])
 
