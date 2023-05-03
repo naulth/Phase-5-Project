@@ -52,18 +52,10 @@ function OtherUserProfile() {
 
     const createFriend = (e) => {
 
-        console.log('friend_id is', targetUser?.id)
-        console.log('user_id is', user?.id)
-
-        const newFriend = {
-            friend_id: targetUser?.id,
-            user_id: user?.id,
-        }
-
-        fetch('/friendships', {
+        fetch(`/follow/${targetUser?.id}`, {
             method: "POST",
             headers: {'Content-Type' : 'application/json'},
-            body: JSON.stringify(newFriend)
+            body: JSON.stringify({followed_id: targetUser?.id})
         })
         .then((response) => {
             if (response.ok) {

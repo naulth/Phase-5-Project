@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask import Flask, make_response, jsonify, request, session, flash
 
-from models import User, Game, Comment, Favorite
+from models import User, Game, Comment, Favorite, Follow
 
 class HomePage(Resource):
     def get(self):
@@ -53,16 +53,6 @@ class SignUp(Resource):
         
 
 class Login(Resource):
-
-    # def post(self):
-    #     username = request.get_json()['username']
-    #     password = request.get_json()['password']
-    #     user = User.query.filter(User.username == username).first()
-    #     if user.authenticate(password) == True:
-    #         session['user_id'] = user.id
-    #         return user.to_dict()
-
-    ################################
 
     def post(self):
 
@@ -184,13 +174,6 @@ class CommentsById(Resource):
 
         return make_response({'message': 'The comment has been deleted'}, 200)
 
-
-# class CommentsByUserId(Resource):
-#     def get(self, id):
-#         if id not in [u.id for u in User.query.all()]:
-#             return {'error': '404, User not Found!'}, 404
-
-#         return make_response((User.query.filter(User.id==id).first()).comments.to_dict(), 200)
         
 class Users(Resource):
     def get(self):
@@ -259,19 +242,22 @@ class FavoritesById(Resource):
 
         return make_response({'message': 'The favorite has been deleted'}, 200)
 
+class FollowById(Resource):
+    def post(self, id):
 
-        
-# class Friendships(Resource):
-#     def post(self):
-#         data = request.get_json()
-#         friend_id = data['friend_id']
-#         user_id = data['user_id']
-#         user = User.query.filter(User.id == user_id).first()
-        
-#         user.follow(friend_id)
+        user = User.query.filter(User.id == session.get('user_id')).first()
+        user_id = user.id
+        # followed_user = User.query.filter(User.id == id).first()
 
-#         db.session.commit()
-#         return make_response({'message': 'Friendship created'}, 201)
+        new_follow = Follow(
+            followee_id = user_id,
+            follower_id = id
+        )
+        db.session.add(new_follow)
+        db.session.commit()
+
+        return make_response(new_follow.to_dict(), 201)
+
 
 
 api.add_resource(HomePage, '/')
@@ -287,7 +273,7 @@ api.add_resource(UserByID, '/users/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(Favorites, '/favorites')
 api.add_resource(FavoritesById, '/favorites/<int:id>')
-# api.add_resource(Friendships, '/friendships')
+api.add_resource(FollowById, '/follow/<int:id>')
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)

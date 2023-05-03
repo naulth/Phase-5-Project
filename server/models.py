@@ -5,46 +5,58 @@ from datetime import datetime
 
 
 
-# friendship = db.Table(
-#     "friendships",
-#     db.Model.metadata,
-#     db.Column("user_id", db.Integer, db.ForeignKey("users.id"), index=True),
-#     db.Column("friend_id", db.Integer, db.ForeignKey("users.id")),
+# follows = db.Table(
+#     'follows',
+#     db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
+#     db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
 # )
+class Follow(db.Model, SerializerMixin):
+    __tablename__ = 'follows'
+
+    id = db.Column(db.Integer, primary_key=True)
+    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+    followee_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
 
 
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-comments.user', '-favorites.user',)
+    serialize_rules = ('-comments.user', '-favorites.user', '-followers', '-following',)
 
     id = db.Column( db.Integer, primary_key = True )
 
     first_name = db.Column(db.String, nullable=False)
     last_name = db.Column(db.String, nullable=False)
     birth_date = db.Column(db.String, nullable=False)
-    username = db.Column( db.String, nullable = False)
+    username = db.Column( db.String, unique = True, nullable = False)
     image = db.Column(db.String, nullable = False)
     _password_hash = db.Column( db.String, nullable = False )
     confirm_password = db.Column(db.String, nullable = False)
 
     comments = db.relationship('Comment', backref='user', cascade='all, delete')
     favorites = db.relationship('Favorite', backref='user', cascade='all, delete')
+    followers = db.relationship('Follow', backref='followee', foreign_keys=[Follow.followee_id])
+    following = db.relationship('Follow', backref='follower', foreign_keys=[Follow.follower_id])
 
-    # friends = db.relationship(
-    #     "User",
-    #     secondary=friendship,
-    #     primaryjoin=id == friendship.c.user_id,
-    #     secondaryjoin=id == friendship.c.friend_id,
-    # )
+    # followed = db.relationship(
+    #     'User', 
+    #     secondary=follows,
+    #     primaryjoin=(follows.c.follower_id == id),
+    #     secondaryjoin=(follows.c.followed_id == id),
+    #     backref=db.backref('follows', lazy='dynamic'),
+    #     lazy='dynamic')
 
-    # def follow(self, friend):
-    #     if friend not in self.friends:
-    #         self.friends.append(friend)
+    # def follow(self, user):
+    #     if not self.is_following(user):
+    #         self.followed.append(user)
 
-    # def unfollow(self, friend):
-    #     if friend in self.friends:
-    #         self.friends.remove(friend)
+    # def unfollow(self, user):
+    #     if self.is_following(user):
+    #         self.followed.remove(user)
+
+    # def is_following(self, user):
+    #     return self.followed.filter(
+    #         follows.c.followed_id == user.id).count() > 0
 
 
     @hybrid_property
