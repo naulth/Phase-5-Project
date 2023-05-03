@@ -5,23 +5,17 @@ from datetime import datetime
 
 
 
-# follows = db.Table(
-#     'follows',
-#     db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
-#     db.Column('followed_id', db.Integer, db.ForeignKey('users.id'))
-# )
-class Follow(db.Model, SerializerMixin):
-    __tablename__ = 'follows'
-
-    id = db.Column(db.Integer, primary_key=True)
-    follower_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
-    followee_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
+followers = db.Table('followers',
+    db.Column('follower_id', db.Integer, db.ForeignKey('users.id')),
+    db.Column('followee_id', db.Integer, db.ForeignKey('users.id'))
+)
 
 
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-comments.user', '-favorites.user', '-followers', '-following',)
+    serialize_rules = ('-comments.user.password_hash', '-favorites.user.password_hash', '-followers',)
+
 
     id = db.Column( db.Integer, primary_key = True )
 
@@ -35,28 +29,37 @@ class User (db.Model, SerializerMixin):
 
     comments = db.relationship('Comment', backref='user', cascade='all, delete')
     favorites = db.relationship('Favorite', backref='user', cascade='all, delete')
-    followers = db.relationship('Follow', backref='followee', foreign_keys=[Follow.followee_id])
-    following = db.relationship('Follow', backref='follower', foreign_keys=[Follow.follower_id])
 
-    # followed = db.relationship(
-    #     'User', 
-    #     secondary=follows,
-    #     primaryjoin=(follows.c.follower_id == id),
-    #     secondaryjoin=(follows.c.followed_id == id),
-    #     backref=db.backref('follows', lazy='dynamic'),
-    #     lazy='dynamic')
+    followers = db.relationship('User', 
+                                 secondary='followers',
+                                 primaryjoin=('followers.c.followee_id == User.id'),
+                                 secondaryjoin=('followers.c.follower_id == User.id'),
+                                 backref=db.backref('following', lazy='dynamic'), lazy='dynamic')
+
+    def user_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "birth_date": self.birth_date,
+            "image": self.image,
+            "favorites": [fav.to_dict() for fav in self.favorites],
+            "comments": [comment.to_dict() for comment in self.comments],
+            "followers": [follower.to_dict() for follower in self.followers],
+            "following": [following.to_dict() for following in self.following]
+        }
 
     # def follow(self, user):
     #     if not self.is_following(user):
-    #         self.followed.append(user)
+    #         self.followers.append(user)
 
     # def unfollow(self, user):
     #     if self.is_following(user):
-    #         self.followed.remove(user)
+    #         self.followers.remove(user)
 
     # def is_following(self, user):
-    #     return self.followed.filter(
-    #         follows.c.followed_id == user.id).count() > 0
+    #     return self.followers.filter(followers.c.follower_id == user.id).count() > 0
 
 
     @hybrid_property
@@ -99,7 +102,7 @@ class Game(db.Model, SerializerMixin):
 class Comment(db.Model, SerializerMixin):
     __tablename__ = 'comments'
 
-    serialize_rules = ('-game.comments', '-user.comments',)
+    serialize_rules = ('-game.comments.game.comments', '-user.comments.user.password_hash', '-game.favorites',)
 
     id = db.Column(db.Integer, primary_key = True)
 
@@ -119,7 +122,7 @@ class Comment(db.Model, SerializerMixin):
 class Favorite(db.Model, SerializerMixin):
     __tablename__ = 'favorites'
 
-    serialize_rules = ('-game.favorites', '-user.favorites',)
+    serialize_rules = ('-game.favorites', '-user.favorites', '-user.comments',)
 
     id = db.Column(db.Integer, primary_key = True)
 

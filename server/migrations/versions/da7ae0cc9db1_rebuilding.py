@@ -1,8 +1,8 @@
-"""follow model
+"""rebuilding
 
-Revision ID: 9c94bbbe6eab
+Revision ID: da7ae0cc9db1
 Revises: 
-Create Date: 2023-05-03 02:40:41.729947
+Create Date: 2023-05-03 05:45:01.454842
 
 """
 from alembic import op
@@ -10,7 +10,7 @@ import sqlalchemy as sa
 
 
 # revision identifiers, used by Alembic.
-revision = '9c94bbbe6eab'
+revision = 'da7ae0cc9db1'
 down_revision = None
 branch_labels = None
 depends_on = None

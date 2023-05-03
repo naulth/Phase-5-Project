@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask import Flask, make_response, jsonify, request, session, flash
 
-from models import User, Game, Comment, Favorite, Follow
+from models import User, Game, Comment, Favorite
 
 class HomePage(Resource):
     def get(self):
@@ -49,7 +49,9 @@ class SignUp(Resource):
         )
         db.session.add(new_user)
         db.session.commit()
-        return new_user.to_dict()
+        return jsonify(
+            new_user.user_dict()
+        )
         
 
 class Login(Resource):
@@ -66,7 +68,9 @@ class Login(Resource):
 
         elif user.authenticate(password) == True:
             session['user_id'] = user.id
-            return user.to_dict()
+
+            result = user.user_dict()
+            return make_response(jsonify(result))
         
         else:
             return {'error', 'Invalid username or password'}, 401
@@ -85,7 +89,9 @@ class CheckSession(Resource):
 
     def get(self):
         user = User.query.filter(User.id == session.get('user_id')).first()
-        return user.to_dict(), 200
+
+        result = user.user_dict()
+        return make_response(jsonify(result), 200)
     
 class Games(Resource):
     def get(self):
@@ -177,14 +183,16 @@ class CommentsById(Resource):
         
 class Users(Resource):
     def get(self):
-        return make_response([u.to_dict() for u in User.query.all()], 200)
+        
+        return make_response([u.user_dict() for u in User.query.all()], 200)
 
 class UserByID(Resource):
     def get(self, id):
         if id not in [u.id for u in User.query.all()]:
             return {'error': '404, User not Found!'}, 404
 
-        return make_response((User.query.filter(User.id==id).first()).to_dict(), 200)
+        user = User.query.filter(User.id==id).first()
+        return make_response(jsonify(user.user_dict()), 200)
 
     def patch(self, id):
         if id not in [u.id for u in User.query.all()]:
@@ -196,7 +204,7 @@ class UserByID(Resource):
             setattr(user, key , data[key])
         db.session.add(user)
         db.session.commit()
-        return make_response(user.to_dict(), 200)
+        return make_response(jsonify(user.user_dict()), 200)
     
     def delete(self, id):
         if id not in [u.id for u in User.query.all()]:
@@ -245,18 +253,31 @@ class FavoritesById(Resource):
 class FollowById(Resource):
     def post(self, id):
 
-        user = User.query.filter(User.id == session.get('user_id')).first()
-        user_id = user.id
-        # followed_user = User.query.filter(User.id == id).first()
+        followed_user = User.query.filter_by(id == id).first()
+        current_user = User.query.filter(User.id == session.get('user_id')).first()
 
-        new_follow = Follow(
-            followee_id = user_id,
-            follower_id = id
-        )
-        db.session.add(new_follow)
+        current_user.following.append(followed_user.user_dict())
+
         db.session.commit()
 
-        return make_response(new_follow.to_dict(), 201)
+        return make_response({'message': 'Follow Successful'}, 201)
+    
+# @app.route('/user/<username>')
+# def user(username):
+#     user = User.query.filter_by(username=username).first_or_404()
+#     followers = user.followers.all()
+#     following = user.following.all()
+#     return render_template('user.html', user=user, followers=followers, following=following)
+
+# @app.route('/unfollow/<username>')
+# @login_required
+# def unfollow(username):
+#     user = User.query.filter_by(username=username).first_or_404()
+#     current_user.following.remove(user)
+#     db.session.commit()
+#     flash(f"You have unfollowed {username}")
+#     return redirect(url_for('user', username=username))
+
 
 
 
@@ -273,7 +294,7 @@ api.add_resource(UserByID, '/users/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(Favorites, '/favorites')
 api.add_resource(FavoritesById, '/favorites/<int:id>')
-api.add_resource(FollowById, '/follow/<int:id>')
+
 
 if __name__ == '__main__':
     app.run(port = 5555, debug = True)
