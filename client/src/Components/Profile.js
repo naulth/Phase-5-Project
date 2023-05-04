@@ -76,7 +76,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
     //         }
     //     })
     // },[])
-    console.log(user)
+    // console.log(followersArray)
 
     const handleDelete = (e) => {
         fetch(`/users/${user.id}`,{
@@ -111,7 +111,8 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
     const userFavorites = user?.favorites?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
 
-    const userFollows = user?.followers?.map(follow => <UserCard key={follow?.id} image={follow?.image} username={follow?.username}/>)
+    const userFollows = user?.following?.map(follow => <UserCard key={follow?.id} image={follow?.image} username={follow?.username} id={follow?.id} />)
+
 
     return(
         <div className="bg-zinc-800 min-h-screen h-full">

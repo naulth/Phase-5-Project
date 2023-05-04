@@ -15,7 +15,6 @@ import {UserContext} from "./Context/user"
 import {FavoritesContext} from "./Context/favorites"
 import {CommentsContext} from "./Context/comments"
 import { UsersArrayContext } from "./Context/usersArray"
-import { FollowersContext } from "./Context/followers"
 import { GamesArrayContext } from "./Context/gamesArray"
 
 import { library } from '@fortawesome/fontawesome-svg-core'
@@ -31,7 +30,6 @@ function App() {
     const {user, setUser} = useContext(UserContext)
     const {commentsArray, setCommentsArray} = useContext(CommentsContext)
     const {usersArray, setUsersArray} = useContext(UsersArrayContext)
-    const {followersArray, setFollowersArray} = useContext(FollowersContext)
     const {gamesArray, setGamesArray} = useContext(GamesArrayContext)
 
 

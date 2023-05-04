@@ -15,7 +15,7 @@ function OtherUserProfile() {
     const{usersArray} = useContext(UsersArrayContext)
     const {favoritesArray} = useContext(FavoritesContext)
     const {commentsArray} = useContext(CommentsContext)
-    const {user} = useContext(UserContext)
+    const {user, setUser} = useContext(UserContext)
 
     const [targetUser, setTargetUser] = useState({})
 
@@ -36,6 +36,12 @@ function OtherUserProfile() {
         })
     },[])
 
+    // const [ friend, setFriend] = useState(false)
+
+    // const toggleFriend = () => {
+    //     setFriend(!friend)
+    // }
+
 
 
     const byCreate = (commentA, commentB) => {
@@ -50,7 +56,7 @@ function OtherUserProfile() {
 
     const targetFavorites = targetUser?.favorites?.map(favorite => <TargetFavoriteCard key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
-    const createFriend = (e) => {
+    const createFriend = () => {
 
         fetch(`/follow/${targetUser?.id}`, {
             method: "POST",
@@ -59,10 +65,32 @@ function OtherUserProfile() {
         })
         .then((response) => {
             if (response.ok) {
-                response.json().then((response) => console.log(response))
+                response.json().then((response) => {
+                    const newUser = {
+                    ...user,
+                    following: [
+                        ...user?.following, response 
+                    ]
+                    }
+                    setUser(newUser)
+                })
             }
         })
+    }
 
+    const deleteFriend = () => {
+
+        fetch(`/unfollow/${targetUser.id}`, {
+            method: "DELETE"
+        })
+
+        const newUser = {
+            ...user,
+            following: [
+                ...user?.following?.filter(follower => follower.id !== targetUser.id)
+            ]
+        }    
+        setUser(newUser)
     }
 
 
@@ -79,6 +107,8 @@ function OtherUserProfile() {
                 </div>
                 <div className="pb-4 px-4 text-center">
                     <p className="text-lg py-4 font-bold tracking-tight text-white">{targetUser?.first_name} {targetUser?.last_name}</p>
+
+                    <button onClick={deleteFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Delete Friend</button>
                     <button onClick={createFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
                 </div>
                 

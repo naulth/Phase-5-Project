@@ -1,7 +1,9 @@
 from sqlalchemy_serializer import SerializerMixin
 from sqlalchemy.ext.hybrid import hybrid_property
 from config import db, bcrypt
-from datetime import datetime
+from datetime import datetime, timedelta
+from sqlalchemy.orm import validates
+import re
 
 
 
@@ -34,7 +36,59 @@ class User (db.Model, SerializerMixin):
                                  secondary='followers',
                                  primaryjoin=('followers.c.followee_id == User.id'),
                                  secondaryjoin=('followers.c.follower_id == User.id'),
-                                 backref=db.backref('following', lazy='dynamic'), lazy='dynamic')
+                                 backref=db.backref('following', lazy='dynamic', cascade='all, delete'), lazy='dynamic', cascade='all, delete')
+
+    @validates('username')
+    def validate_username(self, key, username):
+        if len(username) < 5:
+            raise ValueError("Username must be at least 5 characters.")
+        return username
+    
+    @validates('first_name', 'last_name')
+    def validate_names(self, key, value):
+        if len(value) < 1:
+            raise ValueError('Field cannot be empty.')
+        elif isinstance(value, int):
+            raise ValueError('Integer values are not allowed.')
+        return value
+    
+    @validates('birth_date')
+    def validate_birth_date(self, key, value):
+        birth_date = datetime.strptime(value, '%Y-%m-%d')
+        age = datetime.now() - birth_date
+        if age < timedelta(days=365*18):
+            raise ValueError('User must be over 18 years old.')
+        return value
+    
+    @validates('image')
+    def validate_image(self, key, value):
+        if len(value) < 1:
+            raise ValueError('Image field cannot be empty.')
+        return value
+        
+    @validates('_password_hash', 'confirm_password' )
+    def validate_password(self, key, value):
+        # if not re.search(r'[A-Z]', value):
+        #     raise ValueError('Password must include at least one capital letter.')
+        # if not re.search(r'[a-z]', value):
+        #     raise ValueError('Password must include at least one lowercase letter.')
+        # if not re.search(r'\d', value):
+        #     raise ValueError('Password must include at least one number.')
+        # if not re.search(r'[!@#$%^&*(),.?":{}|<>]', value):
+        #     raise ValueError('Password must include at least one symbol.')
+        if len(value) < 8:
+            raise ValueError('Password must be at least 8 characters long.')
+        return value
+
+    def is_following(self, user):
+        return self.following.filter(followers.c.followee_id == user.id).count() > 0
+    
+    def unfollow(self, user):
+        if not self.is_following(user):
+            return False
+        
+        self.following.remove(user)
+        db.session.commit()
 
     def user_dict(self):
         return {
@@ -49,14 +103,6 @@ class User (db.Model, SerializerMixin):
             "followers": [follower.to_dict() for follower in self.followers],
             "following": [following.to_dict() for following in self.following]
         }
-
-    # def follow(self, user):
-    #     if not self.is_following(user):
-    #         self.followers.append(user)
-
-    # def unfollow(self, user):
-    #     if self.is_following(user):
-    #         self.followers.remove(user)
 
     # def is_following(self, user):
     #     return self.followers.filter(followers.c.follower_id == user.id).count() > 0
@@ -95,14 +141,28 @@ class Game(db.Model, SerializerMixin):
     genre = db.Column(db.String, nullable = False)
     platform = db.Column(db.String, nullable = False)
     price = db.Column(db.Float, nullable = False)
-    favorite = db.Column(db.Boolean, nullable = False, default = False)
 
     comments = db.relationship('Comment', backref = 'game')
+
+    @validates('title', 'genre', 'image', 'platform')
+    def validate_game_info(self, key, value):
+        if len(value) < 1:
+            raise ValueError('Field cannot be empty.')
+        return value
+    
+    @validates('price')
+    def validate_price(self, key, value):
+        try:
+            float(value)
+        except ValueError:
+            raise ValueError('Price must be a float.')
+        return value
+
 
 class Comment(db.Model, SerializerMixin):
     __tablename__ = 'comments'
 
-    serialize_rules = ('-game.comments.game.comments', '-user.comments.user.password_hash', '-game.favorites',)
+    serialize_rules = ('-game.comments', '-user.comments', '-game.favorites',)
 
     id = db.Column(db.Integer, primary_key = True)
 
@@ -118,6 +178,17 @@ class Comment(db.Model, SerializerMixin):
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    @validates('content', 'game_name', 'game_image', 'user_username', 'user_image')
+    def validate_comment(self,key,value):
+        if len(value) < 1:
+            raise ValueError('Field cannot be empty.')
+        return value
+    @validates ('score')
+    def validate_comment_score(self, key, value):
+        if value < 1 or value > 10:
+            raise ValueError('Score must be within 1 and 10.')
+        return value
+
 
 class Favorite(db.Model, SerializerMixin):
     __tablename__ = 'favorites'
@@ -131,3 +202,8 @@ class Favorite(db.Model, SerializerMixin):
     game_image = db.Column(db.String, nullable = False)
     game_title = db.Column(db.String, nullable = False)
 
+    @validates('game_image', 'game_title')
+    def validate_favorite(self, key, value):
+        if len(value) < 1:
+            raise ValueError('Field cannot be empty.')
+        return value

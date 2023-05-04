@@ -253,30 +253,33 @@ class FavoritesById(Resource):
 class FollowById(Resource):
     def post(self, id):
 
-        followed_user = User.query.filter_by(id == id).first()
+        user_to_follow = User.query.filter_by(id = id).first()
         current_user = User.query.filter(User.id == session.get('user_id')).first()
 
-        current_user.following.append(followed_user.user_dict())
-
-        db.session.commit()
-
-        return make_response({'message': 'Follow Successful'}, 201)
+        if not current_user.is_following(user_to_follow):
+            current_user.following.append(user_to_follow)
+            db.session.commit()
+            return make_response(user_to_follow.user_dict(), 201)
+        else:
+            return make_response({'message': 'You are already following this user.'}, 201)
     
-# @app.route('/user/<username>')
-# def user(username):
-#     user = User.query.filter_by(username=username).first_or_404()
-#     followers = user.followers.all()
-#     following = user.following.all()
-#     return render_template('user.html', user=user, followers=followers, following=following)
+class UnfollowById(Resource):
+    def delete(self, id):
 
-# @app.route('/unfollow/<username>')
-# @login_required
-# def unfollow(username):
-#     user = User.query.filter_by(username=username).first_or_404()
-#     current_user.following.remove(user)
-#     db.session.commit()
-#     flash(f"You have unfollowed {username}")
-#     return redirect(url_for('user', username=username))
+        current_user = User.query.filter(User.id == session.get('user_id')).first()
+        followed_user = User.query.filter_by(id = id).first()
+
+        current_user.unfollow(followed_user)
+
+        return make_response({'message': 'User Unfollowed'}, 200)
+    
+class Followers(Resource):
+    def get(self):
+        current_user = User.query.filter(User.id == session.get('user_id')).first()
+
+        followers = [u.user_dict() for u in current_user.followers.all()]
+
+        return make_response(jsonify(followers))
 
 
 
@@ -294,6 +297,9 @@ api.add_resource(UserByID, '/users/<int:id>')
 api.add_resource(Users, '/users')
 api.add_resource(Favorites, '/favorites')
 api.add_resource(FavoritesById, '/favorites/<int:id>')
+api.add_resource(FollowById, '/follow/<int:id>')
+api.add_resource(UnfollowById, '/unfollow/<int:id>')
+api.add_resource(Followers, '/followers')
 
 
 if __name__ == '__main__':

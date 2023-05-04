@@ -18,7 +18,7 @@ function GamePage({handleUpdate,  addFavorite}){
     
     useEffect(() => {
         fetch(`/games/${id}`)
-        .then((res) => { console.log(res)
+        .then((res) => {
             if (res.ok) {
                 res.json().then((r) => {
                     setGame(r)
