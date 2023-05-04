@@ -6,6 +6,7 @@ import FavoriteCard from './FavoriteCard'
 import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
 import UserCard from './UserCard'
+import ViewFollowed from './ViewFollowed'
 import {UserContext} from "../Context/user"
 import {FavoritesContext} from "../Context/favorites"
 import {CommentsContext} from "../Context/comments"
@@ -111,8 +112,6 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
     const userFavorites = user?.favorites?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
 
-    const userFollows = user?.following?.map(follow => <UserCard key={follow?.id} image={follow?.image} username={follow?.username} id={follow?.id} />)
-
 
     return(
         <div className="bg-zinc-800 min-h-screen h-full">
@@ -123,7 +122,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">{user && user.username}</h1>
                 </div>
                 <div className="pb-10">
-                    <img className="w-full rounded-2xl mx-auto" src={user && user.image}/>
+                    <img className="w-full rounded-2xl border border-lime-100 mx-auto" src={user && user.image} alt={user?.username}/>
                 </div>
                 <div className="pb-4 px-4 text-center">
                     <p className="text-lg py-4 font-bold tracking-tight text-white">{user && user.first_name} {user && user.last_name}</p>
@@ -132,26 +131,21 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                     <EditUserForm user={user} handleUpdate={handleUpdate} setUser={setUser}/>
                     <button onClick={handleDelete} className="hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 rounded my-10 mx-2">Delete Account</button>
                     </div>
+                    <ViewFollowed />
                 </div>
             </div>
 
             <div className="col-span-1 ">
-                <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
-                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
+                <div className=" bg-zinc-900 text-center border border-lime-100 shadow py-10 px-8 h-fit">
+                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Your Recent Comments </h1>
                     <div className="w-full ">
                         {userComments?.length ? userComments : <EmptyComment />}
                     </div>
                 </div>
             </div>
-
             <div>
-                {userFollows}
+
             </div>
-
-            
-
-            <div></div>
-
             <div className="col-span-2 float-left h-fit">
                 <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>

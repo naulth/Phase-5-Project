@@ -91,11 +91,13 @@ function Signup(){
 
 
     return(
-        <div className="bg-zinc-800 h-screen">
+        <div className="HomeImg">
         <div >
         <div className="flex flex-col justify-center px-6 py-12 lg:px-8">
             <div className="text-center">
-                {/* <img className="mx-auto h-10 w-auto" src="" alt="Logo"/>*/}
+            <div className="py-12">
+                <h1 className="mt-10 text-center text-8xl font-bold leading-9 tracking-tight text-lime-300">LoggedOn</h1>
+            </div>
                 <h2 className="my-10 text-center text-4xl font-bold leading-9 tracking-tight text-lime-200">Create Your New Account</h2>
                 <p className="block text-md font-medium leading-6 text-lime-100">Please ensure all fields are complete and valid.</p>
             </div>

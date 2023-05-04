@@ -1,6 +1,7 @@
 import React, {useState, useContext} from 'react'
 import {CommentsContext} from "../Context/comments"
 import CommentCard from './CommentCard'
+import EmptyComment from './EmptyComment'
 import SearchComments from './CommentSearch'
 
 function CommentFeed(){
@@ -54,7 +55,7 @@ function CommentFeed(){
                 </div>
                 </div>
                 <div className="">
-                    {commentComponents}
+                    {commentComponents?.length ? commentComponents : <EmptyComment />}
                 </div>
                 
         </div>
