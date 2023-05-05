@@ -2,16 +2,22 @@ import {useState, useContext} from 'react'
 import {useFormik} from "formik"
 import * as yup from "yup"
 import {UserContext} from "../Context/user"
+import { CommentsContext } from '../Context/comments'
 
 
 function AddReply({comment_id}){
 
     const [showAddReply, setShowAddReply] = useState(false)
     const {user, setUser} = useContext(UserContext)
+    const {commentsArray, setCommentsArray} = useContext(CommentsContext)
 
 	const toggleAddReply = () => {
 		setShowAddReply(!showAddReply)
 	}
+
+
+
+
 
     const formSchema = yup.object().shape({
         
@@ -24,6 +30,7 @@ function AddReply({comment_id}){
         initialValues: {
         reply: "",
         user_id: user?.id,
+        user_username: user?.username,
         comment_id: comment_id
         },
         enableReinitialize: true,
@@ -37,31 +44,22 @@ function AddReply({comment_id}){
                 body: JSON.stringify(values),
             }).then((response) => { 
                 if (response.ok) {
-                    response.json().then((response) => { console.log(response)
+                    response.json().then((response) => {
                     
-                        // const newReply = {
-                        //     ...user,
-                        //     comments: [
-                        //         {
-                        //             ...user?.comments,
-                        //             replies: [
-                        //                 ...user?.comments?.replies, response 
-                        //             ]
-                        //         }
-                        //     ]    
-                        // }
-                        // setUser(newReply)
+                        const theComment = commentsArray.filter(comment => comment.id === comment_id)[0]
+                        console.log(theComment)
 
-                        // const newGame = {
-                        //     ...game,
-                        //     comments: [
-                        //         ...game?.comments, response
-                        //     ]
-                        // }
-                        // setGame(newGame)
-
-                        // const newComments = [...commentsArray, response]
-                        // setCommentsArray(newComments)
+                        const newComment = {
+                            ...theComment,
+                                replies: [
+                                   ...theComment?.replies, response 
+                                ]
+                        }
+                        
+                        const commentIndex = commentsArray.findIndex(comment => comment.id === comment_id)
+                        const newCommentsArray = [...commentsArray]
+                        newCommentsArray[commentIndex] = newComment
+                        setCommentsArray(newCommentsArray)
                     })
                 }
             })
@@ -73,7 +71,7 @@ function AddReply({comment_id}){
 
     return(
 		<div>
-			<button onClick={toggleAddReply} className="text-center hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-2 rounded my-1">Reply</button>
+			<button onClick={toggleAddReply} className="hover:bg-sky-950 hover:text-lime-100 py-1 mb-4 text-lime-200 border border-lime-100 shadow font-bold px-4">Reply</button>
 		{showAddReply &&
         <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
 			<div className="max-w-2xl py-20 mx-auto rounded-2xl shadow-lg p-8 my-16 bg-zinc-800">

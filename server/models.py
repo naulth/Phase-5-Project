@@ -97,7 +97,8 @@ class User (db.Model, SerializerMixin):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "birth_date": self.birth_date,
-            "image": self.image
+            "image": self.image,
+            "comments": [comment.to_dict() for comment in self.comments]
         }
     
 
@@ -142,7 +143,7 @@ class User (db.Model, SerializerMixin):
 class Game(db.Model, SerializerMixin):
     __tablename__ = 'games'
 
-    serialize_rules = ('-comments',)
+    serialize_rules = ()
 
     id = db.Column(db.Integer, primary_key = True)
 
@@ -234,6 +235,7 @@ class CommentReply(db.Model, SerializerMixin):
 
     id = db.Column(db.Integer, primary_key = True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = False)
+    user_username = db.Column(db.String, default='unknown', nullable = False)
     comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable = False)
     reply = db.Column(db.String, nullable = False)
     created_at = db.Column(db.DateTime, server_default=db.func.now())

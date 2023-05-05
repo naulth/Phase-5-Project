@@ -154,6 +154,11 @@ class Comments(Resource):
     
     
 class CommentsById(Resource):
+    def get(self, id):
+        if id not in [c.id for c in Comment.query.all()]:
+            return {'error': '404, Comment not Found!'}, 404
+
+        return make_response((Comment.query.filter(Comment.id==id).first()).to_dict(), 200)
 
     def patch(self, id):
         if id not in [c.id for c in Comment.query.all()]:
@@ -293,6 +298,7 @@ class CommentReplies(Resource):
             user_id = data['user_id']
             reply = data['reply']
             comment_id = data['comment_id']
+            user_username = data['user_username']
 
         except KeyError as e:
             return {'message': f'Missing required field: {e}'}, 400
@@ -304,7 +310,8 @@ class CommentReplies(Resource):
         new_reply = CommentReply(
             user_id=user_id,
             comment_id= comment_id,
-            reply=reply
+            reply=reply,
+            user_username=user_username
         )
         db.session.add(new_reply)
         db.session.commit()

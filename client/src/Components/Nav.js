@@ -34,6 +34,7 @@ function Nav({handleLogout}){
                 ) : null }
                     {/* <Link className="hidden lg:block lg:text-sm lg:font-semibold lg:leading-6 lg:text-white" to="/login">Login</Link>
                 )} */}
+                {user ? null : <Link to="/" className="text-lg font-semibold leading-6 text-lime-100">Log In</Link> }
                 {user ? null : <Link to="/signup" className="rounded-md bg-lime-300 px-3 py-2 text-md font-semibold text-zinc-950 shadow-sm hover:bg-lime-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-emerald-200">Sign up</Link> }
 					
 

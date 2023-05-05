@@ -30,7 +30,6 @@ function GamePage({handleUpdate,  addFavorite}){
     },[])
 
 
-
     const byCreate = (commentA, commentB) => {
         return commentB.created_at - commentA.created_at
     }
