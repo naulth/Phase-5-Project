@@ -7,6 +7,7 @@ import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
 import CommentCard from './CommentCard'
 import UserCard from './UserCard'
+import DeleteProfile from './DeleteProfile'
 import ViewFollowed from './ViewFollowed'
 import {UserContext} from "../Context/user"
 
@@ -15,15 +16,6 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
     const navigate = useNavigate()
 
     const {user, setUser} = useContext(UserContext)
-
-    const handleDelete = (e) => {
-        fetch(`/users/${user.id}`,{
-        method: 'DELETE'
-        })
-        handleLogout()
-        deleteUser(user.id)
-        navigate('/')
-    }
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -68,7 +60,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                     <p className="text-lg py-4 font-bold tracking-tight text-white">Birthday: {formattedDate}</p>
                     <div className="pt-10">
                     <EditUserForm user={user} handleUpdate={handleUpdate} setUser={setUser}/>
-                    <button onClick={handleDelete} className="hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 rounded my-10 mx-2">Delete Account</button>
+                    <DeleteProfile deleteUser={deleteUser} handleLogout={handleLogout} />
                     </div>
                     <ViewFollowed />
                 </div>

@@ -15,7 +15,7 @@ function ViewFollowed(){
 
     return(
         <div>
-            <button className="hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 rounded my-1 mx-2" onClick={toggleFollowed}>Followed Users</button>
+            <button className="hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 my-1 mx-2" onClick={toggleFollowed}>Followed Users</button>
             {showFollowed &&
             <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
                 <div className=" bg-zinc-900 text-center border border-lime-100 shadow py-10 px-8 h-fit w-1/2">

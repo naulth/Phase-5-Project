@@ -78,7 +78,7 @@ function EditUserForm({handleUpdate}){
 
     return(
         <div>
-        <button className="hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 rounded my-1 mx-2" onClick={toggleEdit}>Edit Profile</button>
+        <button className="hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 my-1 mx-2" onClick={toggleEdit}>Edit Profile</button>
         {showEdit &&
         <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
         <div className="max-w-2xl py-20 mx-auto rounded-2xl shadow-lg p-8 my-16 bg-zinc-900 border border-lime-100">
