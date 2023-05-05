@@ -1,11 +1,26 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect, useContext} from 'react'
 import GameCard from './GameCard'
 import SearchGames from './SearchGames'
 import {Link, Outlet} from 'react-router-dom'
+import { GamesArrayContext } from "../Context/gamesArray"
+
+function Games({}){
 
 
-function Games({gamesArray}){
+    const {gamesArray, setGamesArray} = useContext(GamesArrayContext)
 
+    useEffect(() => {
+        fetch('/games')
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setGamesArray(r)
+                })
+            }
+        })
+    },[])
+
+    
     const [search, setSearch] = useState('')
 
     const byTitle = game => {

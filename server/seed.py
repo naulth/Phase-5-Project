@@ -7,7 +7,7 @@ from datetime import date
 
 # Local imports
 from app import app
-from models import db, Game, Comment, User, Favorite
+from models import db, Game, Comment, User, Favorite, CommentReply
 
 
 if __name__ == '__main__':
@@ -18,6 +18,7 @@ if __name__ == '__main__':
         Game.query.delete()
         Comment.query.delete()
         Favorite.query.delete()
+        CommentReply.query.delete()
 
         g1 = Game(title = "League of Legends", image = "https://cdn1.epicgames.com/offer/24b9b5e323bc40eea252a10cdd3b2f10/LoL_1200x1600-15ad6c981af8d98f50e833eac7843986", genre = "MOBA", platform = "PC", price = 00.00)
 

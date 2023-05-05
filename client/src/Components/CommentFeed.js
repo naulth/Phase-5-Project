@@ -1,4 +1,4 @@
-import React, {useState, useContext} from 'react'
+import React, {useState, useContext, useEffect} from 'react'
 import {CommentsContext} from "../Context/comments"
 import CommentCard from './CommentCard'
 import EmptyComment from './EmptyComment'
@@ -6,8 +6,19 @@ import SearchComments from './CommentSearch'
 
 function CommentFeed(){
 
-    const {commentsArray} = useContext(CommentsContext)
+    const {commentsArray, setCommentsArray} = useContext(CommentsContext)
     const [search, setSearch] = useState('')
+
+    useEffect(() => {
+        fetch('/comments')
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setCommentsArray(r)
+                })
+            }
+        })
+    },[])
 
 
     const byCreate = (commentA, commentB) => {
@@ -41,9 +52,7 @@ function CommentFeed(){
     const changeSearch = newSearch => setSearch( newSearch.toLowerCase() )
 
 
-
-
-    const commentComponents = searchedComments?.map(comment => <CommentCard key={comment?.id} username={comment?.user_username} userImage={comment?.user_image} content={comment?.content} score={comment?.score} gameImage={comment?.game_image} game={comment?.game_name} user_id={comment?.user_id}/>)
+    const commentComponents = searchedComments?.map(comment => <CommentCard key={comment?.id} username={comment?.user_username} comment_id={comment?.id} userImage={comment?.user_image} content={comment?.content} score={comment?.score} gameImage={comment?.game_image} game={comment?.game_name} user_id={comment?.user_id}/>)
 
     return(
         

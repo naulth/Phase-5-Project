@@ -16,7 +16,7 @@ followers = db.Table('followers',
 class User (db.Model, SerializerMixin):
     __tablename__ = 'users'
 
-    serialize_rules = ('-comments.user.password_hash', '-favorites.user.password_hash', '-followers',)
+    serialize_rules = ( '-favorites', '-followers', '-comments', '-followers.user',)
 
 
     id = db.Column( db.Integer, primary_key = True )
@@ -90,6 +90,17 @@ class User (db.Model, SerializerMixin):
         self.following.remove(user)
         db.session.commit()
 
+    def follower_dict(self):
+        return {
+            "id": self.id,
+            "username": self.username,
+            "first_name": self.first_name,
+            "last_name": self.last_name,
+            "birth_date": self.birth_date,
+            "image": self.image
+        }
+    
+
     def user_dict(self):
         return {
             "id": self.id,
@@ -100,10 +111,9 @@ class User (db.Model, SerializerMixin):
             "image": self.image,
             "favorites": [fav.to_dict() for fav in self.favorites],
             "comments": [comment.to_dict() for comment in self.comments],
-            "followers": [follower.to_dict() for follower in self.followers],
-            "following": [following.to_dict() for following in self.following]
+            "followers": [follower.follower_dict() for follower in self.followers],
+            "following": [following.follower_dict() for following in self.following]
         }
-
     # def is_following(self, user):
     #     return self.followers.filter(followers.c.follower_id == user.id).count() > 0
 
@@ -132,7 +142,7 @@ class User (db.Model, SerializerMixin):
 class Game(db.Model, SerializerMixin):
     __tablename__ = 'games'
 
-    serialize_rules = ('-comments.game', '-favorites.game',)
+    serialize_rules = ('-comments',)
 
     id = db.Column(db.Integer, primary_key = True)
 
@@ -157,12 +167,24 @@ class Game(db.Model, SerializerMixin):
         except ValueError:
             raise ValueError('Price must be a float.')
         return value
+    
+
+    # def game_dict(self):
+    #     return {
+    #         "id": self.id,
+    #         "title": self.title,
+    #         "image": self.image,
+    #         "genre": self.genre,
+    #         "platform": self.platform,
+    #         "price": self.price,
+    #         "comments": [comment.to_dict() for comment in self.comments]
+    #     }
 
 
 class Comment(db.Model, SerializerMixin):
     __tablename__ = 'comments'
 
-    serialize_rules = ('-game.comments', '-user.comments', '-game.favorites',)
+    serialize_rules = ('-user', '-game', )
 
     id = db.Column(db.Integer, primary_key = True)
 
@@ -178,6 +200,22 @@ class Comment(db.Model, SerializerMixin):
     game_id = db.Column(db.Integer, db.ForeignKey('games.id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    replies = db.relationship('CommentReply', back_populates='comment', lazy=True, cascade='all, delete')
+
+    # def comment_dict(self):
+    #     return {
+    #         "id": self.id,
+    #         "score": self.score,
+    #         "content": self.content,
+    #         "game_name": self.game_name,
+    #         "game_image": self.game_image,
+    #         "user_username": self.user_username,
+    #         "user_image": self.user_image,
+    #         "created_at": self.created_at,
+    #         "updated_at": self.updated_at,
+    #         "replies": [reply.reply_dict() for reply in self.replies]
+    #     }
+
     @validates('content', 'game_name', 'game_image', 'user_username', 'user_image')
     def validate_comment(self,key,value):
         if len(value) < 1:
@@ -188,12 +226,45 @@ class Comment(db.Model, SerializerMixin):
         if value < 1 or value > 10:
             raise ValueError('Score must be within 1 and 10.')
         return value
+    
+class CommentReply(db.Model, SerializerMixin):
+    __tablename__ = 'comment_replies'
+
+    serialize_rules = ( '-comment', '-user', )
+
+    id = db.Column(db.Integer, primary_key = True)
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable = False)
+    comment_id = db.Column(db.Integer, db.ForeignKey('comments.id'), nullable = False)
+    reply = db.Column(db.String, nullable = False)
+    created_at = db.Column(db.DateTime, server_default=db.func.now())
+    updated_at = db.Column(db.DateTime, onupdate=db.func.now())
+
+    user = db.relationship('User', backref='comment_replies')
+
+    comment = db.relationship('Comment', back_populates='replies')
+
+
+    @validates('reply')
+    def validate_reply(self, key, value):
+        if len(value) < 1:
+            raise ValueError('Field cannot be empty.')
+        return value
+    
+    # def reply_dict(self):
+    #     return {
+    #         "id": self.id,
+    #         "user_id": self.user_id,
+    #         "comment_id": self.comment_id,
+    #         "reply": self.reply,
+    #         "created_at": self.created_at,
+    #         "updated_at": self.updated_at
+    #     }
 
 
 class Favorite(db.Model, SerializerMixin):
     __tablename__ = 'favorites'
 
-    serialize_rules = ('-game.favorites', '-user.favorites', '-user.comments',)
+    serialize_rules = ('-game.favorites', '-user',)
 
     id = db.Column(db.Integer, primary_key = True)
 

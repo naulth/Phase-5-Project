@@ -6,7 +6,19 @@ import { UsersArrayContext } from "../Context/usersArray"
 function Users(){
 
     const {user} = useContext(UserContext)
-    const{usersArray} = useContext(UsersArrayContext)
+    const{usersArray, setUsersArray} = useContext(UsersArrayContext)
+
+    useEffect(() => {
+        fetch('/users')
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setUsersArray(r)
+                })
+            }
+        })
+    },[])
+
 
     const filteredUserArray = [...usersArray]?.filter(userObj => userObj?.id !== user?.id)
 

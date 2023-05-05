@@ -10,6 +10,7 @@ import GamePage from "./Components/GamePage"
 import Users from "./Components/Users"
 import OtherUserProfile from "./Components/OtherUserProfile"
 import CommentFeed from "./Components/CommentFeed"
+import AddReply from "./Components/AddReply"
 
 import {UserContext} from "./Context/user"
 import {FavoritesContext} from "./Context/favorites"

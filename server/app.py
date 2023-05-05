@@ -3,7 +3,7 @@ from flask_migrate import Migrate
 from flask_restful import Resource, Api
 from flask import Flask, make_response, jsonify, request, session, flash
 
-from models import User, Game, Comment, Favorite
+from models import User, Game, Comment, Favorite, CommentReply
 
 class HomePage(Resource):
     def get(self):
@@ -23,13 +23,15 @@ class SignUp(Resource):
 
     def post(self):
 
-        username = request.json['username']
-        first_name = request.json['first_name']
-        last_name = request.json['last_name']
-        birth_date = request.json['birthDate']
-        image = request.json['profileImage']
-        password = request.json['password']
-        confirm_password = request.json['confirm']
+        data = request.get_json()
+
+        username = data['username']
+        first_name = data['first_name']
+        last_name = data['last_name']
+        birth_date = data['birthDate']
+        image = data['profileImage']
+        password = data['password']
+        confirm_password = data['confirm']
 
         user_exists = User.query.filter(User.username == username).first() is not None
 
@@ -49,10 +51,8 @@ class SignUp(Resource):
         )
         db.session.add(new_user)
         db.session.commit()
-        return jsonify(
-            new_user.user_dict()
-        )
-        
+
+        return { 'message': 'User Created Successfully'}
 
 class Login(Resource):
 
@@ -73,7 +73,7 @@ class Login(Resource):
             return make_response(jsonify(result))
         
         else:
-            return {'error', 'Invalid username or password'}, 401
+            return {'error': 'Invalid username or password'}, 401
         
         ##############################
         
@@ -281,11 +281,38 @@ class Followers(Resource):
 
         return make_response(jsonify(followers))
 
+class CommentReplies(Resource):
+    def get(self):
+        pass
 
+    def post(self, id):
+        
+        data = request.get_json()
+
+        try:
+            user_id = data['user_id']
+            reply = data['reply']
+            comment_id = data['comment_id']
+
+        except KeyError as e:
+            return {'message': f'Missing required field: {e}'}, 400
+
+        comment = Comment.query.filter(Comment.id==comment_id).first()
+        if not comment:
+            return {'message': 'Comment not found'}, 404
+
+        new_reply = CommentReply(
+            user_id=user_id,
+            comment_id= comment_id,
+            reply=reply
+        )
+        db.session.add(new_reply)
+        db.session.commit()
+        return make_response(new_reply.to_dict(), 201)
 
 
 api.add_resource(HomePage, '/')
-api.add_resource(SignUp, '/signup', endpoint='signup')
+api.add_resource(SignUp, '/signup')
 api.add_resource(Login, '/login', endpoint='login')
 api.add_resource(Logout, '/logout', endpoint='logout')
 api.add_resource(CheckSession, '/check_session', endpoint='check_session')
@@ -300,6 +327,7 @@ api.add_resource(FavoritesById, '/favorites/<int:id>')
 api.add_resource(FollowById, '/follow/<int:id>')
 api.add_resource(UnfollowById, '/unfollow/<int:id>')
 api.add_resource(Followers, '/followers')
+api.add_resource(CommentReplies, '/comments/<int:id>/replies')
 
 
 if __name__ == '__main__':

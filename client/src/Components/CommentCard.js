@@ -1,6 +1,7 @@
 import {Outlet, Link} from 'react-router-dom'
+import AddReply from './AddReply'
 
-function CommentCard({username, content, score, gameImage, userImage, game, user_id}) {
+function CommentCard({username, content, comment_id, score, gameImage, userImage, game, user_id}) {
 
     const linkURL = `/users/${user_id}`
 
@@ -12,8 +13,8 @@ function CommentCard({username, content, score, gameImage, userImage, game, user
                         <h2 className="text-lg pb-4 font-bold tracking-tight text-lime-100">{username}</h2>
                     </div>
                     <img src={userImage} alt={game} className="h-20 mb-4" />
-                    <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4"><Link to={linkURL}>View Profile</Link></button>
-                    <Outlet />
+                    <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4"><Link to={linkURL}>View Profile</Link></button> <Outlet />
+                    <AddReply comment_id={comment_id}/>
                     
                     
                     
