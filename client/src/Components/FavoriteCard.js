@@ -11,8 +11,8 @@ function FavoriteCard({image, deleteFavorite, id, title}){
 
 
     return(
-        <div className='text-center shadow-lg h-100 pb-4 my-4 col-span-1 border border-lime-100 bg-zinc-900'>
-            <div className="mx-auto pt-6 pb-2 justify-center items-center ">
+        <div className='text-center shadow-lg h-120 pb-4 my-4 col-span-1 border border-lime-100 bg-zinc-900'>
+            <div className="mx-auto  pb-2 justify-center items-center ">
                 
             </div>
             <img src={image} alt={title} className='p-4 rounded-2xl mx-auto h-3/4'/>

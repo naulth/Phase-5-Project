@@ -6,6 +6,7 @@ import FavoriteCard from './FavoriteCard'
 import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
 import CommentCard from './CommentCard'
+import FollowedComment from './FollowedComment'
 import UserCard from './UserCard'
 import DeleteProfile from './DeleteProfile'
 import ViewFollowed from './ViewFollowed'
@@ -33,20 +34,30 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     }
 
-    const sortedComponents = user?.comments?.slice().sort(byCreate).reverse()
+    const MAX_COMMENTS = 5
+
+    const sortedComponents = user?.comments?.slice(0, MAX_COMMENTS).sort(byCreate)
 
     const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} gameImage ={comment?.game_image} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
    
 
-    // user?.following.map(user => console.log(user.comments.map(comment => console.log(comment))))
-    // const followedUserComments = user?.following?.map(user => user.comments.map(commentObj => <CommentCard content={commentObj.content} />))
-    // console.log(followedUserComments)
+
+    
+    const followedComments = user?.following?.map(followed => followed?.comments)
+    const flatFollowedComments = followedComments?.flat()
+
+    const sortedFlatComments = flatFollowedComments?.slice(0, MAX_COMMENTS).sort(byCreate)
+
+    const followedComponents = sortedFlatComments?.map(comment => <FollowedComment key={comment?.id} username={comment?.user_username} gamename={comment?.game_name} score={comment?.score} content={comment?.content} />)
+
 
     const userFavorites = user?.favorites?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
+
+
     return(
         <div className="bg-zinc-800 min-h-screen h-full">
-		<div className="grid w-full grid-cols-6 gap-6 h-full">
+		<div className="grid w-full grid-cols-7 gap-6 h-full">
 
             <div className="float-left px-8 h-screen col-span-1 border border-lime-200 bg-zinc-900">
                 <div className="text-center py-10 ">
@@ -66,17 +77,6 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                 </div>
             </div>
 
-            <div className="col-span-1 ">
-                <div className=" bg-zinc-900 text-center border border-lime-100 shadow py-10 px-8 h-fit">
-                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Your Recent Comments </h1>
-                    <div className="w-full ">
-                        {userComments?.length ? userComments : <EmptyComment />}
-                    </div>
-                </div>
-            </div>
-            <div>
-
-            </div>
             <div className="col-span-2 float-left h-fit">
                 <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
@@ -85,6 +85,29 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
                     </div>
                 </div>
             </div>
+
+            <div className="col-span-2 ">
+                <div className=" bg-zinc-900 text-center border border-lime-100 shadow py-10 px-8 h-fit">
+                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Your Recent Comments </h1>
+                    <div className="w-full ">
+                        {userComments?.length ? userComments : <EmptyComment />}
+                    </div>
+                </div>
+            </div>
+
+            <div className="col-span-2 ">
+                <div className=" bg-zinc-900 text-center border border-lime-100 shadow py-10 px-8 h-fit">
+                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Followed User Comments </h1>
+                    <div className="w-full ">
+                        {followedComponents?.length ? followedComponents : <EmptyComment />}
+                    </div>
+                </div>
+            </div>
+
+            <div>
+
+            </div>
+            
 		</div>
         </div>
 	)
