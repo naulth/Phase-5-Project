@@ -3,20 +3,20 @@ import {useFormik} from "formik"
 import * as yup from "yup"
 import {UserContext} from "../Context/user"
 import { CommentsContext } from '../Context/comments'
+import { GameContext } from '../Context/game'
 
 
-function AddReply({comment_id}){
+
+function AddCommentReply({comment_id}) {
 
     const [showAddReply, setShowAddReply] = useState(false)
     const {user, setUser} = useContext(UserContext)
     const {commentsArray, setCommentsArray} = useContext(CommentsContext)
+    const {game, setGame} = useContext(GameContext)
 
 	const toggleAddReply = () => {
 		setShowAddReply(!showAddReply)
 	}
-
-
-
 
 
     const formSchema = yup.object().shape({
@@ -46,20 +46,26 @@ function AddReply({comment_id}){
                 if (response.ok) {
                     response.json().then((response) => {
                     
-                        const theComment = commentsArray.filter(comment => comment.id === comment_id)[0]
-                        console.log(theComment)
 
-                        const newComment = {
-                            ...theComment,
-                                replies: [
-                                   ...theComment?.replies, response 
-                                ]
+                        const commentsIndex = commentsArray?.findIndex(comment => comment.id === comment_id)
+
+                        const updatedComment = {
+                        ...commentsArray[commentsIndex],
+                        replies: [
+                            ...(commentsArray[commentsIndex]?.replies || []),
+                            { ...response }
+                        ]
                         }
+
+                        const updatedComments = [
+                        ...commentsArray?.slice(0, commentsIndex),
+                        updatedComment,
+                        ...commentsArray?.slice(commentsIndex + 1)
+                        ]
+
                         
-                        const commentIndex = commentsArray.findIndex(comment => comment.id === comment_id)
-                        const newCommentsArray = [...commentsArray]
-                        newCommentsArray[commentIndex] = newComment
-                        setCommentsArray(newCommentsArray)
+                        setCommentsArray(updatedComments)
+                        
                     })
                 }
             })
@@ -69,8 +75,10 @@ function AddReply({comment_id}){
 
 
 
-    return(
-		<div>
+
+
+    return (
+        <div>
 			<button onClick={toggleAddReply} className="hover:bg-sky-950 hover:text-lime-100 py-1 mb-4 text-lime-200 border border-lime-100 shadow font-bold px-4">Reply</button>
 		{showAddReply &&
         <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
@@ -102,7 +110,9 @@ function AddReply({comment_id}){
         </div>
 }
 		</div>
+
+        
     )
 }
 
-export default AddReply
+export default AddCommentReply

@@ -36,41 +36,39 @@ function GamePage({handleUpdate,  addFavorite}){
 
     const sortedComponents = game?.comments?.sort(byCreate).reverse()
 
-    const gameComments = sortedComponents?.map(comment => <GameCommentCard key={comment?.id} username={comment?.user_username} score={comment?.score} content={comment?.content} create={comment?.created_at}/>)
+    const gameComments = sortedComponents?.map(comment => <GameCommentCard comment_id={comment?.id} game_id={game?.id} user_image={comment?.user_image} key={comment?.id} user_id={comment?.user_id} game={game?.title} username={comment?.user_username} score={comment?.score} content={comment?.content} create={comment?.created_at} replies={comment?.replies} theGame={game} />)
 
     
     return(
-        <div className = "">
-            {/* <div className="text-center my-6">
-                <button className="mx-2 my-4 hover:bg-slate-900 hover:text-white bg-white border shadow font-bold px-4 py-2 rounded"><Link to="/games">Back to Games</Link></button> 
-            </div> */}
-            <div className=" sm:py-32 justify-items-center grid max-w-8xl grid-cols-6 gap-x-2 gap-y-4 ">
+        <div className = "HomeImg h-full min-h-fit">
+            <div className="mx-auto border border-lime-100 bg-zinc-900 w-full p-8">
+                <h1 className="text-center text-6xl font-bold leading-9 tracking-tight text-lime-200 py-2">{game?.title}</h1>
+            </div>
+
+            <div className="justify-items-center grid max-w-8xl grid-cols-6 gap-x-2 gap-y-4 ">
                 <div></div>
-                <div className="mx-4 max-w-3xl px-8 lg:px-8 bg-sky-950 h-fit rounded-2xl border shadow p-4  w-80">
-                    <div className="text-center">
+                <div className="mx-4 max-w-3xl px-8 lg:px-8 bg-zinc-950 h-fit border border-lime-100 p-4 col-span-2">
+                    {/* <div className="text-center">
                         <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">{game?.title}</h1>
-                    </div>
+                    </div> */}
                     <div className="">
-                        <img className="w-full rounded-2xl mx-auto border shadow" src={game?.image}/>
+                        <img className="w-5/6 mx-auto border border-lime-100" src={game?.image}/>
                     </div>
-                    <div className="py-4 px-4 text-center">
+                    {/* <div className="py-4 px-4 text-center">
                         <p className="text-lg font-bold tracking-tight text-white">Genre: {game?.genre} </p>
                         <p className="text-lg font-bold tracking-tight text-white">Platform: {game?.platform}</p>
                         <p className="text-lg font-bold tracking-tight text-white">Price: {game?.price}</p>
-                    </div>
-                    <div className="text-center">
+                    </div> */}
+                    <div className="justify-center py-4 flex flex-row gap-2">
                     <AddGameComment game={game} user={user} setGame={setGame} gameId={game?.id} handleUpdate={handleUpdate}/>
                     <FavoriteGame gameId={game?.id} game={game} addFavorite={addFavorite} gameTitle={game?.title} gameImage={game?.image}/>
                     </div>
-                    {/* <div className="mx-auto text-center">
-                    {favorite ? <button onClick={handleFavorite} className="hover:bg-sky-950 hover:text-lime-100 text-lime-100 border border-lime-100 shadow font-bold px-4 rounded mx-2">Favorited</button> : <button onClick={handleFavorite}className="hover:bg-sky-950 hover:text-lime-100 text-lime-100 border border-lime-100 shadow font-bold px-4 rounded mx-2">Favorite This Game</button> }
-                    </div> */}
-                    
                 </div>
-                
-                <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 col-span-2">
-
-                    <div className="col-span-2 bg-sky-950 rounded-2xl border shadow p-4 my-4 w-108 h-fit">
+                {/* <div className="col-span-2 bg-zinc-950 h-fit p-6 border border-lime-100">
+                    <img className="w-full h-96 mx-auto border border-lime-100" src={game?.image}/>
+                </div> */}
+                <div className="mx-auto bg-zinc-950 border border-lime-100 col-span-3 w-5/6">
+                    <div className="p-4 my-4 h-fit">
                         <div className="text-center">
                             <h2 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">Recent Comments</h2>
                         </div>
@@ -80,11 +78,6 @@ function GamePage({handleUpdate,  addFavorite}){
                             </div>
                         </div>
                     </div>
-                </div>
-                
-                <div className="mx-auto max-w-3xl px-8 mx-10 lg:px-8 col-span-2">
-                    
-                    
                 </div>
             </div>
         </div>

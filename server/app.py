@@ -285,6 +285,17 @@ class Followers(Resource):
         followers = [u.user_dict() for u in current_user.followers.all()]
 
         return make_response(jsonify(followers))
+    
+
+class CheckFollowById(Resource):
+    def get(self, id):
+        current_user = User.query.filter(User.id == session.get('user_id')).first()
+        checking_user = User.query.filter_by(id = id).first()
+
+        if current_user.is_following(checking_user):
+            return make_response(jsonify({'isFollowing': True}), 200)
+        else:
+            return make_response(jsonify({'isFollowing': False}), 200)
 
 class CommentReplies(Resource):
     def get(self):
@@ -316,6 +327,9 @@ class CommentReplies(Resource):
         db.session.add(new_reply)
         db.session.commit()
         return make_response(new_reply.to_dict(), 201)
+    
+
+
 
 
 api.add_resource(HomePage, '/')
@@ -334,6 +348,7 @@ api.add_resource(FavoritesById, '/favorites/<int:id>')
 api.add_resource(FollowById, '/follow/<int:id>')
 api.add_resource(UnfollowById, '/unfollow/<int:id>')
 api.add_resource(Followers, '/followers')
+api.add_resource(CheckFollowById, '/check/<int:id>')
 api.add_resource(CommentReplies, '/comments/<int:id>/replies')
 
 

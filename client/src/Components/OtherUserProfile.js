@@ -9,6 +9,7 @@ import { UserContext } from '../Context/user'
 import EmptyComment from './EmptyComment'
 import TargetFavoriteCard from './TargetFavoriteCard'
 import EmptyFavorite from './EmptyFavorite'
+import FollowButton from './FollowButton'
 
 function OtherUserProfile() {
 
@@ -108,8 +109,9 @@ function OtherUserProfile() {
                 <div className="pb-4 px-4 text-center">
                     <p className="text-lg py-4 font-bold tracking-tight text-white">{targetUser?.first_name} {targetUser?.last_name}</p>
 
-                    <button onClick={deleteFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Delete Friend</button>
-                    <button onClick={createFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Add Friend</button>
+                    {/* <button onClick={deleteFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Unfollow</button>
+                    <button onClick={createFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Follow</button> */}
+                    <FollowButton targetId={id} />
                 </div>
                 
             </div>

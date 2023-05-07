@@ -1,5 +1,5 @@
 import {Outlet, Link} from 'react-router-dom'
-import AddReply from './AddReply'
+import AddCommentReply from './AddCommentReply'
 import ViewReplies from './ViewReplies'
 
 function CommentCard({username, content, comment_id, replies, score, gameImage, game_id, userImage, game, user_id}) {
@@ -20,7 +20,7 @@ function CommentCard({username, content, comment_id, replies, score, gameImage, 
                     </div>
                     <div className="grid grid-cols-1">
                         <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 mb-4 border-lime-100 shadow font-bold px-4"><Link to={linkURL}>View Profile</Link></button> <Outlet />
-                        <AddReply comment_id={comment_id}/>
+                        <AddCommentReply comment_id={comment_id}/>
                     </div>
                     
                 </div>

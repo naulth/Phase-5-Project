@@ -22,7 +22,7 @@ function ViewReplies({replies, user, game}){
 
     return(
         <div>
-            <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4" onClick={toggleReplies}>View All Replies</button>
+            <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4" onClick={toggleReplies}>View Replies</button>
             {showReplies &&
             <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
                 <div className=" bg-zinc-900 text-center border border-lime-100 shadow py-10 px-8 h-fit w-2/3">
