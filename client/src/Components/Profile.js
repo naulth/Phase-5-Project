@@ -8,6 +8,7 @@ import EmptyFavorite from './EmptyFavorite'
 import CommentCard from './CommentCard'
 import FollowedComment from './FollowedComment'
 import UserCard from './UserCard'
+
 import DeleteProfile from './DeleteProfile'
 import ViewFollowed from './ViewFollowed'
 import {UserContext} from "../Context/user"
@@ -36,7 +37,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     const MAX_COMMENTS = 5
 
-    const sortedComponents = user?.comments?.slice(0, MAX_COMMENTS).sort(byCreate)
+    const sortedComponents = user?.comments?.slice(0, MAX_COMMENTS).sort(byCreate).reverse()
 
     const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} gameImage ={comment?.game_image} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
    

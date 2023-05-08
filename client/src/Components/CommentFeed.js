@@ -56,7 +56,7 @@ function CommentFeed(){
 
     return(
         
-        <div className="HomeImg h-full min-h-screen">
+        <div className="bg-zinc-900 h-full min-h-screen">
                 <div className="mx-auto border border-lime-100 bg-zinc-900 w-full p-8">
                     <h1 className="text-center text-6xl font-bold leading-9 tracking-tight text-lime-200">The Feed</h1>
                     <div className="flex mt-10 justify-center">

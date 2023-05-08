@@ -99,7 +99,7 @@ function OtherUserProfile() {
         <div className="bg-zinc-800 min-h-screen h-full">
 		<div className="grid w-full grid-cols-6 gap-6 h-full">
 
-            <div className="float-left w-72 px-8 h-screen col-span-1  border border-lime-200 bg-zinc-900">
+            <div className="float-left w-72 px-8 col-span-1 h-screen border border-lime-200 bg-zinc-900">
                 <div className="text-center py-10 ">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">{targetUser?.username}</h1>
                 </div>
@@ -108,21 +108,9 @@ function OtherUserProfile() {
                 </div>
                 <div className="pb-4 px-4 text-center">
                     <p className="text-lg py-4 font-bold tracking-tight text-white">{targetUser?.first_name} {targetUser?.last_name}</p>
-
-                    {/* <button onClick={deleteFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Unfollow</button>
-                    <button onClick={createFriend} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded mx-2 mb-2">Follow</button> */}
                     <FollowButton targetId={id} />
                 </div>
                 
-            </div>
-
-            <div className="col-span-1 ">
-                <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
-                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
-                    <div className="w-full ">
-                        {targetComments?.length ? targetComments : <EmptyComment />}
-                    </div>
-                </div>
             </div>
 
             <div className="col-span-2 float-left h-fit">
@@ -133,6 +121,17 @@ function OtherUserProfile() {
                     </div>
                 </div>
             </div>
+
+            <div className="col-span-2 ">
+                <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8 h-fit">
+                    <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Recent Comments </h1>
+                    <div className="w-full ">
+                        {targetComments?.length ? targetComments : <EmptyComment />}
+                    </div>
+                </div>
+            </div>
+
+            
 		</div>
         </div>
 	)
