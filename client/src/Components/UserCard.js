@@ -7,7 +7,7 @@ function UserCard({username, image, id}){
 
 
     return(
-        <div className='text-center shadow-lg w-48 border border-lime-100 h-full bg-zinc-900'>
+        <div className='text-center shadow-lg w-48 border border-lime-100 h-full bg-zinc-950'>
             <div className="mx-auto pt-6 pb-2 justify-center items-center ">
                 <div className="px-2 pb-4">
                     <h1 className='text-xl text-lime-100 font-medium'>{username}</h1>
