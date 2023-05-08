@@ -29,7 +29,7 @@ function DeleteProfile({deleteUser, handleLogout}){
             <button onClick={handleShowDelete} className="hover:bg-sky-950 hover:text-lime-200 text-sm w-36 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 my-1 mx-2">Delete Profile</button>
             {showDelete &&
                 <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
-                    <div className="max-w-2xl py-20 mx-auto shadow-lg p-8 my-16 bg-zinc-800 border border-lime-100">
+                    <div className="max-w-2xl py-20 mx-auto shadow-lg p-8 my-16 bg-zinc-900 border border-lime-100">
                         <div>
                             <h2 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">Are You Sure You Want To Delete Your Profile?</h2>
                         </div>
