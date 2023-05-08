@@ -55,44 +55,44 @@ function OtherUserProfile() {
     const targetComments = sortedComponents?.map(comment => <TargetCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id}/>)
 
 
-    const targetFavorites = targetUser?.favorites?.map(favorite => <TargetFavoriteCard key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
+    const targetFavorites = targetUser?.favorites?.map(favorite => <TargetFavoriteCard key={favorite.id} gameId={favorite.game_id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
 
-    const createFriend = () => {
+    // const createFriend = () => {
 
-        fetch(`/follow/${targetUser?.id}`, {
-            method: "POST",
-            headers: {'Content-Type' : 'application/json'},
-            body: JSON.stringify({followed_id: targetUser?.id})
-        })
-        .then((response) => {
-            if (response.ok) {
-                response.json().then((response) => {
-                    const newUser = {
-                    ...user,
-                    following: [
-                        ...user?.following, response 
-                    ]
-                    }
-                    setUser(newUser)
-                })
-            }
-        })
-    }
+    //     fetch(`/follow/${targetUser?.id}`, {
+    //         method: "POST",
+    //         headers: {'Content-Type' : 'application/json'},
+    //         body: JSON.stringify({followed_id: targetUser?.id})
+    //     })
+    //     .then((response) => {
+    //         if (response.ok) {
+    //             response.json().then((response) => {
+    //                 const newUser = {
+    //                 ...user,
+    //                 following: [
+    //                     ...user?.following, response 
+    //                 ]
+    //                 }
+    //                 setUser(newUser)
+    //             })
+    //         }
+    //     })
+    // }
 
-    const deleteFriend = () => {
+    // const deleteFriend = () => {
 
-        fetch(`/unfollow/${targetUser.id}`, {
-            method: "DELETE"
-        })
+    //     fetch(`/unfollow/${targetUser.id}`, {
+    //         method: "DELETE"
+    //     })
 
-        const newUser = {
-            ...user,
-            following: [
-                ...user?.following?.filter(follower => follower.id !== targetUser.id)
-            ]
-        }    
-        setUser(newUser)
-    }
+    //     const newUser = {
+    //         ...user,
+    //         following: [
+    //             ...user?.following?.filter(follower => follower.id !== targetUser.id)
+    //         ]
+    //     }    
+    //     setUser(newUser)
+    // }
 
 
     return(

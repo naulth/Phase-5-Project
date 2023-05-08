@@ -85,7 +85,7 @@ function AddGameReply({comment_id, game_id, theGame}){
 
     return(
 		<div>
-			<button onClick={toggleAddReply} className="hover:bg-sky-950 hover:text-lime-100 py-1 mb-4 text-lime-200 border border-lime-100 shadow font-bold px-4">Reply</button>
+			<button onClick={toggleAddReply} className="hover:bg-zinc-800 hover:text-lime-100 py-1 mb-4 text-lime-200 border border-lime-100 shadow font-bold px-4">Reply</button>
 		{showAddReply &&
         <div className="fixed top-0 left-0 w-full h-full bg-zinc-800 bg-opacity-50 flex justify-center items-center">
 			<div className="max-w-2xl py-20 mx-auto rounded-2xl shadow-lg p-8 my-16 bg-zinc-800">

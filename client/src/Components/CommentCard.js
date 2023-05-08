@@ -59,9 +59,9 @@ function CommentCard({username, content, comment_id, replies, score, gameImage, 
 
                 <div className="col-span-1 mx-auto justify-right mt-auto text-right">
                 
-                        <AddCommentReply comment_id={comment_id}/>
+                        <AddCommentReply username={username} comment_id={comment_id}/>
                     <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4"><Link to={gameURL}>View Game</Link></button> <Outlet />
-                    <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4">Show Replies</button>
+                    <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-2">{`View Replies (${replies?.length}) `}</button>
                     {/* <ViewReplies user={username} game={game} replies={replies}/> */}
                 </div>
             </div>
@@ -71,7 +71,7 @@ function CommentCard({username, content, comment_id, replies, score, gameImage, 
         <div>
         { showReplies ? 
         <div>
-            <div className="bg-zinc-950 mx-auto border border-lime-200 text-right w-2/3 h-fit p-4 my-4 ">
+            <div className="bg-zinc-950 mx-auto border border-lime-200 text-right w-1/2 h-fit p-4 my-4 ">
                 {commentReplies?.length ? commentReplies : <EmptyReply />}
                 <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4">Close Replies</button>
             </div>
