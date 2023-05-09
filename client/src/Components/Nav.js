@@ -2,6 +2,7 @@ import React, {useContext} from 'react'
 import {Link, NavLink} from 'react-router-dom'
 import '../index.css';
 import {UserContext} from "../Context/user"
+import logo from "../Images/power_symbol.jpg"
 
 
 function Nav({handleLogout}){
@@ -12,12 +13,12 @@ function Nav({handleLogout}){
     return(
         <header className="bg-zinc-950 border border-lime-200 sticky top-0">
             <nav className="mx-auto flex mx-w-7xl items-center justify-between h-24 gap-x-6 p-6 lg:px-8" aria-label="Global">
-				<div className="flex lg:flex-1">
+				<div className="flex lg:flex-1 mt-auto">
+                    <Link>
+						<img className="h-10 pr-2" src={logo} />
+					</Link>
                     {user ? <Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/feed">LoggedOn</Link> :<Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/">LoggedOn</Link> }
-					{/* <Link>
-						<span className="sr-only">Project Name</span>
-						<img src=logo />
-					</Link> */}
+					
 				</div>
 				<div className="hidden lg:flex lg:gap-x-12">
                     {user ? <NavLink className="text-lg font-semibold leading-6 text-lime-100" to="/feed" >Feed</NavLink> : null }

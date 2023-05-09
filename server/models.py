@@ -28,6 +28,7 @@ class User (db.Model, SerializerMixin):
     image = db.Column(db.String, nullable = False)
     _password_hash = db.Column( db.String, nullable = False )
     confirm_password = db.Column(db.String, nullable = False)
+    is_authenticated = db.Column(db.Boolean, nullable = False, default=False)
 
     comments = db.relationship('Comment', backref='user', cascade='all, delete')
     favorites = db.relationship('Favorite', backref='user', cascade='all, delete')
@@ -115,8 +116,7 @@ class User (db.Model, SerializerMixin):
             "followers": [follower.follower_dict() for follower in self.followers],
             "following": [following.follower_dict() for following in self.following]
         }
-    # def is_following(self, user):
-    #     return self.followers.filter(followers.c.follower_id == user.id).count() > 0
+        
 
 
     @hybrid_property

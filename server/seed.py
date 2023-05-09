@@ -14,7 +14,7 @@ if __name__ == '__main__':
     with app.app_context():
         print("Starting seed...")
 
-        #User.query.delete()
+        User.query.delete()
         Game.query.delete()
         Comment.query.delete()
         Favorite.query.delete()

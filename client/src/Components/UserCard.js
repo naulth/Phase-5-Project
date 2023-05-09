@@ -1,7 +1,7 @@
 import {Outlet, Link} from 'react-router-dom'
 import React from 'react'
 
-function UserCard({username, image, id}){
+function UserCard({username, image, online, id}){
     
     const linkURL = `/users/${id}`
 
@@ -9,8 +9,9 @@ function UserCard({username, image, id}){
     return(
         <div className='text-center shadow-lg w-48 border border-lime-100 h-full bg-zinc-950'>
             <div className="mx-auto pt-6 pb-2 justify-center items-center ">
-                <div className="px-2 pb-4">
+                <div className="px-2 pb-4 grid grid-cols-2">
                     <h1 className='text-xl text-lime-100 font-medium'>{username}</h1>
+                    <img className="h-6" src={online}/>
                 </div>
             <img src={image} alt={username} className='p-4 rounded-2xl mx-auto h-48'/>
                 

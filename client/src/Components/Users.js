@@ -1,12 +1,14 @@
-import { useEffect, useContext} from "react"
+import { useEffect, useContext, useState} from "react"
 import UserCard from "./UserCard"
 import {UserContext} from "../Context/user"
 import { UsersArrayContext } from "../Context/usersArray"
+import logo from "../Images/power_symbol.jpg"
 
 function Users(){
 
     const {user} = useContext(UserContext)
     const{usersArray, setUsersArray} = useContext(UsersArrayContext)
+    const [loggedIn, setLoggedIn] = useState([])
 
     useEffect(() => {
         fetch('/users')
@@ -19,10 +21,27 @@ function Users(){
         })
     },[])
 
+    useEffect(() => {
+        fetch('/checkloggedin')
+        .then((res) => {
+            if (res.ok) {
+                res.json().then((r) => {
+                    setLoggedIn(r)
+                    console.log(loggedIn)
+                })
+            }
+        })
+    }, [])
+
 
     const filteredUserArray = [...usersArray]?.filter(userObj => userObj?.id !== user?.id)
 
-    const userComponents = filteredUserArray?.map(userObj => <UserCard key={userObj.id} id={userObj.id} username={userObj.username} image={userObj.image} />)
+    const userComponents = filteredUserArray?.map(userObj => {
+
+        const isLoggedIn = loggedIn.some(loggedInUser => loggedInUser.id === userObj.id)
+        const online = isLoggedIn ? logo : null;
+
+        return <UserCard key={userObj.id} id={userObj.id} username={userObj.username} online={online} image={userObj.image} />})
 
     
 
@@ -34,6 +53,9 @@ function Users(){
             <div className="w-full mx-auto">
                 <div className="grid grid-cols-5 justify-items-center py-10">
                     {userComponents}
+                </div>
+                <div>
+
                 </div>
             </div>
         </div>

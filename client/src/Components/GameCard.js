@@ -6,7 +6,7 @@ function GameCard({title, image, id, genre, platform, price, reviews}){
     const linkURL = `/games/${id}`
 
     return(
-        <div className='text-center shadow-lg w-72 border border-lime-100 h-full bg-zinc-900'>
+        <div className='text-center shadow-lg w-72 border border-lime-100 h-full bg-zinc-950'>
             <div className="mx-auto pt-6 pb-2 justify-center items-center ">
                 
             </div>

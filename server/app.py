@@ -69,6 +69,9 @@ class Login(Resource):
         elif user.authenticate(password) == True:
             session['user_id'] = user.id
 
+            user.is_authenticated = True
+            db.session.commit()
+
             result = user.user_dict()
             return make_response(jsonify(result))
         
@@ -82,6 +85,11 @@ class Login(Resource):
 class Logout(Resource):
 
     def delete(self):
+
+        user = User.query.filter(User.id == session.get('user_id')).first()
+        user.is_authenticated = False
+        db.session.commit()
+
         session['user_id'] = None
         return {}, 204
     
@@ -92,6 +100,14 @@ class CheckSession(Resource):
 
         result = user.user_dict()
         return make_response(jsonify(result), 200)
+    
+
+class CheckLoggedIn(Resource):
+    def get(self):
+        logged_in_users = [user.user_dict() for user in User.query.filter_by(is_authenticated=True)]
+
+        return make_response(logged_in_users, 200)
+
     
 class Games(Resource):
     def get(self):
@@ -365,6 +381,7 @@ api.add_resource(Followers, '/followers')
 api.add_resource(CheckFollowById, '/check/<int:id>')
 api.add_resource(CommentReplies, '/comments/<int:id>/replies')
 api.add_resource(ReplyById, '/deletereply/<int:id>')
+api.add_resource(CheckLoggedIn, '/checkloggedin')
 
 
 if __name__ == '__main__':
