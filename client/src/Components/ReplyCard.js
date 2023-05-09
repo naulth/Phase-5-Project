@@ -2,9 +2,7 @@
 import {useState, useContext, useEffect} from 'react'
 import {UserContext} from "../Context/user"
 import { CommentsContext } from '../Context/comments'
-import { GamesArrayContext } from '../Context/gamesArray'
 import { GameContext } from '../Context/game'
-import { UsersArrayContext } from '../Context/usersArray'
 import { TargetUserContext } from '../Context/targetUser'
 
 
@@ -14,9 +12,7 @@ function ReplyCard({reply, username, time, id, user_id, game_id, target_id, comm
     const [showDelete, setShowDelete] = useState(false)
     const {user, setUser} = useContext(UserContext)
     const {commentsArray, setCommentsArray} = useContext(CommentsContext)
-    const {gamesArray, setGamesArray} = useContext(GamesArrayContext)
     const {game, setGame} = useContext(GameContext)
-    const {usersArray, setUsersArray} = useContext(UsersArrayContext)
     const {targetUser, setTargetUser} = useContext(TargetUserContext)
 
 

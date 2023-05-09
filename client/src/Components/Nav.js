@@ -10,7 +10,7 @@ function Nav({handleLogout}){
 
 
     return(
-        <header className="bg-zinc-900 border border-lime-200 sticky top-0">
+        <header className="bg-zinc-950 border border-lime-200 sticky top-0">
             <nav className="mx-auto flex mx-w-7xl items-center justify-between h-24 gap-x-6 p-6 lg:px-8" aria-label="Global">
 				<div className="flex lg:flex-1">
                     {user ? <Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/feed">LoggedOn</Link> :<Link className="text-3xl font-bold leading-6 tracking-tight text-lime-300" to="/">LoggedOn</Link> }
