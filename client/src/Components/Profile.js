@@ -58,7 +58,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
         <div className="bg-zinc-800 min-h-screen h-full">
 		<div className="grid w-full grid-cols-7 gap-6 h-full">
 
-            <div className="float-left px-8 h-screen col-span-1 border border-lime-200 bg-zinc-900">
+            <div className="float-left px-8 h-screen col-span-1 border border-lime-200 bg-zinc-950">
                 <div className="text-center py-10 ">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200">{user && user.username}</h1>
                 </div>
