@@ -2,9 +2,10 @@ import AddCommentReply from "./AddCommentReply"
 import {useState} from 'react'
 import EmptyReply from "./EmptyReply"
 import ReplyCard from "./ReplyCard"
+import AddProfileReply from './AddProfileReply'
 
 
-function FollowedComment({content, score, gamename, username, image, comment_id, replies}){
+function FollowedComment({content, score, gamename, username, image, user_id, comment_id, replies}){
 
     const [showReplies, setShowReplies] = useState(false)
 
@@ -27,12 +28,13 @@ function FollowedComment({content, score, gamename, username, image, comment_id,
         <div>
         <div className="bg-zinc-800 border border-lime-200 shadow w-fit mx-auto p-4 my-4 ">
             <div className = "grid grid-cols-3 w-96">
-                <div className="col-span-1  ">
+                <div className="col-span-1">
                     <div className="text-left">
                         <h2 className=" text-lg font-bold tracking-tight text-lime-100">{username}</h2>
-                        <img className="h-20" src={image} alt={username}/>
-                        {showReplies ?  <button onClick={toggleReplies} className="hover:bg-zinc-900 text-sm hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mt-4 shadow font-bold px-4">Close Replies</button> :
-                        <button onClick={toggleReplies} className="hover:bg-zinc-900 text-sm hover:text-lime-100 text-lime-200 border py-1 w-36 border-lime-100 mt-4 shadow font-bold px-1">{`View Replies (${replies?.length}) `}</button> }
+                        <img className="h-20 pb-2 mb-2" src={image} alt={username}/>
+                        <AddProfileReply comment_id={comment_id} user_id={user_id} username={username}/>
+                        {showReplies ?  <button onClick={toggleReplies} className="hover:bg-zinc-900 text-sm hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mt-2 shadow font-bold px-4">Close Replies</button> :
+                        <button onClick={toggleReplies} className="hover:bg-zinc-900 text-sm hover:text-lime-100 text-lime-200 border py-1 w-36 border-lime-100 mt-2 shadow font-bold px-1">{`View Replies (${replies?.length}) `}</button> }
                     </div>
                     
                     
@@ -40,7 +42,7 @@ function FollowedComment({content, score, gamename, username, image, comment_id,
                         {/* <AddCommentReply comment_id={comment_id} username={username}/> */}
                     </div>
                 </div>
-                <div className="col-span-2 ml-6">
+                <div className="col-span-2 ml-8">
                     <div className="text-left pb-4">
                         <h2 className="text-lg font-light tracking-tight text-lime-100">{gamename}</h2>
                     </div>

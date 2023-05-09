@@ -3,6 +3,7 @@ import {useState} from 'react'
 import ReplyCard from "./ReplyCard"
 import EmptyReply from "./EmptyReply"
 
+
 function UserCommentCard({content, score, handleDeleteComment, editComment, commentId, game_id, gamename, user, replies}){
 
     const handleDelete = (e) => {

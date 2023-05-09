@@ -10,6 +10,7 @@ import DeleteProfile from './DeleteProfile'
 import ViewFollowed from './ViewFollowed'
 import {UserContext} from "../Context/user"
 
+
 function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, handleLogout, deleteFavorite}){
 
     const navigate = useNavigate()
@@ -46,7 +47,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     const sortedFlatComments = flatFollowedComments?.slice(0, MAX_COMMENTS).sort(byCreate)
 
-    const followedComponents = sortedFlatComments?.map(comment => <FollowedComment key={comment?.id} image={comment?.user_image} comment_id={comment?.id} username={comment?.user_username} gamename={comment?.game_name} score={comment?.score} replies={comment?.replies} content={comment?.content} />)
+    const followedComponents = sortedFlatComments?.map(comment => <FollowedComment key={comment?.id} user_id={comment?.user_id} image={comment?.user_image} comment_id={comment?.id} username={comment?.user_username} gamename={comment?.game_name} score={comment?.score} replies={comment?.replies} content={comment?.content} />)
 
 
     const userFavorites = user?.favorites?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
