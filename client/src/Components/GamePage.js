@@ -37,7 +37,7 @@ function GamePage({handleUpdate,  addFavorite}){
 
     const sortedComponents = game?.comments?.slice(0, MAX_COMMENTS).sort(byCreate).reverse()
 
-    const gameComments = sortedComponents?.map(comment => <GameCommentCard comment_id={comment?.id} game_id={game?.id} user_image={comment?.user_image} key={comment?.id} user_id={comment?.user_id} game={game?.title} username={comment?.user_username} score={comment?.score} content={comment?.content} create={comment?.created_at} replies={comment?.replies} theGame={game} />)
+    const gameComments = sortedComponents?.map(comment => <GameCommentCard comment_id={comment?.id} game_id={comment?.game_id} user_image={comment?.user_image} key={comment?.id} user_id={comment?.user_id} game={game?.title} username={comment?.user_username} score={comment?.score} content={comment?.content} create={comment?.created_at} replies={comment?.replies} theGame={game} />)
 
     
     return(

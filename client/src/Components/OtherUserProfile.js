@@ -6,6 +6,7 @@ import TargetCommentCard from './TargetCommentCard'
 import { FavoritesContext } from '../Context/favorites'
 import { CommentsContext } from '../Context/comments'
 import { UserContext } from '../Context/user'
+import { TargetUserContext } from '../Context/targetUser'
 import EmptyComment from './EmptyComment'
 import TargetFavoriteCard from './TargetFavoriteCard'
 import EmptyFavorite from './EmptyFavorite'
@@ -17,8 +18,9 @@ function OtherUserProfile() {
     const {favoritesArray} = useContext(FavoritesContext)
     const {commentsArray} = useContext(CommentsContext)
     const {user, setUser} = useContext(UserContext)
+    
 
-    const [targetUser, setTargetUser] = useState({})
+    const {targetUser, setTargetUser} = useContext(TargetUserContext)
 
     const params = useParams()
 
@@ -52,7 +54,7 @@ function OtherUserProfile() {
 
     const sortedComponents = targetUser?.comments?.slice().sort(byCreate).reverse()
 
-    const targetComments = sortedComponents?.map(comment => <TargetCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id}/>)
+    const targetComments = sortedComponents?.map(comment => <TargetCommentCard key={comment?.id} target_id={targetUser?.id}replies={comment?.replies} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id}/>)
 
 
     const targetFavorites = targetUser?.favorites?.map(favorite => <TargetFavoriteCard key={favorite.id} gameId={favorite.game_id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)

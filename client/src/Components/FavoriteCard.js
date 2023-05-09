@@ -19,9 +19,11 @@ function FavoriteCard({image, deleteFavorite, id, title}){
             <div className="px-2">
                 <h1 className='text-xl text-lime-100 font-medium'>{title}</h1>
             </div>
-            <button onClick={handleDeleteFavorite} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded my-2 mx-2">
-                Remove
-            </button>
+            <div className="">
+                <button onClick={handleDeleteFavorite} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border border-lime-100 shadow font-bold px-4 rounded my-2 mx-2">
+                    Remove
+                </button>
+            </div>
         </div>
 
     )

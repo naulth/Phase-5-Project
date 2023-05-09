@@ -1,7 +1,6 @@
 import {useState} from 'react'
 import {Outlet, Link} from 'react-router-dom'
 import AddCommentReply from './AddCommentReply'
-import ViewReplies from './ViewReplies'
 import EmptyReply from './EmptyReply'
 import ReplyCard from './ReplyCard'
 
@@ -23,7 +22,7 @@ function CommentCard({username, content, comment_id, replies, score, gameImage, 
 
     const sortedReplies = replies.slice().sort(byCreate).reverse()
 
-    const commentReplies = sortedReplies.map(reply => <ReplyCard key={reply?.id} reply={reply?.reply} time={reply?.created_at} username={reply?.user_username}/>)
+    const commentReplies = sortedReplies.map(reply => <ReplyCard key={reply?.id} comment_id={reply?.comment_id} id={reply?.id} user_id={reply?.user_id} reply={reply?.reply} time={reply?.created_at} username={reply?.user_username}/>)
 
     return(
         <div>

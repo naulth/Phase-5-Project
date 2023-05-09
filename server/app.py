@@ -327,6 +327,20 @@ class CommentReplies(Resource):
         db.session.add(new_reply)
         db.session.commit()
         return make_response(new_reply.to_dict(), 201)
+
+class ReplyById(Resource):
+    def delete(self, id):
+        if id not in [r.id for r in CommentReply.query.all()]:
+            return {'error': '404, Comment not Found!'}, 404
+
+        try:
+            reply = CommentReply.query.filter(CommentReply.id==id).first()
+            db.session.delete(reply)
+            db.session.commit()
+        except:
+            db.session.rollback()
+
+        return make_response({'message': 'The reply has been deleted'}, 200)
     
 
 
@@ -350,6 +364,7 @@ api.add_resource(UnfollowById, '/unfollow/<int:id>')
 api.add_resource(Followers, '/followers')
 api.add_resource(CheckFollowById, '/check/<int:id>')
 api.add_resource(CommentReplies, '/comments/<int:id>/replies')
+api.add_resource(ReplyById, '/deletereply/<int:id>')
 
 
 if __name__ == '__main__':

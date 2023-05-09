@@ -5,10 +5,7 @@ import EditUserForm from "./EditUserForm"
 import FavoriteCard from './FavoriteCard'
 import EmptyComment from './EmptyComment'
 import EmptyFavorite from './EmptyFavorite'
-import CommentCard from './CommentCard'
 import FollowedComment from './FollowedComment'
-import UserCard from './UserCard'
-
 import DeleteProfile from './DeleteProfile'
 import ViewFollowed from './ViewFollowed'
 import {UserContext} from "../Context/user"
@@ -39,7 +36,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     const sortedComponents = user?.comments?.slice(0, MAX_COMMENTS).sort(byCreate).reverse()
 
-    const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} commentId={comment?.id} gamename={comment?.game_name} gameImage ={comment?.game_image} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
+    const userComments = sortedComponents?.map(comment => <UserCommentCard key={comment?.id} replies={comment?.replies} commentId={comment?.id} gamename={comment?.game_name} gameImage ={comment?.game_image} score={comment?.score} content={comment?.content} game_id={comment?.game_id} handleDeleteComment={handleDeleteComment} user={user} editComment={editComment} />)
    
 
 
@@ -49,7 +46,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
 
     const sortedFlatComments = flatFollowedComments?.slice(0, MAX_COMMENTS).sort(byCreate)
 
-    const followedComponents = sortedFlatComments?.map(comment => <FollowedComment key={comment?.id} username={comment?.user_username} gamename={comment?.game_name} score={comment?.score} content={comment?.content} />)
+    const followedComponents = sortedFlatComments?.map(comment => <FollowedComment key={comment?.id} image={comment?.user_image} comment_id={comment?.id} username={comment?.user_username} gamename={comment?.game_name} score={comment?.score} replies={comment?.replies} content={comment?.content} />)
 
 
     const userFavorites = user?.favorites?.map(favorite => <FavoriteCard deleteFavorite={deleteFavorite} key={favorite.id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
@@ -81,7 +78,7 @@ function Profile({handleUpdate, deleteUser, handleDeleteComment, editComment, ha
             <div className="col-span-2 float-left h-fit">
                 <div className=" bg-zinc-900 text-center border border-lime-100 shadow px-8">
                     <h1 className="text-3xl py-4 px-4 font-bold tracking-tight text-lime-200"> Favorite Games </h1>
-                    <div className="grid grid-cols-2 gap-x-8 pb-6">
+                    <div className="grid grid-cols-2 gap-x-4 pb-6">
                         {userFavorites?.length ? userFavorites : <EmptyFavorite />}
                     </div>
                 </div>

@@ -14,7 +14,7 @@ function GameCard({title, image, id, genre, platform, price, reviews}){
             <div className="px-2">
                 <h1 className='text-xl text-lime-100 font-medium'>{title}</h1>
             </div>
-            <button className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border mt-4 border-lime-100 shadow font-bold px-4 rounded mx-2">
+            <button className="hover:bg-zinc-800 hover:text-lime-100 text-lime-200 border mt-4 border-lime-100 shadow font-bold px-4 rounded mx-2">
                     <Link to={linkURL}>View Game</Link> 
                 </button> 
            <Outlet />

@@ -86,7 +86,7 @@ function EditCommentForm({theId, editComment, gameImage, game_id, gamename}){
 
     return(
         <div>
-            <button onClick={toggleEditComment} className="hover:bg-sky-950 hover:text-lime-200 text-sm w-20 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 rounded my-1">Edit</button>
+            <button onClick={toggleEditComment} className="hover:bg-zinc-900 hover:text-lime-200 text-sm w-20 text-lime-200 border border-lime-200 shadow font-bold py-1 px-4 my-1">Edit</button>
 
         {showEditComment &&
         <div className="fixed top-0 left-0 w-full h-full bg-zinc-900 bg-opacity-50 flex justify-center items-center">

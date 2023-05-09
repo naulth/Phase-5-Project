@@ -2,7 +2,6 @@ import {useState} from 'react'
 import {Link, Outlet} from 'react-router-dom'
 import ReplyCard from './ReplyCard'
 import AddGameReply from './AddGameReply'
-import ViewReplies from './ViewReplies'
 import EmptyReply from './EmptyReply'
 
 function GameCommentCard({content, score, username, game, user_id, user_image, game_id, replies, comment_id, theGame }){
@@ -23,7 +22,7 @@ function GameCommentCard({content, score, username, game, user_id, user_image, g
 
     const sortedReplies = replies.slice().sort(byCreate).reverse()
 
-    const commentReplies = sortedReplies.map(reply => <ReplyCard key={reply?.id} reply={reply?.reply} time={reply?.created_at} username={reply?.user_username}/>)
+    const commentReplies = sortedReplies.map(reply => <ReplyCard key={reply?.id} game_id={game_id} comment_id={reply?.comment_id} id={reply?.id} user_id={reply?.user_id}reply={reply?.reply} time={reply?.created_at} username={reply?.user_username}/>)
 
     return(
         <div className="">
@@ -44,7 +43,7 @@ function GameCommentCard({content, score, username, game, user_id, user_image, g
                     </div>
                     
                     
-                    <div className="col-span-1 w-full mr-2">
+                    <div className="col-span-1 w-full ml-2">
                         <div className="">
                             <div className="text-left pt-2">
                                 <h2 className="text-lg font-medium tracking-tight mb-4 text-lime-100">{game}</h2>
@@ -58,9 +57,9 @@ function GameCommentCard({content, score, username, game, user_id, user_image, g
 
 
                     <div className="col-span-1 mx-auto justify-right mt-auto text-right">
+                        <AddGameReply comment_id={comment_id} theGame={theGame}/>
                         {showReplies ?  <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4">Close Replies</button> :
-                        <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4">View Replies</button> }
-                        
+                        <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 w-36 border-lime-100 mb-4 shadow font-bold px-1">{`View Replies (${replies?.length}) `}</button> }
                     </div>
                 </div>
             </div>
