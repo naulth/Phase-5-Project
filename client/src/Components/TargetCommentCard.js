@@ -2,8 +2,9 @@
 import {useState} from 'react'
 import ReplyCard from './ReplyCard'
 import EmptyReply from './EmptyReply'
+import AddTargetReply from './AddTargetReply'
 
-function TargetCommentCard({gamename, content, score, replies, target_id}) {
+function TargetCommentCard({gamename, content, score, replies, commentId, username, target_id}) {
 
     const [showReplies, setShowReplies] = useState(false)
 
@@ -37,17 +38,19 @@ function TargetCommentCard({gamename, content, score, replies, target_id}) {
                     </div>
                 </div>
                 <div className="text-right">
+                    <AddTargetReply comment_id={commentId} username={username}/>
                     {showReplies ?  <button onClick={toggleReplies} className="hover:bg-zinc-900 hover:text-lime-100 text-sm text-lime-200 my-1 border py-1 border-lime-100 shadow font-bold px-1">Close Replies</button> :
                         <button onClick={toggleReplies} className="hover:bg-zinc-900 hover:text-lime-100 text-lime-200 text-sm border my-1 py-1 w-36 border-lime-100 shadow font-bold px-1">{`View Replies (${replies?.length}) `}</button> }
                 </div>
         </div>
-        { showReplies ? 
-            <div>
-                <div className="bg-zinc-900 mx-auto border border-lime-200 text-right w-2/3 h-fit p-4 my-4 ">
-                    {commentReplies?.length ? commentReplies : <EmptyReply />}
-                    <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4">Close Replies</button>
-                </div>
-            </div> : null}
+            { showReplies ? 
+                <div>
+                    <div className="bg-zinc-900 mx-auto border border-lime-200 text-right w-2/3 h-fit p-4 my-4 ">
+                        {commentReplies?.length ? commentReplies : <EmptyReply />}
+                        <button onClick={toggleReplies} className="hover:bg-sky-950 hover:text-lime-100 text-lime-200 border py-1 border-lime-100 mb-4 shadow font-bold px-4">Close Replies</button>
+                    </div>
+                </div> 
+            : null}
         </div>
     )
 }

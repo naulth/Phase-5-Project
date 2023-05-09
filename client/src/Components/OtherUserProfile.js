@@ -54,7 +54,7 @@ function OtherUserProfile() {
 
     const sortedComponents = targetUser?.comments?.slice().sort(byCreate).reverse()
 
-    const targetComments = sortedComponents?.map(comment => <TargetCommentCard key={comment?.id} target_id={targetUser?.id}replies={comment?.replies} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id}/>)
+    const targetComments = sortedComponents?.map(comment => <TargetCommentCard key={comment?.id} username={comment?.user_username} target_id={targetUser?.id} replies={comment?.replies} commentId={comment?.id} gamename={comment?.game_name} score={comment?.score} content={comment?.content} game_id={comment?.game_id}/>)
 
 
     const targetFavorites = targetUser?.favorites?.map(favorite => <TargetFavoriteCard key={favorite.id} gameId={favorite.game_id} id={favorite.id} title={favorite?.game_title} image={favorite?.game_image}/>)
