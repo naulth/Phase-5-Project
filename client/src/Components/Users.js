@@ -22,15 +22,18 @@ function Users(){
     },[])
 
     useEffect(() => {
-        fetch('/checkloggedin')
-        .then((res) => {
-            if (res.ok) {
-                res.json().then((r) => {
-                    setLoggedIn(r)
-                    console.log(loggedIn)
-                })
-            }
-        })
+        const interval = setInterval(() => {
+            fetch('/checkloggedin')
+            .then((res) => {
+                if (res.ok) {
+                    res.json().then((r) => {
+                        setLoggedIn(r)
+                        console.log(loggedIn)
+                    })
+                }
+            })
+        }, 30000)
+        return () => clearInterval(interval)
     }, [])
 
 
