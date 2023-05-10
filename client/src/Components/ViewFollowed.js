@@ -1,26 +1,24 @@
 import {useState, useContext, useEffect} from 'react'
 import {UserContext} from "../Context/user"
 import UserCard from './UserCard'
+import { UserFollowsContext } from '../Context/userfollows'
 
 function ViewFollowed(){
 
     const [showFollowed, setShowFollowed] = useState(false)
     const {user} = useContext(UserContext)
-    const [ userFollows, setUserFollows] = useState([])
+    const {userFollows, setUserFollows} = useContext(UserFollowsContext)
 
     const toggleFollowed = () => {
         setShowFollowed(!showFollowed)
     }
 
-
     useEffect(() => {
-        if (user && user.following) {
-            const newFollows = user.following.map(follow => (
-                <UserCard key={follow?.id} image={follow?.image} username={follow?.username} id={follow?.id} />
-            ));
-            setUserFollows(newFollows);
-        }
-    }, [user]);
+        setUserFollows(user?.following?.map(follow => (
+          <UserCard key={follow?.id} image={follow?.image} username={follow?.username} id={follow?.id} />
+        )));
+      }, [user, user?.following, setUserFollows]);
+      
 
     return(
         <div>

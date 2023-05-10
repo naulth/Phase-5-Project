@@ -1,10 +1,12 @@
 import React, {useState, useContext, useEffect, useCallback} from 'react'
 import { UserContext } from '../Context/user'
+import { UserFollowsContext } from '../Context/userfollows'
 
 function FollowButton({targetId}) {
 
     const [isFollowing, setIsFollowing] = useState(false)
     const {user, setUser} = useContext(UserContext)
+    const {userFollows, setUserFollows} = useContext(UserFollowsContext)
 
 
     useEffect(()=>{
@@ -51,15 +53,14 @@ function FollowButton({targetId}) {
             method: "DELETE"
         }).then((response) => {
             if (response.ok) {
-                const newUser = {
-                    ...user,
-                    following: [
-                        ...user?.following?.filter(follower => follower.id !== targetId)
-                    ]
-                } 
-                setUser(newUser)
-                
-            
+                setUser(user => {
+                    const updatedFollowing = user?.following?.filter(follow => follow.id !== targetId)
+                    return {
+                        ...user,
+                        following: updatedFollowing
+                    }
+                })
+                setUserFollows(userFollows => userFollows?.filter(follow => follow.id !== targetId))
             }
         })
     }

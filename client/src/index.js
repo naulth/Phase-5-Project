@@ -14,6 +14,7 @@ import { FollowersProvider } from './Context/followers';
 import { GameProvider } from './Context/game';
 import { GamesArrayProvider } from './Context/gamesArray';
 import { TargetUserProvider } from './Context/targetUser';
+import { UserFollowsProvider } from './Context/userfollows';
 
 const root = createRoot(document.getElementById('root'));
 
@@ -21,6 +22,7 @@ root.render(
 
 	<BrowserRouter>
         <ScrollToTop />
+        <UserFollowsProvider>
         <TargetUserProvider>
         <GamesArrayProvider>
         <GameProvider>
@@ -38,5 +40,6 @@ root.render(
         </GameProvider>
         </GamesArrayProvider>
         </TargetUserProvider>
+        </UserFollowsProvider>
     </BrowserRouter>
 );
