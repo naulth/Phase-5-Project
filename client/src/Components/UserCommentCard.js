@@ -32,9 +32,9 @@ function UserCommentCard({content, score, handleDeleteComment, editComment, comm
 
     }
 
-    const sortedReplies = replies.slice().sort(byCreate).reverse()
+    const sortedReplies = replies?.slice().sort(byCreate).reverse()
 
-    const commentReplies = sortedReplies.map(reply => <ReplyCard key={reply?.id} id={reply?.id} comment_id={reply?.comment_id} reply={reply?.reply} user_id={reply?.user_id} time={reply?.created_at} username={reply?.user_username}/>)
+    const commentReplies = sortedReplies?.map(reply => <ReplyCard key={reply?.id} id={reply?.id} comment_id={reply?.comment_id} reply={reply?.reply} user_id={reply?.user_id} time={reply?.created_at} username={reply?.user_username}/>)
 
     return(
         <div>
